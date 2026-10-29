@@ -25,6 +25,8 @@ final class SnapController {
     private var didUnsnap = false
     private var didResize = false
     private var pending: (zone: Zone, screen: ScreenInfo)?
+    /// Ends the drag if the button release was never delivered (drop over one of our own windows, lost event).
+    private var releaseWatchdog: Task<Void, Never>?
 
     init(settings: Settings) {
         self.settings = settings
@@ -44,10 +46,15 @@ final class SnapController {
         lastFrame = frame
         lastReadTime = CACurrentMediaTime()
         wasSnapped = registry.isStillSnapped(window, frame: frame, tolerance: Self.tolerance)
+        startReleaseWatchdog()
     }
 
     func mouseDragged(at point: CGPoint) {
         guard let window = dragWindow else { return }
+        guard DragMonitor.isLeftButtonPressed else {
+            mouseUp(at: point)
+            return
+        }
         let now = CACurrentMediaTime()
         guard now - lastReadTime >= Self.readInterval else { return }
         lastReadTime = now
@@ -94,9 +101,25 @@ final class SnapController {
         }
     }
 
+    private func startReleaseWatchdog() {
+        releaseWatchdog?.cancel()
+        releaseWatchdog = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .milliseconds(100))
+                guard let self, self.dragWindow != nil else { return }
+                if !DragMonitor.isLeftButtonPressed {
+                    self.mouseUp(at: DragMonitor.pointerLocation)
+                    return
+                }
+            }
+        }
+    }
+
     /// Resets the drag state and hides the preview.
     func cancelDrag() {
         preview.hide()
+        releaseWatchdog?.cancel()
+        releaseWatchdog = nil
         dragWindow = nil
         wasSnapped = false
         didUnsnap = false

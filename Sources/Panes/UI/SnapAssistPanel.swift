@@ -48,22 +48,20 @@ final class SnapAssistPanel {
             self?.hide()
         }
         let hosting = NSHostingView(rootView: tiles)
-        hosting.translatesAutoresizingMaskIntoConstraints = false
+        // The panel must keep the zone's frame: never let SwiftUI's intrinsic size drive the window.
+        hosting.sizingOptions = []
+        effect.frame = CGRect(origin: .zero, size: frame.size)
+        hosting.frame = effect.bounds
+        hosting.autoresizingMask = [.width, .height]
         effect.addSubview(hosting)
-        NSLayoutConstraint.activate([
-            hosting.leadingAnchor.constraint(equalTo: effect.leadingAnchor),
-            hosting.trailingAnchor.constraint(equalTo: effect.trailingAnchor),
-            hosting.topAnchor.constraint(equalTo: effect.topAnchor),
-            hosting.bottomAnchor.constraint(equalTo: effect.bottomAnchor),
-        ])
         panel.contentView = effect
         panel.setFrame(frame, display: true)
         panel.orderFrontRegardless()
 
-        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            guard event.keyCode == 53 else { return event }
-            MainActor.assumeIsolated { self?.dismiss() }
-            return nil
+        // The panel never becomes key (non-activating), so Escape has to be caught globally.
+        keyMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            guard event.keyCode == 53 else { return }
+            Task { @MainActor in self?.dismiss() }
         }
         mouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
             Task { @MainActor in self?.dismiss() }
