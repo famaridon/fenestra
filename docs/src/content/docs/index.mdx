@@ -1,0 +1,32 @@
+---
+title: Panes
+description: Le snap de Windows et Ubuntu, sur macOS.
+template: splash
+hero:
+  title: Panes — le snap de Windows et Ubuntu, sur macOS
+  tagline: Glissez une fenêtre vers un bord, elle prend sa place. Instantané, à la souris comme au clavier, avec un écran vertical bien géré.
+  actions:
+    - text: Installer Panes
+      link: /guide/installation/
+      icon: right-arrow
+    - text: Découvrir l'utilisation
+      link: /guide/souris/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Glisser vers un bord" icon="rocket">
+    Le pointeur touche un bord, l'aperçu s'affiche immédiatement. Les coins donnent des quarts. [En savoir plus](/guide/souris/).
+  </Card>
+  <Card title="Raccourcis façon Win + flèches" icon="pencil">
+    `⌃⌥` + flèches pour les moitiés, avec passage à l'écran voisin en appuyant de nouveau. [Voir les raccourcis](/guide/clavier/).
+  </Card>
+  <Card title="Écran vertical" icon="laptop">
+    Sur un écran en portrait, le découpage principal est haut / bas. [Détails](/guide/ecran-vertical/).
+  </Card>
+  <Card title="Bordure partagée" icon="random">
+    Tirez la bordure commune de deux fenêtres collées : les voisines suivent. [Comment ça marche](/guide/bordure-partagee/).
+  </Card>
+</CardGrid>

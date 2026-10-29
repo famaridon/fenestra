@@ -3,3 +3,7 @@
 build/
 DerivedData/
 xcuserdata/
+.claude/
+docs/node_modules/
+docs/dist/
+docs/.astro/

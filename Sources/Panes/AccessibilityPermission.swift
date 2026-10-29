@@ -5,6 +5,9 @@ import Observation
 @MainActor
 @Observable
 final class AccessibilityPermission {
+    /// Current trust state, readable without an instance.
+    nonisolated static var isTrusted: Bool { AXIsProcessTrusted() }
+
     private(set) var isGranted = AXIsProcessTrusted()
     private var pollTask: Task<Void, Never>?
 
