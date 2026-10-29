@@ -1,0 +1,51 @@
+name: Panes
+options:
+  bundleIdPrefix: com.florentamaridon
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: 7MM73SMMT5
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "Apple Development"
+    ENABLE_HARDENED_RUNTIME: YES
+targets:
+  Panes:
+    type: application
+    platform: macOS
+    sources:
+      - Sources/Panes
+    info:
+      path: Sources/Panes/Info.plist
+      properties:
+        CFBundleDisplayName: Panes
+        LSUIElement: true
+        NSHumanReadableCopyright: ""
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.florentamaridon.Panes
+        ENABLE_APP_SANDBOX: NO
+        GENERATE_INFOPLIST_FILE: NO
+  PanesTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - Tests/PanesTests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: Panes
+schemes:
+  Panes:
+    build:
+      targets:
+        Panes: all
+        PanesTests: [test]
+    test:
+      targets:
+        - PanesTests
