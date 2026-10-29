@@ -12,6 +12,7 @@ final class Settings {
     var restoreOnUnsnap: Bool { didSet { store(restoreOnUnsnap, "restoreOnUnsnap") } }
     var gap: Double { didSet { store(gap, "gap") } }
     var cornerLength: Double { didSet { store(cornerLength, "cornerLength") } }
+    var innerEdgeThreshold: Double { didSet { store(innerEdgeThreshold, "innerEdgeThreshold") } }
     var enabledZones: Set<Zone> { didSet { storeJSON(enabledZones, "enabledZones") } }
     var portraitTopEdgeMaximizes: Bool { didSet { store(portraitTopEdgeMaximizes, "portraitTopEdgeMaximizes") } }
     var portraitSideEdgesEnabled: Bool { didSet { store(portraitSideEdgesEnabled, "portraitSideEdgesEnabled") } }
@@ -34,6 +35,7 @@ final class Settings {
         restoreOnUnsnap = defaults.object(forKey: "restoreOnUnsnap") as? Bool ?? true
         gap = defaults.object(forKey: "gap") as? Double ?? 0
         cornerLength = defaults.object(forKey: "cornerLength") as? Double ?? 120
+        innerEdgeThreshold = defaults.object(forKey: "innerEdgeThreshold") as? Double ?? 24
         enabledZones = Self.loadJSON(Set<Zone>.self, "enabledZones", defaults) ?? Zone.defaultEnabled
         portraitTopEdgeMaximizes = defaults.object(forKey: "portraitTopEdgeMaximizes") as? Bool ?? false
         portraitSideEdgesEnabled = defaults.object(forKey: "portraitSideEdgesEnabled") as? Bool ?? true
@@ -61,6 +63,7 @@ final class Settings {
 
     var dragResolverConfig: DragZoneResolver.Config {
         DragZoneResolver.Config(
+            innerEdgeThreshold: CGFloat(innerEdgeThreshold),
             cornerLength: CGFloat(cornerLength),
             portraitTopEdgeMaximizes: portraitTopEdgeMaximizes,
             portraitSideEdgesEnabled: portraitSideEdgesEnabled,

@@ -121,3 +121,27 @@ struct DragZoneResolverTests {
         }
     }
 }
+
+extension DragZoneResolverTests {
+    /// The junction between two displays uses the wider band, outer edges keep the tight one.
+    @Test func innerEdgesUseWiderBand() {
+        let inner: Set<Direction> = [.right]
+        // 20 pt from the shared right edge: inside the 24 pt inner band.
+        #expect(resolver.zone(forPointer: CGPoint(x: 1900, y: 540), on: landscape, innerEdges: inner) == .rightHalf)
+        // Same distance from the outer left edge: nothing.
+        #expect(resolver.zone(forPointer: CGPoint(x: 20, y: 540), on: landscape, innerEdges: inner) == nil)
+        // Beyond the inner band: nothing.
+        #expect(resolver.zone(forPointer: CGPoint(x: 1895, y: 540), on: landscape, innerEdges: inner) == nil)
+        // Corners along the inner edge follow the same band.
+        #expect(resolver.zone(forPointer: CGPoint(x: 1900, y: 50), on: landscape, innerEdges: inner) == .topRight)
+        // Without the inner-edge information the tight threshold applies.
+        #expect(resolver.zone(forPointer: CGPoint(x: 1900, y: 540), on: landscape) == nil)
+    }
+
+    @Test func innerBandIsConfigurable() {
+        var r = resolver
+        r.config.innerEdgeThreshold = 60
+        #expect(r.zone(forPointer: CGPoint(x: 1861, y: 540), on: landscape, innerEdges: [.right]) == .rightHalf)
+        #expect(r.zone(forPointer: CGPoint(x: 1859, y: 540), on: landscape, innerEdges: [.right]) == nil)
+    }
+}

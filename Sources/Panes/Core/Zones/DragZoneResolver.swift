@@ -4,8 +4,12 @@ import Foundation
 /// Maps the pointer position, while dragging a window, to the zone it triggers.
 struct DragZoneResolver: Sendable {
     struct Config: Sendable, Equatable {
-        /// Distance to a screen edge (points) that counts as "touching" it.
+        /// Distance to an outer screen edge (points) that counts as "touching" it. The pointer
+        /// stops on outer edges, so a tiny value is enough.
         var edgeThreshold: CGFloat = 2
+        /// Width of the trigger band along an edge shared with another display. The pointer
+        /// crosses such edges freely, so the band has to be wider to be reachable.
+        var innerEdgeThreshold: CGFloat = 24
         /// Length of edge counted as a corner.
         var cornerLength: CGFloat = 120
         /// Portrait screens: the top edge maximizes instead of giving the top half.
@@ -19,16 +23,19 @@ struct DragZoneResolver: Sendable {
 
     /// `pointer` and `screen.frame` are in AX coordinates. A pointer slightly outside the frame
     /// still counts as touching the nearest edge. A zone missing from `enabledZones` gives nil
-    /// (no fallback to another zone).
-    func zone(forPointer pointer: CGPoint, on screen: ScreenInfo) -> Zone? {
+    /// (no fallback to another zone). `innerEdges` lists the edges of `screen` that touch another
+    /// display (see `ScreenLayout.innerEdges(of:)`): they use the wider `innerEdgeThreshold`.
+    func zone(forPointer pointer: CGPoint, on screen: ScreenInfo, innerEdges: Set<Direction> = []) -> Zone? {
         let f = screen.frame
-        let t = config.edgeThreshold
         let c = config.cornerLength
+        func threshold(_ edge: Direction) -> CGFloat {
+            innerEdges.contains(edge) ? config.innerEdgeThreshold : config.edgeThreshold
+        }
 
-        let nearLeft = pointer.x <= f.minX + t
-        let nearRight = pointer.x >= f.maxX - t
-        let nearTop = pointer.y <= f.minY + t
-        let nearBottom = pointer.y >= f.maxY - t
+        let nearLeft = pointer.x <= f.minX + threshold(.left)
+        let nearRight = pointer.x >= f.maxX - threshold(.right)
+        let nearTop = pointer.y <= f.minY + threshold(.up)
+        let nearBottom = pointer.y >= f.maxY - threshold(.down)
         guard nearLeft || nearRight || nearTop || nearBottom else { return nil }
 
         let inLeft = pointer.x <= f.minX + c

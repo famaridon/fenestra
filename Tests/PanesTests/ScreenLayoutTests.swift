@@ -79,3 +79,11 @@ struct ScreenLayoutTests {
         #expect(l.previous(before: primary) == nil)
     }
 }
+
+extension ScreenLayoutTests {
+    @Test func innerEdgesAreTheSharedOnes() {
+        #expect(layout.innerEdges(of: primary) == [.right])
+        #expect(layout.innerEdges(of: portrait) == [.left])
+        #expect(ScreenLayout(screens: [primary]).innerEdges(of: primary).isEmpty)
+    }
+}

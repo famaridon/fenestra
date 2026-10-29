@@ -139,7 +139,8 @@ final class SnapController {
 
     private func updatePreview(pointer: CGPoint) {
         guard let screen = layout.screen(containing: pointer) else { return }
-        let zone = resolver.zone(forPointer: pointer, on: screen).flatMap { settings.enabledZones.contains($0) ? $0 : nil }
+        let zone = resolver.zone(forPointer: pointer, on: screen, innerEdges: layout.innerEdges(of: screen))
+            .flatMap { settings.enabledZones.contains($0) ? $0 : nil }
         guard zone != pending?.zone || screen.id != pending?.screen.id else { return }
         guard let zone else {
             pending = nil

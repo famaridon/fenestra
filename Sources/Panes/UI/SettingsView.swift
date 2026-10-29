@@ -52,6 +52,12 @@ private struct GeneralTab: View {
             }
             Stepper("Taille des coins : \(Int(settings.cornerLength)) pt",
                     value: $settings.cornerLength, in: 40...300, step: 10)
+            LabeledContent("Bande de déclenchement entre deux écrans : \(Int(settings.innerEdgeThreshold)) pt") {
+                Slider(value: $settings.innerEdgeThreshold, in: 4...80, step: 2)
+            }
+            Text("Sur un bord extérieur le pointeur s'arrête ; à la jonction de deux écrans il passe, d'où une bande plus large.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .formStyle(.grouped)
     }

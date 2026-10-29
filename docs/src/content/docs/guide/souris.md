@@ -18,7 +18,7 @@ Saisissez une fenêtre par sa barre de titre et amenez le **pointeur jusqu'au bo
 - **Relâcher** applique la zone.
 - **S'éloigner du bord** annule l'aperçu : relâcher ne fait alors rien de plus.
 
-Le pointeur doit réellement toucher le bord (à environ 2 points). Un coin correspond à la portion de bord proche d'un angle (120 points par défaut, réglable).
+Sur un **bord extérieur**, le pointeur doit réellement toucher le bord (à environ 2 points) : il s'y arrête de lui-même, la précision n'est donc pas un problème. À la **jonction de deux écrans**, le pointeur passe d'un écran à l'autre sans s'arrêter ; Panes y utilise une bande plus large (24 points par défaut, réglable dans Réglages > Général). Un coin correspond à la portion de bord proche d'un angle (120 points par défaut, réglable).
 
 ## Restauration de la taille
 

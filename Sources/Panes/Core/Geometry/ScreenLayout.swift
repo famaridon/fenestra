@@ -61,6 +61,15 @@ struct ScreenLayout: Sendable {
         return best?.screen
     }
 
+    /// Edges of `screen` that touch another display. The pointer crosses them instead of stopping.
+    func innerEdges(of screen: ScreenInfo) -> Set<Direction> {
+        var edges: Set<Direction> = []
+        for direction in [Direction.left, .right, .up, .down] where neighbor(of: screen, toward: direction) != nil {
+            edges.insert(direction)
+        }
+        return edges
+    }
+
     /// Next screen in reading order (minX, then minY), wrapping around. nil with a single screen.
     func next(after screen: ScreenInfo) -> ScreenInfo? {
         step(from: screen, by: 1)

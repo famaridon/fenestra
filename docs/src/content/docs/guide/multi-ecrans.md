@@ -14,7 +14,7 @@ Toutes les fonctions marchent **sur chaque écran indépendamment** : chaque éc
   - Une fenêtre collée garde sa zone sur le nouvel écran.
   - Une fenêtre non collée est déplacée proportionnellement.
   - Avec un seul écran, il ne se passe rien.
-- **À la souris** : glissez simplement la fenêtre vers le bord de l'écran voulu. La zone est calculée sur l'écran qui contient le pointeur.
+- **À la souris** : glissez simplement la fenêtre vers le bord de l'écran voulu. La zone est calculée sur l'écran qui contient le pointeur. Le long de la jonction entre deux écrans, une bande de 24 points de chaque côté déclenche la moitié correspondante, puisque le pointeur ne s'y arrête pas.
 
 ## Branchement et débranchement
 

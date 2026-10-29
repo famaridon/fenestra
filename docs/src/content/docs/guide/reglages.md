@@ -23,6 +23,7 @@ Ouvrez les réglages depuis le menu de Panes dans la barre des menus. Chaque opt
 | Zones activées | tout sauf les tiers | Active ou désactive chaque zone (moitiés, quarts, plein écran, tiers). Une zone désactivée n'est jamais proposée, sans repli sur une autre. |
 | Marge entre fenêtres | 0 | Espace entre fenêtres et avec les bords de l'écran, en points. |
 | Longueur des coins | 120 | Longueur de bord comptée comme coin pour le glisser. |
+| Bande de déclenchement entre deux écrans | 24 | Largeur, en points, de la zone qui déclenche le snap le long d'un bord partagé avec un autre écran. Les bords extérieurs gardent un seuil de 2 points. |
 | Écran vertical : bord haut = plein écran | désactivé | Sinon le bord haut donne la moitié haute. |
 | Écran vertical : bords gauche / droit | activé | Garde les moitiés gauche / droite sur un écran vertical. |
 
