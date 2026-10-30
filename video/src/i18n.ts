@@ -4,6 +4,7 @@ export type Lang = 'en' | 'fr';
 
 export type Strings = {
 	tagline: string;
+	layouts: [string, string];
 	mouse: [string, string];
 	assist: [string, string];
 	border: [string, string];
@@ -16,6 +17,7 @@ export type Strings = {
 export const strings: Record<Lang, Strings> = {
 	en: {
 		tagline: 'Windows and Ubuntu-style window snapping for macOS',
+		layouts: ['Snap Layouts', 'Rest on the green button, click a zone'],
 		mouse: ['Drag to an edge', 'A preview shows the zone, release to snap'],
 		assist: ['Snap Assist', 'Pick another window to fill the free space'],
 		border: ['Shared border', 'Resize snapped windows together'],
@@ -26,6 +28,7 @@ export const strings: Record<Lang, Strings> = {
 	},
 	fr: {
 		tagline: 'Le snapping de fenêtres façon Windows et Ubuntu, sur macOS',
+		layouts: ['Snap Layouts', 'Survolez le bouton vert, cliquez sur une zone'],
 		mouse: ['Glissez vers un bord', "Un aperçu montre la zone, relâchez pour l'appliquer"],
 		assist: ['Snap Assist', "Choisissez une autre fenêtre pour remplir l'espace libre"],
 		border: ['Bordure partagée', 'Redimensionnez les fenêtres ancrées ensemble'],

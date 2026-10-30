@@ -4,12 +4,13 @@ import { assist } from './scenes/Assist';
 import { border } from './scenes/Border';
 import { displays } from './scenes/Displays';
 import { keyboard } from './scenes/Keyboard';
+import { snapLayouts } from './scenes/Layouts';
 import { mouse } from './scenes/Mouse';
 import type { Scene } from './scenes/shared';
 import { outro, title } from './scenes/Title';
 
 // The video, in order. Add, remove or reorder scenes here.
-const scenes: Scene[] = [title, mouse, assist, border, keyboard, displays, outro];
+const scenes: Scene[] = [title, snapLayouts, mouse, assist, border, keyboard, displays, outro];
 
 const FPS = 30;
 const duration = scenes.reduce((sum, sc) => sum + sc.duration, 0);

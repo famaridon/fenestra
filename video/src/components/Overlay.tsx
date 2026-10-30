@@ -1,6 +1,6 @@
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import type { Point } from '../anim';
-import type { Rect } from '../geometry';
+import type { Rect, Zone } from '../geometry';
 import { theme } from '../theme';
 import { AppIcon, type AppKind, box } from './Desktop';
 
@@ -149,3 +149,114 @@ export const SnapAssist = ({
 		))}
 	</div>
 );
+
+// Snap Layouts palette shown under a window's green button: one miniature display per layout.
+export const PALETTE = { pad: 16, spacing: 14, tile: { w: 132, h: 72 }, columns: 4 };
+
+const MINI_GAP = 5;
+
+// A zone inside a miniature display of the palette.
+const mini = (z: Zone, w: number, h: number): Rect => {
+	const a = { x: MINI_GAP / 2, y: MINI_GAP / 2, w: w - MINI_GAP, h: h - MINI_GAP };
+	const halfW = a.w / 2;
+	const halfH = a.h / 2;
+	const r = (x: number, y: number, rw: number, rh: number): Rect => ({
+		x: x + MINI_GAP / 2,
+		y: y + MINI_GAP / 2,
+		w: rw - MINI_GAP,
+		h: rh - MINI_GAP,
+	});
+	switch (z) {
+		case 'full':
+			return r(a.x, a.y, a.w, a.h);
+		case 'left':
+			return r(a.x, a.y, halfW, a.h);
+		case 'right':
+			return r(a.x + halfW, a.y, halfW, a.h);
+		case 'top':
+			return r(a.x, a.y, a.w, halfH);
+		case 'bottom':
+			return r(a.x, a.y + halfH, a.w, halfH);
+		case 'topLeft':
+			return r(a.x, a.y, halfW, halfH);
+		case 'topRight':
+			return r(a.x + halfW, a.y, halfW, halfH);
+		case 'bottomLeft':
+			return r(a.x, a.y + halfH, halfW, halfH);
+		case 'bottomRight':
+			return r(a.x + halfW, a.y + halfH, halfW, halfH);
+	}
+};
+
+const tileOrigin = (at: Point, index: number): Point => ({
+	x: at.x + PALETTE.pad + (index % PALETTE.columns) * (PALETTE.tile.w + PALETTE.spacing),
+	y: at.y + PALETTE.pad + Math.floor(index / PALETTE.columns) * (PALETTE.tile.h + PALETTE.spacing),
+});
+
+// Stage rect of a zone of the palette whose top-left corner is `at`, to aim the pointer.
+export const paletteZone = (at: Point, index: number, z: Zone): Rect => {
+	const o = tileOrigin(at, index);
+	const m = mini(z, PALETTE.tile.w, PALETTE.tile.h);
+	return { ...m, x: o.x + m.x, y: o.y + m.y };
+};
+
+export const SnapLayouts = ({
+	at,
+	layouts,
+	hovered,
+	opacity,
+}: {
+	at: Point;
+	layouts: Zone[][];
+	hovered: { index: number; zone: Zone } | null;
+	opacity: number;
+}) => {
+	const columns = Math.min(layouts.length, PALETTE.columns);
+	const rows = Math.ceil(layouts.length / PALETTE.columns);
+	const { pad, spacing, tile } = PALETTE;
+	return (
+		<div
+			style={{
+				...box({
+					x: at.x,
+					y: at.y,
+					w: columns * tile.w + (columns - 1) * spacing + 2 * pad,
+					h: rows * tile.h + (rows - 1) * spacing + 2 * pad,
+				}),
+				opacity,
+				transform: `scale(${0.94 + 0.06 * opacity})`,
+				transformOrigin: '30px 0',
+				borderRadius: 16,
+				background: 'rgba(28,32,46,.82)',
+				backdropFilter: 'blur(24px)',
+				border: '1px solid rgba(255,255,255,.18)',
+				boxShadow: '0 18px 50px rgba(0,0,0,.45)',
+			}}
+		>
+			{layouts.map((zones, index) => {
+				const o = tileOrigin({ x: 0, y: 0 }, index);
+				return (
+					<div
+						key={zones.join('+')}
+						style={{ ...box({ ...o, ...tile }), borderRadius: 8, background: 'rgba(255,255,255,.07)' }}
+					>
+						{zones.map((z) => {
+							const on = hovered?.index === index && hovered.zone === z;
+							return (
+								<div
+									key={z}
+									style={{
+										...box(mini(z, tile.w, tile.h)),
+										borderRadius: 5,
+										background: on ? theme.accent : 'rgba(255,255,255,.26)',
+										border: `1px solid ${on ? '#9bb8ff' : 'rgba(255,255,255,.18)'}`,
+									}}
+								/>
+							);
+						})}
+					</div>
+				);
+			})}
+		</div>
+	);
+};
