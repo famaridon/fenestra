@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Fenestra">
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#3b7bf5"/>
+			<stop offset="1" stop-color="#1d58d6"/>
+		</linearGradient>
+		<clipPath id="arch">
+			<path d="M26 108V58a38 38 0 0 1 76 0v50z"/>
+		</clipPath>
+	</defs>
+	<rect width="128" height="128" rx="28" fill="url(#bg)"/>
+	<g clip-path="url(#arch)">
+		<rect x="26" y="18" width="34" height="90" fill="#fff"/>
+		<rect x="68" y="18" width="34" height="40" fill="#fff" fill-opacity=".55"/>
+		<rect x="68" y="66" width="34" height="42" fill="#fff" fill-opacity=".55"/>
+	</g>
+</svg>

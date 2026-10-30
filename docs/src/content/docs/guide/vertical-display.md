@@ -24,7 +24,22 @@ On a landscape display, the bottom edge does nothing and the top edge gives full
 | `⌃⌥↑` | Top half | Top half: full screen. Bottom half: moves up to the display above (otherwise top half). |
 | `⌃⌥↓` | Bottom half | Top half: moves down to the display below (otherwise bottom half). Bottom half or full screen: restore. |
 
-`⌃⌥←` and `⌃⌥→` always give the left and right halves, and `↑`/`↓` on those halves give the quarters, as on a landscape display.
+## Quarters: the split goes the other way
+
+On a landscape display, `↑`/`↓` cut a left or right half into quarters. On a vertical display, it is the other way around: `←`/`→` cut the **top or bottom half** into quarters.
+
+| Shortcut | From | Result |
+|---|---|---|
+| `⌃⌥←` / `⌃⌥→` | Top half | Top-left / top-right quarter |
+| `⌃⌥←` / `⌃⌥→` | Bottom half | Bottom-left / bottom-right quarter |
+| `⌃⌥→` / `⌃⌥←` | Top-left / top-right quarter | Back to the top half (same for the bottom quarters) |
+| `⌃⌥↑` / `⌃⌥↓` | Bottom / top quarter | The quarter above / below, on the same side |
+
+For example: `⌃⌥↑` (top half), then `⌃⌥←` (top-left quarter), then `⌃⌥→` (back to the top half).
+
+On a window that is not snapped, or already on a left or right half, `⌃⌥←` and `⌃⌥→` still give the left and right halves and move to the neighboring display, as on a landscape display.
+
+To get the landscape behavior back (quarters cut from the left and right halves with `↑`/`↓`), turn off **Vertical display: ← and → cut the top and bottom halves into quarters** in the **Zones** tab of the [settings](/fenestra/guide/settings/).
 
 ## "Top edge = full screen" option
 

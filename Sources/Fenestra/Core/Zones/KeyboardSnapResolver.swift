@@ -16,6 +16,10 @@ enum SnapCommand: Sendable, Equatable {
 
 /// Pure decision table for keyboard snapping (see ARCHITECTURE.md).
 struct KeyboardSnapResolver: Sendable {
+    /// Portrait screens: ← / → cut the top or bottom half into quarters, mirroring how ↑ / ↓ cut
+    /// a side half on landscape screens. Off: quarters come from the left / right halves, as on landscape.
+    var portraitArrowsSplitHalves = true
+
     /// `state` is nil when the window is not snapped. `screen` is the window's current screen.
     /// A state recorded on another screen is treated as "not snapped".
     func command(for action: SnapAction, state: WindowSnapState?, on screen: ScreenInfo, layout: ScreenLayout) -> SnapCommand {
@@ -23,10 +27,12 @@ struct KeyboardSnapResolver: Sendable {
         let portrait = screen.orientation == .portrait
 
         switch action {
-        case .left:
-            return horizontal(.left, zone: zone, screen: screen, layout: layout)
-        case .right:
-            return horizontal(.right, zone: zone, screen: screen, layout: layout)
+        case .left, .right:
+            let direction: Direction = action == .left ? .left : .right
+            if portrait, portraitArrowsSplitHalves, let split = splitHalf(direction, zone: zone, screen: screen) {
+                return split
+            }
+            return horizontal(direction, zone: zone, screen: screen, layout: layout)
         case .up:
             return portrait ? upPortrait(zone: zone, screen: screen, layout: layout) : upLandscape(zone: zone, screen: screen)
         case .down:
@@ -78,6 +84,20 @@ struct KeyboardSnapResolver: Sendable {
         return .place(isLeft ? .leftHalf : .rightHalf, on: screen)
     }
 
+    /// Portrait with `portraitArrowsSplitHalves`: a top or bottom half and its quarters.
+    /// Nil for every other zone, which falls back to `horizontal`.
+    private func splitHalf(_ direction: Direction, zone: Zone?, screen: ScreenInfo) -> SnapCommand? {
+        let isLeft = direction == .left
+        switch zone {
+        case .topHalf: return .place(isLeft ? .topLeft : .topRight, on: screen)
+        case .bottomHalf: return .place(isLeft ? .bottomLeft : .bottomRight, on: screen)
+        // Back to the whole half from the other quarter.
+        case .topRight where isLeft, .topLeft where !isLeft: return .place(.topHalf, on: screen)
+        case .bottomRight where isLeft, .bottomLeft where !isLeft: return .place(.bottomHalf, on: screen)
+        default: return nil
+        }
+    }
+
     // MARK: Up / down
 
     private func upLandscape(zone: Zone?, screen: ScreenInfo) -> SnapCommand {
@@ -99,8 +119,8 @@ struct KeyboardSnapResolver: Sendable {
             return .place(.topHalf, on: screen)
         case .leftHalf: return .place(.topLeft, on: screen)
         case .rightHalf: return .place(.topRight, on: screen)
-        case .bottomLeft: return .place(.leftHalf, on: screen)
-        case .bottomRight: return .place(.rightHalf, on: screen)
+        case .bottomLeft: return .place(portraitArrowsSplitHalves ? .topLeft : .leftHalf, on: screen)
+        case .bottomRight: return .place(portraitArrowsSplitHalves ? .topRight : .rightHalf, on: screen)
         case .maximize, .topLeft, .topRight: return .none
         default: return .place(.topHalf, on: screen)  // nil, thirds
         }
@@ -125,8 +145,8 @@ struct KeyboardSnapResolver: Sendable {
             return .place(.bottomHalf, on: screen)
         case .leftHalf: return .place(.bottomLeft, on: screen)
         case .rightHalf: return .place(.bottomRight, on: screen)
-        case .topLeft: return .place(.leftHalf, on: screen)
-        case .topRight: return .place(.rightHalf, on: screen)
+        case .topLeft: return .place(portraitArrowsSplitHalves ? .bottomLeft : .leftHalf, on: screen)
+        case .topRight: return .place(portraitArrowsSplitHalves ? .bottomRight : .rightHalf, on: screen)
         default: return .place(.bottomHalf, on: screen)  // nil, thirds
         }
     }

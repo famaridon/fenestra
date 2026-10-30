@@ -10,7 +10,6 @@ final class SnapController {
 
     private let settings: Settings
     private let preview = SnapPreviewPanel()
-    private let keyboardResolver = KeyboardSnapResolver()
     private(set) var registry = SnapRegistry<AXWindow>()
     var snapAssist: SnapAssistController?
     private(set) lazy var sharedBorder = SharedBorderController(snapController: self)
@@ -172,7 +171,7 @@ final class SnapController {
                 registry.remove(window)
             }
         }
-        switch keyboardResolver.command(for: action, state: state, on: screen, layout: layout) {
+        switch settings.keyboardResolver.command(for: action, state: state, on: screen, layout: layout) {
         case .place(let zone, let target):
             place(window, zone: zone, on: target)
             window.raise()

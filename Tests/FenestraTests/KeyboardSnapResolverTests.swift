@@ -6,6 +6,8 @@ struct KeyboardSnapResolverTests {
     let landscape = Fixtures.primary  // id 1
     let portrait = Fixtures.portrait  // id 2, to the right of the landscape one
     let resolver = KeyboardSnapResolver()
+    /// Portrait quarters taken from the left / right halves, as on landscape.
+    let withoutSplit = KeyboardSnapResolver(portraitArrowsSplitHalves: false)
 
     /// A portrait screen stacked above `portrait` (id 3) and one below (id 4).
     var stacked: (above: ScreenInfo, below: ScreenInfo, layout: ScreenLayout) {
@@ -23,12 +25,14 @@ struct KeyboardSnapResolverTests {
         case none
     }
 
-    private func run(_ action: SnapAction, _ zone: Zone?, on screen: ScreenInfo, layout: ScreenLayout) -> SnapCommand {
+    private func run(_ action: SnapAction, _ zone: Zone?, on screen: ScreenInfo, layout: ScreenLayout,
+                     resolver: KeyboardSnapResolver? = nil) -> SnapCommand {
         let state = zone.map { WindowSnapState(zone: $0, screenID: screen.id) }
-        return resolver.command(for: action, state: state, on: screen, layout: layout)
+        return (resolver ?? self.resolver).command(for: action, state: state, on: screen, layout: layout)
     }
 
     private func check(_ action: SnapAction, on screen: ScreenInfo, layout: ScreenLayout,
+                       resolver: KeyboardSnapResolver? = nil,
                        _ table: [(Zone?, Expect)], sourceLocation: SourceLocation = #_sourceLocation) {
         for (zone, expect) in table {
             let expected: SnapCommand = switch expect {
@@ -36,7 +40,7 @@ struct KeyboardSnapResolverTests {
             case .restore: .restore
             case .none: .none
             }
-            let got = run(action, zone, on: screen, layout: layout)
+            let got = run(action, zone, on: screen, layout: layout, resolver: resolver)
             #expect(got == expected, "\(action) from \(String(describing: zone)) on screen \(screen.id)", sourceLocation: sourceLocation)
         }
     }
@@ -101,21 +105,53 @@ struct KeyboardSnapResolverTests {
         #expect(run(.right, .rightHalf, on: landscape, layout: layout) == .place(.leftHalf, on: portrait))
     }
 
-    @Test func leftRightWorkOnPortraitToo() {
+    @Test func leftRightOnPortraitWithoutSplit() {
         let solo = ScreenLayout(screens: [portrait])
-        check(.left, on: portrait, layout: solo, [
+        check(.left, on: portrait, layout: solo, resolver: withoutSplit, [
             (nil, .place(.leftHalf)),
             (.topHalf, .place(.leftHalf)),
             (.rightHalf, .place(.leftHalf)),
             (.bottomRight, .place(.bottomLeft)),
             (.leftHalf, .restore),
         ])
-        check(.right, on: portrait, layout: solo, [
+        check(.right, on: portrait, layout: solo, resolver: withoutSplit, [
             (nil, .place(.rightHalf)),
             (.bottomHalf, .place(.rightHalf)),
             (.topLeft, .place(.topRight)),
             (.rightHalf, .restore),
         ])
+    }
+
+    @Test func leftRightSplitTopAndBottomHalvesOnPortrait() {
+        let solo = ScreenLayout(screens: [portrait])
+        check(.left, on: portrait, layout: solo, [
+            (nil, .place(.leftHalf)),
+            (.topHalf, .place(.topLeft)),
+            (.bottomHalf, .place(.bottomLeft)),
+            (.topRight, .place(.topHalf)),
+            (.bottomRight, .place(.bottomHalf)),
+            (.rightHalf, .place(.leftHalf)),
+            (.leftHalf, .restore),
+            (.topLeft, .restore),
+            (.bottomLeft, .restore),
+        ])
+        check(.right, on: portrait, layout: solo, [
+            (nil, .place(.rightHalf)),
+            (.topHalf, .place(.topRight)),
+            (.bottomHalf, .place(.bottomRight)),
+            (.topLeft, .place(.topHalf)),
+            (.bottomLeft, .place(.bottomHalf)),
+            (.leftHalf, .place(.rightHalf)),
+            (.rightHalf, .restore),
+            (.topRight, .restore),
+            (.bottomRight, .restore),
+        ])
+    }
+
+    @Test func splitDoesNotChangeLandscape() {
+        let solo = ScreenLayout(screens: [landscape])
+        check(.left, on: landscape, layout: solo, [(.topHalf, .place(.leftHalf)), (.topRight, .place(.topLeft))])
+        check(.up, on: landscape, layout: solo, [(.bottomLeft, .place(.leftHalf))])
     }
 
     // MARK: up / down, landscape
@@ -166,8 +202,8 @@ struct KeyboardSnapResolverTests {
             (.bottomHalf, .place(.topHalf)),
             (.leftHalf, .place(.topLeft)),
             (.rightHalf, .place(.topRight)),
-            (.bottomLeft, .place(.leftHalf)),
-            (.bottomRight, .place(.rightHalf)),
+            (.bottomLeft, .place(.topLeft)),
+            (.bottomRight, .place(.topRight)),
             (.maximize, .none),
             (.topLeft, .none),
             (.topRight, .none),
@@ -177,6 +213,40 @@ struct KeyboardSnapResolverTests {
     @Test func downPortraitWithoutNeighbour() {
         let layout = Fixtures.twoScreens
         check(.down, on: portrait, layout: layout, [
+            (nil, .place(.bottomHalf)),
+            (.rightThird, .place(.bottomHalf)),
+            (.maximize, .restore),
+            (.topHalf, .place(.bottomHalf)),
+            (.bottomHalf, .restore),
+            (.leftHalf, .place(.bottomLeft)),
+            (.rightHalf, .place(.bottomRight)),
+            (.topLeft, .place(.bottomLeft)),
+            (.topRight, .place(.bottomRight)),
+            (.bottomLeft, .restore),
+            (.bottomRight, .restore),
+        ])
+    }
+
+    @Test func upPortraitWithoutNeighbourWithoutSplit() {
+        let layout = Fixtures.twoScreens
+        check(.up, on: portrait, layout: layout, resolver: withoutSplit, [
+            (nil, .place(.topHalf)),
+            (.leftThird, .place(.topHalf)),
+            (.topHalf, .place(.maximize)),
+            (.bottomHalf, .place(.topHalf)),
+            (.leftHalf, .place(.topLeft)),
+            (.rightHalf, .place(.topRight)),
+            (.bottomLeft, .place(.leftHalf)),
+            (.bottomRight, .place(.rightHalf)),
+            (.maximize, .none),
+            (.topLeft, .none),
+            (.topRight, .none),
+        ])
+    }
+
+    @Test func downPortraitWithoutNeighbourWithoutSplit() {
+        let layout = Fixtures.twoScreens
+        check(.down, on: portrait, layout: layout, resolver: withoutSplit, [
             (nil, .place(.bottomHalf)),
             (.rightThird, .place(.bottomHalf)),
             (.maximize, .restore),

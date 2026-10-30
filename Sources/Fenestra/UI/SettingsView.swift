@@ -108,6 +108,8 @@ private struct ZonesTab: View {
             Section("Écran vertical") {
                 Toggle("Le bord haut passe en plein écran", isOn: $settings.portraitTopEdgeMaximizes)
                 Toggle("Bords gauche/droit actifs", isOn: $settings.portraitSideEdgesEnabled)
+                Toggle("Au clavier, ← et → coupent les moitiés haute et basse en quarts",
+                       isOn: $settings.portraitArrowsSplitHalves)
             }
         }
         .formStyle(.grouped)

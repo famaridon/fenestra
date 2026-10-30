@@ -28,6 +28,7 @@ The main **Enable Fenestra** switch is in the menu bar menu.
 | Halves, quarters, full screen, thirds | all but thirds | Turns each zone on or off. A disabled zone is never offered, and there is no fallback to another one. |
 | Vertical display: top edge goes full screen | off | Otherwise the top edge gives the top half. |
 | Vertical display: left/right edges active | on | Keeps the left / right halves on a vertical display. |
+| Vertical display: ← and → cut the top and bottom halves into quarters | on | Otherwise quarters come from the left / right halves, as on a landscape display. See [Vertical displays](/fenestra/guide/vertical-display/#quarters-the-split-goes-the-other-way). |
 
 ## Shortcuts
 

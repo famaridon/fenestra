@@ -180,16 +180,21 @@ enum SnapCommand: Sendable, Equatable {
 }
 
 struct KeyboardSnapResolver: Sendable {
+    /// Portrait : ← / → coupent la moitié haute ou basse en quarts (Settings.portraitArrowsSplitHalves, true).
+    var portraitArrowsSplitHalves = true
     /// `state` = nil si la fenêtre n'est pas collée. `screen` = écran courant de la fenêtre.
     func command(for action: SnapAction, state: WindowSnapState?, on screen: ScreenInfo, layout: ScreenLayout) -> SnapCommand
 }
 ```
 
-Table de `KeyboardSnapResolver` (P = portrait, L = paysage, « voisin » = `layout.neighbor`).
-Si `state.screenID != screen.id`, on considère la fenêtre comme non collée.
+Table de `KeyboardSnapResolver` (P = portrait, L = paysage, « voisin » = `layout.neighbor`,
+« split » = `portraitArrowsSplitHalves`). Si `state.screenID != screen.id`, on considère la fenêtre comme non collée.
 
 | action | état courant | résultat |
 |---|---|---|
+| left (P, split) | topHalf / bottomHalf | topLeft / bottomLeft |
+| left (P, split) | topRight / bottomRight | topHalf / bottomHalf |
+| left (P, split) | autres zones | comme en paysage (lignes ci-dessous) |
 | left | non collée, maximize, topHalf, bottomHalf, tiers | leftHalf |
 | left | rightHalf / topRight / bottomRight | leftHalf / topLeft / bottomLeft |
 | left | leftHalf / topLeft / bottomLeft | voisin gauche : zone miroir (rightHalf / topRight / bottomRight) sur le voisin ; sans voisin : restore |
@@ -202,7 +207,7 @@ Si `state.screenID != screen.id`, on considère la fenêtre comme non collée.
 | up (P) | topHalf | maximize |
 | up (P) | bottomHalf | voisin haut : bottomHalf sur le voisin ; sinon topHalf |
 | up (P) | leftHalf / rightHalf | topLeft / topRight |
-| up (P) | bottomLeft / bottomRight | leftHalf / rightHalf |
+| up (P) | bottomLeft / bottomRight | split : topLeft / topRight ; sinon leftHalf / rightHalf |
 | up (P) | maximize, topLeft, topRight | none |
 | down (L) | non collée | none |
 | down (L) | maximize, bottomLeft, bottomRight, topHalf, bottomHalf, tiers | restore |
@@ -213,7 +218,7 @@ Si `state.screenID != screen.id`, on considère la fenêtre comme non collée.
 | down (P) | topHalf | voisin bas : topHalf sur le voisin ; sinon bottomHalf |
 | down (P) | bottomHalf | restore |
 | down (P) | leftHalf / rightHalf | bottomLeft / bottomRight |
-| down (P) | topLeft / topRight | leftHalf / rightHalf |
+| down (P) | topLeft / topRight | split : bottomLeft / bottomRight ; sinon leftHalf / rightHalf |
 | down (P) | bottomLeft / bottomRight | restore |
 | topLeft… bottomRight, maximize, tiers | tout | place(zone) sur l'écran courant ; si déjà cette zone sur cet écran : none |
 | restore | collée / non collée | restore / none |
@@ -337,6 +342,7 @@ Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_,
     var enabledZones: Set<Zone>              // Zone.defaultEnabled
     var portraitTopEdgeMaximizes: Bool       // false
     var portraitSideEdgesEnabled: Bool       // true
+    var portraitArrowsSplitHalves: Bool      // true ; voir KeyboardSnapResolver
     var sharedBorderEnabled: Bool            // F5, true
     var snapAssistEnabled: Bool              // F8, true
     var snapAssistPreviews: Bool             // F8, false ; demande l'enregistrement de l'écran

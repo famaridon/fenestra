@@ -16,6 +16,7 @@ final class Settings {
     var enabledZones: Set<Zone> { didSet { storeJSON(enabledZones, "enabledZones") } }
     var portraitTopEdgeMaximizes: Bool { didSet { store(portraitTopEdgeMaximizes, "portraitTopEdgeMaximizes") } }
     var portraitSideEdgesEnabled: Bool { didSet { store(portraitSideEdgesEnabled, "portraitSideEdgesEnabled") } }
+    var portraitArrowsSplitHalves: Bool { didSet { store(portraitArrowsSplitHalves, "portraitArrowsSplitHalves") } }
     var sharedBorderEnabled: Bool { didSet { store(sharedBorderEnabled, "sharedBorderEnabled") } }
     var snapAssistEnabled: Bool { didSet { store(snapAssistEnabled, "snapAssistEnabled") } }
     /// Window thumbnails in Snap Assist; needs the Screen Recording permission.
@@ -41,6 +42,7 @@ final class Settings {
         enabledZones = Self.loadJSON(Set<Zone>.self, "enabledZones", defaults) ?? Zone.defaultEnabled
         portraitTopEdgeMaximizes = defaults.object(forKey: "portraitTopEdgeMaximizes") as? Bool ?? false
         portraitSideEdgesEnabled = defaults.object(forKey: "portraitSideEdgesEnabled") as? Bool ?? true
+        portraitArrowsSplitHalves = defaults.object(forKey: "portraitArrowsSplitHalves") as? Bool ?? true
         sharedBorderEnabled = defaults.object(forKey: "sharedBorderEnabled") as? Bool ?? true
         snapAssistEnabled = defaults.object(forKey: "snapAssistEnabled") as? Bool ?? true
         snapAssistPreviews = defaults.object(forKey: "snapAssistPreviews") as? Bool ?? false
@@ -62,6 +64,10 @@ final class Settings {
     func isExcluded(bundleIdentifier: String?) -> Bool {
         guard let bundleIdentifier else { return false }
         return excludedBundleIdentifiers.contains(bundleIdentifier)
+    }
+
+    var keyboardResolver: KeyboardSnapResolver {
+        KeyboardSnapResolver(portraitArrowsSplitHalves: portraitArrowsSplitHalves)
     }
 
     var dragResolverConfig: DragZoneResolver.Config {

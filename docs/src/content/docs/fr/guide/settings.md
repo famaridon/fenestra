@@ -28,6 +28,7 @@ L'interrupteur général **Activer Fenestra** se trouve dans le menu de la barre
 | Moitiés, quarts, plein écran, tiers | tout sauf les tiers | Active ou désactive chaque zone. Une zone désactivée n'est jamais proposée, sans repli sur une autre. |
 | Écran vertical : le bord haut passe en plein écran | désactivé | Sinon le bord haut donne la moitié haute. |
 | Écran vertical : bords gauche/droit actifs | activé | Garde les moitiés gauche / droite sur un écran vertical. |
+| Écran vertical : au clavier, ← et → coupent les moitiés haute et basse en quarts | activé | Sinon les quarts sont tirés des moitiés gauche / droite, comme sur un écran paysage. Voir [Écran vertical](/fenestra/fr/guide/vertical-display/#quarts--le-découpage-dans-lautre-sens). |
 
 ## Raccourcis
 
