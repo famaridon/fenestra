@@ -20,7 +20,7 @@ struct FenestraApp: App {
                 .environment(controller)
         }
 
-        Window("Bienvenue dans Fenestra", id: "onboarding") {
+        Window("Welcome to Fenestra", id: "onboarding") {
             OnboardingView()
                 .environment(controller)
         }

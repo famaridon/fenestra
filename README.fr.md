@@ -16,6 +16,8 @@
 - Écrans multiples et verticaux, réapplication automatique au changement de configuration.
 - Applications exclues, marges entre fenêtres, lancement à la connexion.
 
+L'app est en anglais et en français, selon la langue de macOS.
+
 Le besoin complet est décrit dans [BESOIN.md](BESOIN.md), l'architecture et les contrats entre modules dans [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Installer

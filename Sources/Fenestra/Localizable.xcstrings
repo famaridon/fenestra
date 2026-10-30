@@ -1,0 +1,669 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "1. Open System Settings and allow Fenestra under Accessibility." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Ouvrez les Réglages Système et autorisez Fenestra dans Accessibilité."
+          }
+        }
+      }
+    },
+    "2. Drag a window to an edge or a corner of the screen." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Glissez une fenêtre vers un bord ou un coin de l'écran."
+          }
+        }
+      }
+    },
+    "3. Release it: the window fills the highlighted zone." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Relâchez : la fenêtre se place dans la zone affichée."
+          }
+        }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos"
+          }
+        }
+      }
+    },
+    "Accessibility granted" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accessibilité autorisée"
+          }
+        }
+      }
+    },
+    "Accessibility not granted" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accessibilité non autorisée"
+          }
+        }
+      }
+    },
+    "Arrange Window" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disposer la fenêtre"
+          }
+        }
+      }
+    },
+    "Bottom Half" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moitié basse"
+          }
+        }
+      }
+    },
+    "Bottom Left Quarter" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quart bas gauche"
+          }
+        }
+      }
+    },
+    "Bottom Right Quarter" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quart bas droit"
+          }
+        }
+      }
+    },
+    "Center Third" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiers central"
+          }
+        }
+      }
+    },
+    "Clear Shortcut" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer le raccourci"
+          }
+        }
+      }
+    },
+    "Click to Set" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cliquer pour définir"
+          }
+        }
+      }
+    },
+    "Corner size: %lld pt" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille des coins : %lld pt"
+          }
+        }
+      }
+    },
+    "Documentation" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Documentation"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer"
+          }
+        }
+      }
+    },
+    "Enable Fenestra" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer Fenestra"
+          }
+        }
+      }
+    },
+    "Exclusions" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclusions"
+          }
+        }
+      }
+    },
+    "Fenestra" : {
+      "shouldTranslate" : false
+    },
+    "Fenestra never moves the windows of these apps." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fenestra ne déplace jamais les fenêtres de ces applications."
+          }
+        }
+      }
+    },
+    "Full Screen" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plein écran"
+          }
+        }
+      }
+    },
+    "Gap between windows: %lld pt" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marge entre fenêtres : %lld pt"
+          }
+        }
+      }
+    },
+    "General" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
+          }
+        }
+      }
+    },
+    "Grant Access…" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser l'accès…"
+          }
+        }
+      }
+    },
+    "Halves" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moitiés"
+          }
+        }
+      }
+    },
+    "Launch at login" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancer à l'ouverture de session"
+          }
+        }
+      }
+    },
+    "Left and right edges active" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bords gauche/droit actifs"
+          }
+        }
+      }
+    },
+    "Left Half" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moitié gauche"
+          }
+        }
+      }
+    },
+    "Left Third" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiers gauche"
+          }
+        }
+      }
+    },
+    "Left Two Thirds" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deux tiers gauches"
+          }
+        }
+      }
+    },
+    "Move Down" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vers le bas"
+          }
+        }
+      }
+    },
+    "Move Left" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vers la gauche"
+          }
+        }
+      }
+    },
+    "Move Right" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vers la droite"
+          }
+        }
+      }
+    },
+    "Move Up" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vers le haut"
+          }
+        }
+      }
+    },
+    "Next Display" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écran suivant"
+          }
+        }
+      }
+    },
+    "Open System Settings" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les Réglages Système"
+          }
+        }
+      }
+    },
+    "Open System Settings…" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les Réglages Système…"
+          }
+        }
+      }
+    },
+    "Previews need the Screen & System Audio Recording permission. Without it, Snap Assist shows the app icons. Once the permission is granted, relaunch Fenestra if macOS asks you to." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les aperçus demandent l'autorisation d'enregistrement de l'écran. Sans elle, Snap Assist affiche les icônes des applications. Une fois l'autorisation accordée, relancez Fenestra si macOS le demande."
+          }
+        }
+      }
+    },
+    "Previous Display" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écran précédent"
+          }
+        }
+      }
+    },
+    "Quarters" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quarts"
+          }
+        }
+      }
+    },
+    "Quit Fenestra" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitter Fenestra"
+          }
+        }
+      }
+    },
+    "Recommended: turn off the built-in macOS tiling in System Settings > Desktop & Dock > Windows." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommandé : désactivez le placement natif de macOS dans Réglages Système > Bureau et Dock > Fenêtres."
+          }
+        }
+      }
+    },
+    "Restore Default Shortcuts" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rétablir les raccourcis par défaut"
+          }
+        }
+      }
+    },
+    "Restore original size when unsnapping" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer la taille d'origine au décollage"
+          }
+        }
+      }
+    },
+    "Restore Size" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer la taille"
+          }
+        }
+      }
+    },
+    "Right Half" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moitié droite"
+          }
+        }
+      }
+    },
+    "Right Third" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiers droit"
+          }
+        }
+      }
+    },
+    "Right Two Thirds" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deux tiers droits"
+          }
+        }
+      }
+    },
+    "Settings…" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages…"
+          }
+        }
+      }
+    },
+    "Shared border between snapped windows" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bordure partagée entre fenêtres collées"
+          }
+        }
+      }
+    },
+    "Shortcuts" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raccourcis"
+          }
+        }
+      }
+    },
+    "Snap Assist" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snap Assist"
+          }
+        }
+      }
+    },
+    "Snap windows by dragging them to an edge" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Placer les fenêtres en les glissant vers un bord"
+          }
+        }
+      }
+    },
+    "The pointer stops on an outer edge, but crosses the junction between two displays, hence a wider band." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sur un bord extérieur le pointeur s'arrête ; à la jonction de deux écrans il passe, d'où une bande plus large."
+          }
+        }
+      }
+    },
+    "Thirds" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiers"
+          }
+        }
+      }
+    },
+    "Top edge goes full screen" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le bord haut passe en plein écran"
+          }
+        }
+      }
+    },
+    "Top Half" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moitié haute"
+          }
+        }
+      }
+    },
+    "Top Left Quarter" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quart haut gauche"
+          }
+        }
+      }
+    },
+    "Top Right Quarter" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quart haut droit"
+          }
+        }
+      }
+    },
+    "Trigger band between two displays: %lld pt" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bande de déclenchement entre deux écrans : %lld pt"
+          }
+        }
+      }
+    },
+    "Type the shortcut…" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapez le raccourci…"
+          }
+        }
+      }
+    },
+    "Vertical Display" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écran vertical"
+          }
+        }
+      }
+    },
+    "Welcome to Fenestra" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue dans Fenestra"
+          }
+        }
+      }
+    },
+    "Window previews in Snap Assist" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu des fenêtres dans Snap Assist"
+          }
+        }
+      }
+    },
+    "Window snapping with the mouse or the keyboard, as on Windows." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Placement de fenêtres à la souris ou au clavier, comme sous Windows."
+          }
+        }
+      }
+    },
+    "With the keyboard, ← and → cut the top and bottom halves into quarters" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au clavier, ← et → coupent les moitiés haute et basse en quarts"
+          }
+        }
+      }
+    },
+    "Zones" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zones"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

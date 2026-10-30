@@ -14,7 +14,7 @@ qui permet l'assemblage final.
   `NSEvent.mouseLocation` utilisent l'origine en bas à gauche : la conversion
   se fait **uniquement** dans `ScreenGeometry`.
 - Pas d'API privée (NF4). Pas de dépendance externe (pas de SwiftPM tiers).
-- Textes d'interface en **français**. Identifiants de code en anglais.
+- Textes d'interface écrits en **anglais** dans le code et traduits dans `Sources/Fenestra/Localizable.xcstrings` (français) ; l'app suit la langue de macOS. Identifiants de code en anglais.
 - Pas de `print` de debug dans le code livré ; utiliser `os.Logger`
   (`Logger(subsystem: "com.florentamaridon.Fenestra", category: "<module>")`).
 

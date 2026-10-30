@@ -8,20 +8,20 @@ struct MenuBarView: View {
     var body: some View {
         @Bindable var settings = controller.settings
         if controller.permission.isGranted {
-            Text("Accessibilité autorisée")
+            Text("Accessibility granted")
         } else {
-            Text("Accessibilité non autorisée")
-            Button("Autoriser l'accès…") { controller.permission.request() }
+            Text("Accessibility not granted")
+            Button("Grant Access…") { controller.permission.request() }
         }
         Divider()
-        Toggle("Activer Fenestra", isOn: $settings.isEnabled)
-        Menu("Disposer la fenêtre") {
+        Toggle("Enable Fenestra", isOn: $settings.isEnabled)
+        Menu("Arrange Window") {
             ForEach(SnapAction.allCases) { action in
                 Button {
                     controller.perform(action)
                 } label: {
                     if let shortcut = settings.shortcuts[action] {
-                        Text("\(action.localizedName)  \(shortcut.displayString)")
+                        Text(verbatim: "\(action.localizedName)  \(shortcut.displayString)")
                     } else {
                         Text(action.localizedName)
                     }
@@ -29,12 +29,12 @@ struct MenuBarView: View {
             }
         }
         Divider()
-        Button("Réglages…") {
+        Button("Settings…") {
             NSApplication.shared.activate()
             openSettings()
         }
         .keyboardShortcut(",")
-        Button("Quitter Fenestra") { NSApplication.shared.terminate(nil) }
+        Button("Quit Fenestra") { NSApplication.shared.terminate(nil) }
             .keyboardShortcut("q")
     }
 }

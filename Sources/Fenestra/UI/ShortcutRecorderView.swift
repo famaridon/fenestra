@@ -13,14 +13,22 @@ struct ShortcutRecorderView: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            Button(isRecording ? "Tapez le raccourci…" : (shortcut?.displayString ?? "Cliquer pour définir")) {
+            Button {
                 isRecording ? stopRecording() : startRecording()
+            } label: {
+                if isRecording {
+                    Text("Type the shortcut…")
+                } else if let shortcut {
+                    Text(verbatim: shortcut.displayString)
+                } else {
+                    Text("Click to Set")
+                }
             }
             .frame(minWidth: 130)
             Button { shortcut = nil } label: { Image(systemName: "xmark.circle.fill") }
                 .buttonStyle(.borderless)
                 .disabled(shortcut == nil)
-                .help("Effacer le raccourci")
+                .help("Clear Shortcut")
         }
         .onDisappear { stopRecording() }
     }

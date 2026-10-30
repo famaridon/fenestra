@@ -9,7 +9,7 @@ struct ExcludedAppsView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Fenestra ne déplace jamais les fenêtres de ces applications.")
+            Text("Fenestra never moves the windows of these apps.")
                 .foregroundStyle(.secondary)
             List(controller.settings.excludedBundleIdentifiers, id: \.self, selection: $selection) { id in
                 HStack {

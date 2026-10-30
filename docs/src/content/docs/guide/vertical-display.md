@@ -39,7 +39,7 @@ For example: `⌃⌥↑` (top half), then `⌃⌥←` (top-left quarter), then `
 
 On a window that is not snapped, or already on a left or right half, `⌃⌥←` and `⌃⌥→` still give the left and right halves and move to the neighboring display, as on a landscape display.
 
-To get the landscape behavior back (quarters cut from the left and right halves with `↑`/`↓`), turn off **Vertical display: ← and → cut the top and bottom halves into quarters** in the **Zones** tab of the [settings](/fenestra/guide/settings/).
+To get the landscape behavior back (quarters cut from the left and right halves with `↑`/`↓`), turn off **With the keyboard, ← and → cut the top and bottom halves into quarters** in the **Vertical Display** section of the **Zones** tab of the [settings](/fenestra/guide/settings/).
 
 ## "Top edge = full screen" option
 

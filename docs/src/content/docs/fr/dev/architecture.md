@@ -9,7 +9,7 @@ Cette page résume `ARCHITECTURE.md` (à la racine du dépôt), qui reste la ré
 
 - **Swift 6**, mode strict de concurrence. Tout ce qui touche AppKit, l'Accessibilité ou les événements souris est `@MainActor`.
 - **Pas d'API privée** (NF4) et **aucune dépendance tierce** (pas de SwiftPM externe).
-- Textes d'interface en français, identifiants de code en anglais.
+- Textes d'interface écrits en anglais dans le code et traduits dans `Localizable.xcstrings` (français) ; identifiants de code en anglais.
 - Pas de `print` : journalisation avec `os.Logger` (sous-système `com.florentamaridon.Fenestra`, une catégorie par module).
 
 ## Modules

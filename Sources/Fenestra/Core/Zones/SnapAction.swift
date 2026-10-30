@@ -12,18 +12,18 @@ enum SnapAction: String, CaseIterable, Codable, Sendable, Identifiable, Hashable
 
     var localizedName: String {
         switch self {
-        case .left: "Vers la gauche"
-        case .right: "Vers la droite"
-        case .up: "Vers le haut"
-        case .down: "Vers le bas"
+        case .left: String(localized: "Move Left")
+        case .right: String(localized: "Move Right")
+        case .up: String(localized: "Move Up")
+        case .down: String(localized: "Move Down")
         case .topLeft: Zone.topLeft.localizedName
         case .topRight: Zone.topRight.localizedName
         case .bottomLeft: Zone.bottomLeft.localizedName
         case .bottomRight: Zone.bottomRight.localizedName
         case .maximize: Zone.maximize.localizedName
-        case .restore: "Restaurer la taille"
-        case .nextDisplay: "Écran suivant"
-        case .previousDisplay: "Écran précédent"
+        case .restore: String(localized: "Restore Size")
+        case .nextDisplay: String(localized: "Next Display")
+        case .previousDisplay: String(localized: "Previous Display")
         case .leftThird: Zone.leftThird.localizedName
         case .centerThird: Zone.centerThird.localizedName
         case .rightThird: Zone.rightThird.localizedName

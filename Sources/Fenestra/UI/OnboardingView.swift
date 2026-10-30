@@ -11,22 +11,22 @@ struct OnboardingView: View {
             Label("Fenestra", systemImage: "rectangle.split.2x1")
                 .font(.largeTitle.bold())
             VStack(alignment: .leading, spacing: 8) {
-                Text("1. Ouvrez les Réglages Système et autorisez Fenestra dans Accessibilité.")
-                Text("2. Glissez une fenêtre vers un bord ou un coin de l'écran.")
-                Text("3. Relâchez : la fenêtre se place dans la zone affichée.")
+                Text("1. Open System Settings and allow Fenestra under Accessibility.")
+                Text("2. Drag a window to an edge or a corner of the screen.")
+                Text("3. Release it: the window fills the highlighted zone.")
             }
-            Label(granted ? "Accessibilité autorisée" : "Accessibilité non autorisée",
+            Label(granted ? "Accessibility granted" : "Accessibility not granted",
                   systemImage: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
                 .foregroundStyle(granted ? .green : .red)
-            Button("Ouvrir les Réglages Système…") { controller.permission.request() }
+            Button("Open System Settings…") { controller.permission.request() }
                 .disabled(granted)
-            Text("Recommandé : désactivez le placement natif de macOS dans Réglages Système > Bureau et Dock > Fenêtres.")
+            Text("Recommended: turn off the built-in macOS tiling in System Settings > Desktop & Dock > Windows.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
             Spacer()
             HStack {
                 Spacer()
-                Button("Terminer") {
+                Button("Done") {
                     controller.settings.hasCompletedOnboarding = true
                     controller.refresh()
                     dismissWindow(id: "onboarding")

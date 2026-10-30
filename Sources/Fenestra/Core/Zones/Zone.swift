@@ -12,20 +12,20 @@ enum Zone: String, CaseIterable, Codable, Sendable, Identifiable, Hashable {
 
     var localizedName: String {
         switch self {
-        case .leftHalf: "Moitié gauche"
-        case .rightHalf: "Moitié droite"
-        case .topHalf: "Moitié haute"
-        case .bottomHalf: "Moitié basse"
-        case .topLeft: "Quart haut gauche"
-        case .topRight: "Quart haut droit"
-        case .bottomLeft: "Quart bas gauche"
-        case .bottomRight: "Quart bas droit"
-        case .maximize: "Plein écran"
-        case .leftThird: "Tiers gauche"
-        case .centerThird: "Tiers central"
-        case .rightThird: "Tiers droit"
-        case .leftTwoThirds: "Deux tiers gauches"
-        case .rightTwoThirds: "Deux tiers droits"
+        case .leftHalf: String(localized: "Left Half")
+        case .rightHalf: String(localized: "Right Half")
+        case .topHalf: String(localized: "Top Half")
+        case .bottomHalf: String(localized: "Bottom Half")
+        case .topLeft: String(localized: "Top Left Quarter")
+        case .topRight: String(localized: "Top Right Quarter")
+        case .bottomLeft: String(localized: "Bottom Left Quarter")
+        case .bottomRight: String(localized: "Bottom Right Quarter")
+        case .maximize: String(localized: "Full Screen")
+        case .leftThird: String(localized: "Left Third")
+        case .centerThird: String(localized: "Center Third")
+        case .rightThird: String(localized: "Right Third")
+        case .leftTwoThirds: String(localized: "Left Two Thirds")
+        case .rightTwoThirds: String(localized: "Right Two Thirds")
         }
     }
 

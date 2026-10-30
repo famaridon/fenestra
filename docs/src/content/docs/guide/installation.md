@@ -5,10 +5,6 @@ description: Downloading a release or building from source, and granting the Acc
 
 Fenestra is not distributed on the App Store: an app cannot be sandboxed while driving windows through the Accessibility API. Download a ready-made build from GitHub, or build it from source.
 
-:::note
-The app's interface is currently in French only. An English version is planned.
-:::
-
 ## Requirements
 
 - macOS 26 or later

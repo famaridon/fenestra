@@ -7,15 +7,15 @@ struct SettingsView: View {
     var body: some View {
         TabView {
             GeneralTab(settings: controller.settings)
-                .tabItem { Label("Général", systemImage: "gearshape") }
+                .tabItem { Label("General", systemImage: "gearshape") }
             ZonesTab(settings: controller.settings)
                 .tabItem { Label("Zones", systemImage: "rectangle.split.2x2") }
             ShortcutsTab(settings: controller.settings)
-                .tabItem { Label("Raccourcis", systemImage: "keyboard") }
+                .tabItem { Label("Shortcuts", systemImage: "keyboard") }
             ExcludedAppsView()
                 .tabItem { Label("Exclusions", systemImage: "nosign") }
             AboutTab()
-                .tabItem { Label("À propos", systemImage: "info.circle") }
+                .tabItem { Label("About", systemImage: "info.circle") }
         }
         .frame(width: 520, height: 460)
     }
@@ -29,7 +29,7 @@ private struct GeneralTab: View {
 
     var body: some View {
         Form {
-            Toggle("Lancer à l'ouverture de session", isOn: Binding(
+            Toggle("Launch at login", isOn: Binding(
                 get: { launchAtLogin },
                 set: { newValue in
                     do {
@@ -44,11 +44,11 @@ private struct GeneralTab: View {
             if let launchError {
                 Text(launchError).font(.caption).foregroundStyle(.red)
             }
-            Toggle("Placer les fenêtres en les glissant vers un bord", isOn: $settings.dragSnapEnabled)
-            Toggle("Restaurer la taille d'origine au décollage", isOn: $settings.restoreOnUnsnap)
-            Toggle("Bordure partagée entre fenêtres collées", isOn: $settings.sharedBorderEnabled)
+            Toggle("Snap windows by dragging them to an edge", isOn: $settings.dragSnapEnabled)
+            Toggle("Restore original size when unsnapping", isOn: $settings.restoreOnUnsnap)
+            Toggle("Shared border between snapped windows", isOn: $settings.sharedBorderEnabled)
             Toggle("Snap Assist", isOn: $settings.snapAssistEnabled)
-            Toggle("Aperçu des fenêtres dans Snap Assist", isOn: Binding(
+            Toggle("Window previews in Snap Assist", isOn: Binding(
                 get: { settings.snapAssistPreviews },
                 set: { newValue in
                     settings.snapAssistPreviews = newValue
@@ -60,21 +60,21 @@ private struct GeneralTab: View {
             .disabled(!settings.snapAssistEnabled)
             if settings.snapAssistPreviews && !screenRecordingGranted {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Les aperçus demandent l'autorisation d'enregistrement de l'écran. Sans elle, Snap Assist affiche les icônes des applications. Une fois l'autorisation accordée, relancez Fenestra si macOS le demande.")
+                    Text("Previews need the Screen & System Audio Recording permission. Without it, Snap Assist shows the app icons. Once the permission is granted, relaunch Fenestra if macOS asks you to.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Button("Ouvrir les Réglages Système") { ScreenRecordingPermission.openSystemSettings() }
+                    Button("Open System Settings") { ScreenRecordingPermission.openSystemSettings() }
                 }
             }
-            LabeledContent("Marge entre fenêtres : \(Int(settings.gap)) pt") {
+            LabeledContent("Gap between windows: \(Int(settings.gap)) pt") {
                 Slider(value: $settings.gap, in: 0...32, step: 1)
             }
-            Stepper("Taille des coins : \(Int(settings.cornerLength)) pt",
+            Stepper("Corner size: \(Int(settings.cornerLength)) pt",
                     value: $settings.cornerLength, in: 40...300, step: 10)
-            LabeledContent("Bande de déclenchement entre deux écrans : \(Int(settings.innerEdgeThreshold)) pt") {
+            LabeledContent("Trigger band between two displays: \(Int(settings.innerEdgeThreshold)) pt") {
                 Slider(value: $settings.innerEdgeThreshold, in: 4...80, step: 2)
             }
-            Text("Sur un bord extérieur le pointeur s'arrête ; à la jonction de deux écrans il passe, d'où une bande plus large.")
+            Text("The pointer stops on an outer edge, but crosses the junction between two displays, hence a wider band.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -88,10 +88,10 @@ private struct ZonesTab: View {
     @Bindable var settings: Settings
 
     private let groups: [(String, [Zone])] = [
-        ("Moitiés", [.leftHalf, .rightHalf, .topHalf, .bottomHalf]),
-        ("Quarts", [.topLeft, .topRight, .bottomLeft, .bottomRight]),
-        ("Plein écran", [.maximize]),
-        ("Tiers", [.leftThird, .centerThird, .rightThird, .leftTwoThirds, .rightTwoThirds]),
+        (String(localized: "Halves"), [.leftHalf, .rightHalf, .topHalf, .bottomHalf]),
+        (String(localized: "Quarters"), [.topLeft, .topRight, .bottomLeft, .bottomRight]),
+        (String(localized: "Full Screen"), [.maximize]),
+        (String(localized: "Thirds"), [.leftThird, .centerThird, .rightThird, .leftTwoThirds, .rightTwoThirds]),
     ]
 
     var body: some View {
@@ -105,10 +105,10 @@ private struct ZonesTab: View {
                     }
                 }
             }
-            Section("Écran vertical") {
-                Toggle("Le bord haut passe en plein écran", isOn: $settings.portraitTopEdgeMaximizes)
-                Toggle("Bords gauche/droit actifs", isOn: $settings.portraitSideEdgesEnabled)
-                Toggle("Au clavier, ← et → coupent les moitiés haute et basse en quarts",
+            Section("Vertical Display") {
+                Toggle("Top edge goes full screen", isOn: $settings.portraitTopEdgeMaximizes)
+                Toggle("Left and right edges active", isOn: $settings.portraitSideEdgesEnabled)
+                Toggle("With the keyboard, ← and → cut the top and bottom halves into quarters",
                        isOn: $settings.portraitArrowsSplitHalves)
             }
         }
@@ -138,13 +138,19 @@ private struct ShortcutsTab: View {
                     ))
                 }
             }
-            Button("Rétablir les raccourcis par défaut") { settings.resetShortcuts() }
+            Button("Restore Default Shortcuts") { settings.resetShortcuts() }
         }
         .formStyle(.grouped)
     }
 }
 
 private struct AboutTab: View {
+    /// The documentation site has an English root and a French section.
+    private static var documentationURL: URL {
+        let french = Bundle.main.preferredLocalizations.first == "fr"
+        return URL(string: french ? "https://famaridon.github.io/fenestra/fr/" : "https://famaridon.github.io/fenestra/")!
+    }
+
     private var version: String {
         let info = Bundle.main.infoDictionary
         let short = info?["CFBundleShortVersionString"] as? String ?? "?"
@@ -157,11 +163,9 @@ private struct AboutTab: View {
             Image(systemName: "rectangle.split.2x1").font(.system(size: 48))
             Text("Fenestra").font(.title.bold())
             Text(version).foregroundStyle(.secondary)
-            Text("Placement de fenêtres par glisser ou au clavier, comme sous Windows.")
+            Text("Window snapping with the mouse or the keyboard, as on Windows.")
                 .multilineTextAlignment(.center)
-            Text("Documentation : `cd docs && pnpm dev` dans le dépôt du projet.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            Link("Documentation", destination: Self.documentationURL)
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)

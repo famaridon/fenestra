@@ -16,7 +16,7 @@
 - Multiple and vertical displays, zones applied again automatically when the display setup changes.
 - Excluded apps, gaps between windows, launch at login.
 
-The app's interface is currently in French only; an English version is planned.
+The app is available in English and French, following the macOS language.
 
 The full requirements are in [BESOIN.md](BESOIN.md), and the architecture and module contracts in [ARCHITECTURE.md](ARCHITECTURE.md) (both in French).
 
