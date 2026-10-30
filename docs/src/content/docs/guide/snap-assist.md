@@ -8,7 +8,7 @@ As on Windows 11, when you snap a window to one half of the screen, with the mou
 ## How it works
 
 1. Snap a window: drag it to an edge or a corner (see [Snapping with the mouse](/fenestra/guide/mouse/)), or use a shortcut such as `⌃⌥←` (see [Keyboard shortcuts](/fenestra/guide/keyboard/)).
-2. The free space shows the list of your other open windows, with their app icon and title.
+2. The free space shows the list of your other open windows, with their app icon and title, or a [thumbnail](#window-thumbnails) of each window.
 3. **Click** a window: it fills the free space and comes to the front.
 
 **Escape**, a click anywhere else or another shortcut closes the list without doing anything. When you cycle with the arrows, the list follows the window and offers the space left by its new zone.
@@ -34,6 +34,22 @@ The window you pick is snapped like any other: it stays **linked** to its neighb
 If no window is left, the list does not show up.
 
 The list does not show up either when another snapped window already fills the free space.
+
+## Window thumbnails
+
+As on Windows, Snap Assist can show a **thumbnail of each window** instead of the app icon, which makes it easier to tell apart several windows of the same app.
+
+This option is **off by default**, because it needs a second permission: **Screen & System Audio Recording**. To turn it on:
+
+1. In the **General** tab of the [settings](/fenestra/guide/settings/), turn on **Window previews in Snap Assist**.
+2. macOS asks for the permission: allow Fenestra in **System Settings > Privacy & Security > Screen & System Audio Recording**. A button in the settings opens that page.
+3. Relaunch Fenestra if macOS asks you to.
+
+The list still shows up instantly: thumbnails fill in one by one right after. A window that cannot be captured keeps its app icon, and so does every window as long as the permission is not granted.
+
+:::note[Privacy]
+Thumbnails are only kept in memory while the list is on screen. They are never saved and never leave your Mac.
+:::
 
 ## Limitations
 

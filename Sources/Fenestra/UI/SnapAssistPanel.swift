@@ -8,6 +8,20 @@ struct SnapAssistCandidate: Identifiable {
     let icon: NSImage?
 }
 
+/// What the panel shows; thumbnails arrive after the panel is on screen.
+@MainActor
+@Observable
+final class SnapAssistModel {
+    let candidates: [SnapAssistCandidate]
+    let showsPreviews: Bool
+    var thumbnails: [Int: NSImage] = [:]
+
+    init(candidates: [SnapAssistCandidate], showsPreviews: Bool) {
+        self.candidates = candidates
+        self.showsPreviews = showsPreviews
+    }
+}
+
 /// Panel listing the windows that can fill the space left by a snap (F8).
 @MainActor
 final class SnapAssistPanel {
@@ -29,7 +43,7 @@ final class SnapAssistPanel {
     }
 
     /// `frame` is in Cocoa coordinates.
-    func show(frame: CGRect, candidates: [SnapAssistCandidate],
+    func show(frame: CGRect, model: SnapAssistModel,
               onSelect: @escaping (Int) -> Void, onDismiss: @escaping () -> Void) {
         removeMonitors()
         self.onDismiss = onDismiss
@@ -43,7 +57,7 @@ final class SnapAssistPanel {
         effect.layer?.cornerRadius = 12
         effect.layer?.masksToBounds = true
 
-        let tiles = SnapAssistGrid(candidates: candidates) { [weak self] id in
+        let tiles = SnapAssistGrid(model: model) { [weak self] id in
             onSelect(id)
             self?.hide()
         }
@@ -89,24 +103,20 @@ final class SnapAssistPanel {
 }
 
 private struct SnapAssistGrid: View {
-    let candidates: [SnapAssistCandidate]
+    let model: SnapAssistModel
     let onSelect: (Int) -> Void
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 12)], spacing: 12) {
-                ForEach(candidates) { candidate in
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: model.showsPreviews ? 200 : 120), spacing: 12)],
+                      spacing: 12) {
+                ForEach(model.candidates) { candidate in
                     Button { onSelect(candidate.id) } label: {
-                        VStack(spacing: 4) {
-                            if let icon = candidate.icon {
-                                Image(nsImage: icon).resizable().frame(width: 48, height: 48)
-                            }
-                            Text(candidate.appName).font(.headline).lineLimit(1)
-                            Text(candidate.title).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                        if model.showsPreviews {
+                            PreviewTile(candidate: candidate, thumbnail: model.thumbnails[candidate.id])
+                        } else {
+                            IconTile(candidate: candidate)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(8)
-                        .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
@@ -114,5 +124,55 @@ private struct SnapAssistGrid: View {
             .padding(16)
         }
         .foregroundStyle(.white)
+    }
+}
+
+/// App icon, app name and window title.
+private struct IconTile: View {
+    let candidate: SnapAssistCandidate
+
+    var body: some View {
+        VStack(spacing: 4) {
+            if let icon = candidate.icon {
+                Image(nsImage: icon).resizable().frame(width: 48, height: 48)
+            }
+            Text(candidate.appName).font(.headline).lineLimit(1)
+            Text(candidate.title).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(8)
+        .contentShape(Rectangle())
+    }
+}
+
+/// Small app icon and title above a thumbnail of the window, as on Windows 11.
+/// The app icon stands in for the thumbnail until it arrives, or if it cannot be captured.
+private struct PreviewTile: View {
+    let candidate: SnapAssistCandidate
+    let thumbnail: NSImage?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                if let icon = candidate.icon {
+                    Image(nsImage: icon).resizable().frame(width: 16, height: 16)
+                }
+                Text(candidate.title.isEmpty ? candidate.appName : candidate.title)
+                    .font(.caption).lineLimit(1)
+            }
+            ZStack {
+                RoundedRectangle(cornerRadius: 6).fill(.white.opacity(0.08))
+                if let thumbnail {
+                    Image(nsImage: thumbnail).resizable().aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                        .padding(4)
+                } else if let icon = candidate.icon {
+                    Image(nsImage: icon).resizable().frame(width: 48, height: 48)
+                }
+            }
+            .frame(height: 120)
+        }
+        .padding(8)
+        .contentShape(Rectangle())
     }
 }

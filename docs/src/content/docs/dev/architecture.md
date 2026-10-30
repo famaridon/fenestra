@@ -17,8 +17,9 @@ This page summarizes `ARCHITECTURE.md` (at the repository root, in French), whic
 | Folder | Role |
 |---|---|
 | `App/` | Entry point, `AppController` (wiring), building displays from `NSScreen`. |
-| `Core/` | Pure Swift (Foundation + CoreGraphics), fully testable: geometry, zones, resolvers, snap registry, shared border. |
+| `Core/` | Pure Swift (Foundation + CoreGraphics), fully testable: geometry, zones, resolvers, snap registry, shared border, matching windows across APIs. |
 | `Accessibility/` | `AXWindow` (wrapper around an `AXUIElement`) and `AXWindowFinder`. |
+| `Capture/` | `WindowThumbnailer` (window thumbnails with ScreenCaptureKit) and `ScreenRecordingPermission`. |
 | `Input/` | `DragMonitor` (global mouse) and `HotkeyManager` (Carbon `RegisterEventHotKey`). |
 | `Settings/` | Observable `Settings` model, persisted in `UserDefaults`, and `LaunchAtLogin` (`SMAppService`). |
 | `UI/` | Menu bar, welcome window, settings, shortcut recorder, preview and Snap Assist panels. |

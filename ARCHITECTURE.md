@@ -38,9 +38,13 @@ Sources/Fenestra/
     Zones/KeyboardSnapResolver.swift   — action clavier + état -> commande
     Snap/SnapRegistry.swift            — mémoire des fenêtres collées (restauration F2)
     Snap/SharedBorderResolver.swift    — calcul de la bordure partagée (F5)
+    Capture/WindowMatcher.swift        — associe une fenêtre AX à une fenêtre ScreenCaptureKit (F8)
   Accessibility/
     AXWindow.swift                     — enveloppe d'une fenêtre AXUIElement
     AXWindowFinder.swift               — fenêtre sous le pointeur, fenêtre active, toutes les fenêtres
+  Capture/
+    ScreenRecordingPermission.swift    — autorisation d'enregistrement de l'écran (aperçus F8 uniquement)
+    WindowThumbnailer.swift            — miniatures des fenêtres (ScreenCaptureKit)
   Input/
     DragMonitor.swift                  — événements souris globaux (repère AX)
     HotkeyManager.swift                — raccourcis globaux (Carbon RegisterEventHotKey)
@@ -335,6 +339,7 @@ Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_,
     var portraitSideEdgesEnabled: Bool       // true
     var sharedBorderEnabled: Bool            // F5, true
     var snapAssistEnabled: Bool              // F8, true
+    var snapAssistPreviews: Bool             // F8, false ; demande l'enregistrement de l'écran
     var excludedBundleIdentifiers: [String]
     var shortcuts: [SnapAction: KeyboardShortcut]   // seules les actions assignées ; défaut SnapAction.defaultShortcuts
     var hasCompletedOnboarding: Bool
@@ -364,10 +369,13 @@ types composés) dans son `didSet`, et relue dans `init`.
 
 struct SnapAssistCandidate: Identifiable { let id: Int; let title: String; let appName: String; let icon: NSImage? }
 
+/// @Observable : les miniatures arrivent après l'affichage du panneau.
+@MainActor final class SnapAssistModel { let candidates: [SnapAssistCandidate]; let showsPreviews: Bool; var thumbnails: [Int: NSImage] }
+
 @MainActor final class SnapAssistPanel {
     init()
     /// `frame` en repère Cocoa. `onSelect(id)` quand l'utilisateur clique une fenêtre ; `onDismiss` sur Échap / clic ailleurs.
-    func show(frame: CGRect, candidates: [SnapAssistCandidate], onSelect: @escaping (Int) -> Void, onDismiss: @escaping () -> Void)
+    func show(frame: CGRect, model: SnapAssistModel, onSelect: @escaping (Int) -> Void, onDismiss: @escaping () -> Void)
     func hide()
 }
 
@@ -408,3 +416,7 @@ réapplique sa zone sur son écran (ou sur l'écran principal si l'écran a disp
 `SnapAssistPanel` dans le cadre du complément, listant les autres fenêtres standard (icône + titre).
 Rien n'est proposé si une fenêtre collée sur cet écran occupe déjà le complément (`Zone.overlaps`).
 Un clic place la fenêtre choisie dans le complément. Échap ou clic ailleurs ferme.
+Avec `snapAssistPreviews` et l'autorisation d'enregistrement de l'écran, le panneau s'affiche d'abord avec les
+icônes, puis `WindowThumbnailer` remplit `SnapAssistModel.thumbnails` une fenêtre après l'autre. L'API
+d'Accessibilité ne donne pas de `CGWindowID` public (NF4) : chaque fenêtre est associée à sa fenêtre
+ScreenCaptureKit par processus, cadre et titre (`WindowMatcher`). Une fenêtre non associée garde son icône.

@@ -8,7 +8,7 @@ Comme sous Windows 11, quand vous collez une fenêtre sur une moitié de l'écra
 ## Fonctionnement
 
 1. Collez une fenêtre : glissez-la vers un bord ou un coin (voir [Snap à la souris](/fenestra/fr/guide/mouse/)), ou utilisez un raccourci comme `⌃⌥←` (voir [Raccourcis clavier](/fenestra/fr/guide/keyboard/)).
-2. L'espace libre affiche la liste de vos autres fenêtres ouvertes, avec l'icône de l'application et le titre.
+2. L'espace libre affiche la liste de vos autres fenêtres ouvertes, avec l'icône de l'application et le titre, ou une [miniature](#miniatures-des-fenêtres) de chaque fenêtre.
 3. **Cliquez** une fenêtre : elle remplit l'espace libre et passe au premier plan.
 
 **Échap**, un clic ailleurs ou un autre raccourci ferme la liste sans rien faire. Quand vous enchaînez les flèches, la liste suit la fenêtre et propose l'espace laissé par sa nouvelle zone.
@@ -34,6 +34,22 @@ La fenêtre choisie est collée comme les autres : elle reste **liée** à sa vo
 S'il ne reste aucune fenêtre, la liste ne s'affiche pas.
 
 Elle ne s'affiche pas non plus si une autre fenêtre collée occupe déjà l'espace libre.
+
+## Miniatures des fenêtres
+
+Comme sous Windows, Snap Assist peut afficher une **miniature de chaque fenêtre** à la place de l'icône de l'application, ce qui permet de distinguer plusieurs fenêtres d'une même application.
+
+Cette option est **désactivée par défaut**, car elle demande une seconde autorisation : l'**enregistrement de l'écran**. Pour l'activer :
+
+1. Dans l'onglet **Général** des [réglages](/fenestra/fr/guide/settings/), activez **Aperçu des fenêtres dans Snap Assist**.
+2. macOS demande l'autorisation : autorisez Fenestra dans **Réglages Système > Confidentialité et sécurité > Enregistrement de l'écran et de l'audio du système**. Un bouton des réglages ouvre cette page.
+3. Relancez Fenestra si macOS le demande.
+
+La liste s'affiche toujours instantanément : les miniatures arrivent une à une juste après. Une fenêtre qui ne peut pas être capturée garde l'icône de son application, de même que toutes les fenêtres tant que l'autorisation n'est pas accordée.
+
+:::note[Confidentialité]
+Les miniatures ne sont gardées en mémoire que le temps de l'affichage de la liste. Elles ne sont jamais enregistrées et ne quittent pas votre Mac.
+:::
 
 ## Limites
 

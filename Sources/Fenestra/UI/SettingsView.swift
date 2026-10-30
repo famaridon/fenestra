@@ -25,6 +25,7 @@ private struct GeneralTab: View {
     @Bindable var settings: Settings
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
     @State private var launchError: String?
+    @State private var screenRecordingGranted = ScreenRecordingPermission.isGranted
 
     var body: some View {
         Form {
@@ -47,6 +48,24 @@ private struct GeneralTab: View {
             Toggle("Restaurer la taille d'origine au décollage", isOn: $settings.restoreOnUnsnap)
             Toggle("Bordure partagée entre fenêtres collées", isOn: $settings.sharedBorderEnabled)
             Toggle("Snap Assist", isOn: $settings.snapAssistEnabled)
+            Toggle("Aperçu des fenêtres dans Snap Assist", isOn: Binding(
+                get: { settings.snapAssistPreviews },
+                set: { newValue in
+                    settings.snapAssistPreviews = newValue
+                    if newValue && !screenRecordingGranted {
+                        screenRecordingGranted = ScreenRecordingPermission.request()
+                    }
+                }
+            ))
+            .disabled(!settings.snapAssistEnabled)
+            if settings.snapAssistPreviews && !screenRecordingGranted {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Les aperçus demandent l'autorisation d'enregistrement de l'écran. Sans elle, Snap Assist affiche les icônes des applications. Une fois l'autorisation accordée, relancez Fenestra si macOS le demande.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button("Ouvrir les Réglages Système") { ScreenRecordingPermission.openSystemSettings() }
+                }
+            }
             LabeledContent("Marge entre fenêtres : \(Int(settings.gap)) pt") {
                 Slider(value: $settings.gap, in: 0...32, step: 1)
             }
@@ -60,6 +79,8 @@ private struct GeneralTab: View {
                 .foregroundStyle(.secondary)
         }
         .formStyle(.grouped)
+        // macOS doesn't notify permission changes: refresh whenever the tab is shown again.
+        .onAppear { screenRecordingGranted = ScreenRecordingPermission.isGranted }
     }
 }
 

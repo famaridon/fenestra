@@ -18,6 +18,8 @@ final class Settings {
     var portraitSideEdgesEnabled: Bool { didSet { store(portraitSideEdgesEnabled, "portraitSideEdgesEnabled") } }
     var sharedBorderEnabled: Bool { didSet { store(sharedBorderEnabled, "sharedBorderEnabled") } }
     var snapAssistEnabled: Bool { didSet { store(snapAssistEnabled, "snapAssistEnabled") } }
+    /// Window thumbnails in Snap Assist; needs the Screen Recording permission.
+    var snapAssistPreviews: Bool { didSet { store(snapAssistPreviews, "snapAssistPreviews") } }
     var excludedBundleIdentifiers: [String] { didSet { storeJSON(excludedBundleIdentifiers, "excludedBundleIdentifiers") } }
     var shortcuts: [SnapAction: KeyboardShortcut] {
         didSet {
@@ -41,6 +43,7 @@ final class Settings {
         portraitSideEdgesEnabled = defaults.object(forKey: "portraitSideEdgesEnabled") as? Bool ?? true
         sharedBorderEnabled = defaults.object(forKey: "sharedBorderEnabled") as? Bool ?? true
         snapAssistEnabled = defaults.object(forKey: "snapAssistEnabled") as? Bool ?? true
+        snapAssistPreviews = defaults.object(forKey: "snapAssistPreviews") as? Bool ?? false
         excludedBundleIdentifiers = Self.loadJSON([String].self, "excludedBundleIdentifiers", defaults) ?? []
         if let raw = Self.loadJSON([String: KeyboardShortcut].self, "shortcuts", defaults) {
             shortcuts = Dictionary(uniqueKeysWithValues: raw.compactMap { key, value in

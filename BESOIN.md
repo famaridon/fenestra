@@ -77,6 +77,7 @@ Priorités : **P0** = indispensable au MVP · **P1** = attendu en v1 · **P2** =
 
 ### F8 — Snap Assist · P2
 - Après avoir collé une fenêtre sur une moitié, à la souris ou au clavier, proposer les autres fenêtres ouvertes pour remplir l'espace restant, comme sous Windows.
+- En option, afficher une miniature de chaque fenêtre. Elle demande l'autorisation d'enregistrement de l'écran ; sans elle, on affiche les icônes des applications.
 
 ### F9 — Application et réglages · P0
 - App **dans la barre des menus** uniquement, sans icône dans le Dock.
@@ -94,7 +95,7 @@ Priorités : **P0** = indispensable au MVP · **P1** = attendu en v1 · **P2** =
 | NF3 | **Robustesse** : une application qui ne répond pas ou refuse la taille demandée ne doit ni bloquer ni faire planter Fenestra. La taille réelle est toujours relue après chaque redimensionnement. |
 | NF4 | **API publiques uniquement** (Accessibilité, AppKit). Pas d'API privées, pas de SIP à désactiver. |
 | NF5 | **Coexistence** : Fenestra cohabite avec le collage natif de macOS. Il recommande de désactiver le glisser natif pour éviter un double snap. |
-| NF6 | **Confidentialité** : aucune donnée collectée, aucun accès réseau. |
+| NF6 | **Confidentialité** : aucune donnée collectée, aucun accès réseau. Les miniatures de Snap Assist restent en mémoire et ne sont jamais enregistrées. |
 
 ## 6. Hors périmètre
 
