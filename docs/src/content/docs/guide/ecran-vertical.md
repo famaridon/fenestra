@@ -28,6 +28,6 @@ Sur un écran paysage, le bord bas ne fait rien et le bord haut donne le plein �
 
 ## Option « bord haut = plein écran »
 
-Par défaut, le bord haut d'un écran vertical donne la **moitié haute**. Si vous préférez le comportement de Windows (plein écran), activez l'option correspondante dans l'onglet **Zones** des [réglages](/guide/reglages/).
+Par défaut, le bord haut d'un écran vertical donne la **moitié haute**. Si vous préférez le comportement de Windows (plein écran), activez l'option correspondante dans l'onglet **Zones** des [réglages](/fenestra/guide/reglages/).
 
 Vous pouvez aussi désactiver les bords gauche et droit sur écran vertical, si vous ne voulez que le découpage haut / bas.

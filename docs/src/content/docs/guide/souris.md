@@ -12,7 +12,7 @@ Saisissez une fenêtre par sa barre de titre et amenez le **pointeur jusqu'au bo
 | Bord gauche / droit | Moitié gauche / droite |
 | Coin | Quart d'écran |
 | Bord haut (écran paysage) | Plein écran |
-| Bord haut / bas (écran vertical) | Moitié haute / basse, voir [Écran vertical](/guide/ecran-vertical/) |
+| Bord haut / bas (écran vertical) | Moitié haute / basse, voir [Écran vertical](/fenestra/guide/ecran-vertical/) |
 
 - L'**aperçu translucide** de la zone s'affiche **immédiatement**, sans délai ni touche modificatrice.
 - **Relâcher** applique la zone.
@@ -24,7 +24,7 @@ Sur un **bord extérieur**, le pointeur doit réellement toucher le bord (à env
 
 Quand vous « décollez » une fenêtre collée en la glissant hors de sa zone, elle **retrouve la taille qu'elle avait avant le snap**, comme sous Windows. Le pointeur reste au même endroit relatif dans la barre de titre.
 
-Cette option peut être désactivée dans les [réglages](/guide/reglages/).
+Cette option peut être désactivée dans les [réglages](/fenestra/guide/reglages/).
 
 ## Composer une disposition
 
@@ -34,7 +34,7 @@ Combinez les zones pour obtenir, par exemple, **deux fenêtres à gauche et une 
 2. Glissez la fenêtre B vers le coin bas gauche (quart bas gauche).
 3. Glissez la fenêtre C vers le bord droit (moitié droite).
 
-Cela fonctionne aussi au [clavier](/guide/clavier/), et les deux méthodes se mélangent.
+Cela fonctionne aussi au [clavier](/fenestra/guide/clavier/), et les deux méthodes se mélangent.
 
 ## Snap Assist
 
@@ -43,4 +43,4 @@ Après un snap par glisser sur une moitié (ou un quart), Fenestra affiche dans 
 - **Cliquez** une fenêtre : elle remplit l'espace restant.
 - **Échap** (ou un clic ailleurs) ferme la liste.
 
-Snap Assist se désactive dans les [réglages](/guide/reglages/).
+Snap Assist se désactive dans les [réglages](/fenestra/guide/reglages/).

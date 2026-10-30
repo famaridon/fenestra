@@ -12,8 +12,8 @@ Ouvrez les réglages depuis le menu de Fenestra dans la barre des menus. Chaque 
 | Activer Fenestra | activé | Interrupteur général (aussi dans la barre des menus). |
 | Snap par glisser | activé | Active le snap à la souris. |
 | Restaurer la taille au décollage | activé | Rend la taille d'avant le snap quand on décolle une fenêtre. |
-| Bordure partagée | activé | Lie les fenêtres collées, voir [Bordure partagée](/guide/bordure-partagee/). |
-| Snap Assist | activé | Propose les autres fenêtres après un snap, voir [Snap à la souris](/guide/souris/). |
+| Bordure partagée | activé | Lie les fenêtres collées, voir [Bordure partagée](/fenestra/guide/bordure-partagee/). |
+| Snap Assist | activé | Propose les autres fenêtres après un snap, voir [Snap à la souris](/fenestra/guide/souris/). |
 | Lancer à l'ouverture de session | désactivé | Démarre Fenestra à la connexion. |
 
 ## Zones
@@ -29,7 +29,7 @@ Ouvrez les réglages depuis le menu de Fenestra dans la barre des menus. Chaque 
 
 ## Raccourcis
 
-Une ligne par action avec un champ de saisie du raccourci, et un bouton pour **rétablir les raccourcis par défaut**. Voir [Raccourcis clavier](/guide/clavier/).
+Une ligne par action avec un champ de saisie du raccourci, et un bouton pour **rétablir les raccourcis par défaut**. Voir [Raccourcis clavier](/fenestra/guide/clavier/).
 
 ## Exclusions
 

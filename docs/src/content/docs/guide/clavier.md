@@ -56,17 +56,17 @@ Autres repères sur un écran paysage :
 
 Dans l'autre sens, `⌃⌥←` sur une moitié gauche de B renvoie la fenêtre sur A en moitié droite.
 
-Sur un écran vertical, le cycle utilise `↑`/`↓`, voir [Écran vertical](/guide/ecran-vertical/).
+Sur un écran vertical, le cycle utilise `↑`/`↓`, voir [Écran vertical](/fenestra/guide/ecran-vertical/).
 
 ## Autres actions
 
 - **Quarts, plein écran, tiers** : placent la fenêtre dans la zone sur son écran courant. Si elle y est déjà, rien ne se passe.
 - **Restaurer** : rend à la fenêtre sa taille d'avant le premier snap (sans effet si elle n'est pas collée).
-- **Écran suivant / précédent** : envoie la fenêtre sur l'écran suivant ou précédent. Une fenêtre collée garde sa zone ; une fenêtre non collée est déplacée proportionnellement. Voir [Multi-écrans](/guide/multi-ecrans/).
+- **Écran suivant / précédent** : envoie la fenêtre sur l'écran suivant ou précédent. Une fenêtre collée garde sa zone ; une fenêtre non collée est déplacée proportionnellement. Voir [Multi-écrans](/fenestra/guide/multi-ecrans/).
 
 ## Changer les raccourcis
 
-Ouvrez les réglages de Fenestra (depuis le menu de la barre des menus), onglet **Raccourcis** : cliquez sur un raccourci, saisissez la nouvelle combinaison. Un bouton permet de rétablir les raccourcis par défaut. Voir [Réglages](/guide/reglages/).
+Ouvrez les réglages de Fenestra (depuis le menu de la barre des menus), onglet **Raccourcis** : cliquez sur un raccourci, saisissez la nouvelle combinaison. Un bouton permet de rétablir les raccourcis par défaut. Voir [Réglages](/fenestra/guide/reglages/).
 
 :::caution
 Un raccourci déjà pris par le système ou une autre application peut échouer à s'enregistrer : Fenestra l'ignore alors (il est consigné dans le journal).
