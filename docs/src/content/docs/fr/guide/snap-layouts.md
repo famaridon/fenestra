@@ -31,5 +31,5 @@ Une disposition n'apparaît que si **toutes ses zones sont activées** dans l'on
 Snap Layouts se désactive dans l'onglet **Général** des [réglages](/fenestra/fr/guide/settings/).
 
 :::note
-macOS affiche son propre menu quand le pointeur reste sur le bouton vert. La palette de Fenestra s'ouvre avant et le recouvre.
+macOS affiche son propre menu quand le pointeur reste sur le bouton vert, et les Réglages Système ne permettent pas de le désactiver. La palette de Fenestra s'ouvre avant et reste au-dessus.
 :::

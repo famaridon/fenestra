@@ -38,6 +38,9 @@ private let log = Logger(subsystem: "com.florentamaridon.Fenestra", category: "a
         return AXWindow(element: element, pid: pid)
     }
 
+    /// The green button reports itself as a full screen button on recent macOS versions.
+    private static let greenButtonSubroles: Set<String> = [kAXZoomButtonSubrole, kAXFullScreenButtonSubrole]
+
     /// Window whose zoom (green) button is under `point`, with the button's frame.
     static func zoomButton(at point: CGPoint) -> (window: AXWindow, buttonFrame: CGRect)? {
         let systemWide = AXUIElementCreateSystemWide()
@@ -47,7 +50,10 @@ private let log = Logger(subsystem: "com.florentamaridon.Fenestra", category: "a
         AXUIElementSetMessagingTimeout(hit, 0.25)
         var subrole: CFTypeRef?
         AXUIElementCopyAttributeValue(hit, kAXSubroleAttribute as CFString, &subrole)
-        guard (subrole as? String) == kAXZoomButtonSubrole else { return nil }
+        guard let subrole = subrole as? String, greenButtonSubroles.contains(subrole) else {
+            log.debug("no green button under the pointer: \(subrole as? String ?? "-")")
+            return nil
+        }
         var pid: pid_t = 0
         guard AXUIElementGetPid(hit, &pid) == .success,
               let element = elementAttribute(hit, kAXWindowAttribute),

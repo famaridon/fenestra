@@ -21,8 +21,8 @@ final class SnapLayoutsPanel {
     init() {
         panel = NSPanel(contentRect: .zero, styleMask: [.borderless, .nonactivatingPanel],
                         backing: .buffered, defer: true)
-        // Above the menu macOS shows itself when the pointer rests on the zoom button.
-        panel.level = .popUpMenu
+        // Above the menu macOS shows itself when the pointer rests on the green button.
+        panel.level = NSWindow.Level(rawValue: NSWindow.Level.popUpMenu.rawValue + 1)
         panel.collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .fullScreenAuxiliary]
         panel.backgroundColor = .clear
         panel.isOpaque = false

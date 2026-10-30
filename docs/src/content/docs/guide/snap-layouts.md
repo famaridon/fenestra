@@ -31,5 +31,5 @@ A layout only appears when **all its zones are enabled** in the **Zones** tab of
 Snap Layouts can be turned off in the **General** tab of the [settings](/fenestra/guide/settings/).
 
 :::note
-macOS shows its own menu when the pointer stays on the green button. Fenestra's palette opens first and covers it.
+macOS shows its own menu when the pointer stays on the green button, and System Settings has no option to turn it off. Fenestra's palette opens first and stays on top of it.
 :::
