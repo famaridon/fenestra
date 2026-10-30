@@ -47,6 +47,7 @@ private struct GeneralTab: View {
             Toggle("Snap windows by dragging them to an edge", isOn: $settings.dragSnapEnabled)
             Toggle("Restore original size when unsnapping", isOn: $settings.restoreOnUnsnap)
             Toggle("Shared border between snapped windows", isOn: $settings.sharedBorderEnabled)
+            Toggle("Snap Layouts when hovering the green button", isOn: $settings.snapLayoutsEnabled)
             Toggle("Snap Assist", isOn: $settings.snapAssistEnabled)
             Toggle("Window previews in Snap Assist", isOn: Binding(
                 get: { settings.snapAssistPreviews },

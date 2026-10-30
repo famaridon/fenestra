@@ -514,6 +514,16 @@
         }
       }
     },
+    "Snap Layouts when hovering the green button" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snap Layouts au survol du bouton vert"
+          }
+        }
+      }
+    },
     "Snap windows by dragging them to an edge" : {
       "localizations" : {
         "fr" : {

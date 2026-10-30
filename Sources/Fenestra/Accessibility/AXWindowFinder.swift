@@ -38,6 +38,24 @@ private let log = Logger(subsystem: "com.florentamaridon.Fenestra", category: "a
         return AXWindow(element: element, pid: pid)
     }
 
+    /// Window whose zoom (green) button is under `point`, with the button's frame.
+    static func zoomButton(at point: CGPoint) -> (window: AXWindow, buttonFrame: CGRect)? {
+        let systemWide = AXUIElementCreateSystemWide()
+        var hit: AXUIElement?
+        guard AXUIElementCopyElementAtPosition(systemWide, Float(point.x), Float(point.y), &hit) == .success,
+              let hit else { return nil }
+        AXUIElementSetMessagingTimeout(hit, 0.25)
+        var subrole: CFTypeRef?
+        AXUIElementCopyAttributeValue(hit, kAXSubroleAttribute as CFString, &subrole)
+        guard (subrole as? String) == kAXZoomButtonSubrole else { return nil }
+        var pid: pid_t = 0
+        guard AXUIElementGetPid(hit, &pid) == .success,
+              let element = elementAttribute(hit, kAXWindowAttribute),
+              let origin: CGPoint = value(hit, kAXPositionAttribute, type: .cgPoint),
+              let size: CGSize = value(hit, kAXSizeAttribute, type: .cgSize) else { return nil }
+        return (AXWindow(element: element, pid: pid), CGRect(origin: origin, size: size))
+    }
+
     /// Non-minimized standard windows of every regular application except Fenestra.
     static func visibleStandardWindows() -> [AXWindow] {
         let ownBundleID = Bundle.main.bundleIdentifier
@@ -77,5 +95,17 @@ private let log = Logger(subsystem: "com.florentamaridon.Fenestra", category: "a
             return nil
         }
         return unsafeDowncast(value as AnyObject, to: AXUIElement.self)
+    }
+
+    /// Reads an `AXValue`-boxed attribute (CGPoint, CGSize…).
+    private static func value<T>(_ element: AXUIElement, _ name: String, type: AXValueType) -> T? {
+        var value: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(element, name as CFString, &value) == .success,
+              let value, CFGetTypeID(value) == AXValueGetTypeID() else { return nil }
+        let box = unsafeDowncast(value as AnyObject, to: AXValue.self)
+        let pointer = UnsafeMutablePointer<T>.allocate(capacity: 1)
+        defer { pointer.deallocate() }
+        guard AXValueGetValue(box, type, pointer) else { return nil }
+        return pointer.move()
     }
 }

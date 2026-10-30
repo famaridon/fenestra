@@ -15,6 +15,7 @@ The main **Enable Fenestra** switch is in the menu bar menu.
 | Snap windows by dragging them to an edge | on | Turns on snapping with the mouse. |
 | Restore original size when unsnapping | on | Gives back the pre-snap size when you unsnap a window. |
 | Shared border between snapped windows | on | Links snapped windows, see [Shared border](/fenestra/guide/shared-border/). |
+| Snap Layouts when hovering the green button | on | Palette of layouts when the pointer rests on a window's green button, see [Snap Layouts](/fenestra/guide/snap-layouts/). |
 | Snap Assist | on | Offers your other windows after a snap, see [Snap Assist](/fenestra/guide/snap-assist/). |
 | Window previews in Snap Assist | off | Shows a thumbnail of each window. Needs the Screen & System Audio Recording permission, see [Window thumbnails](/fenestra/guide/snap-assist/#window-thumbnails). |
 | Gap between windows | 0 pt | Space between windows and with the screen edges. |

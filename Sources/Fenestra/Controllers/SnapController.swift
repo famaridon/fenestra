@@ -214,6 +214,14 @@ final class SnapController {
         snapAssist?.offer(after: window, zone: zone, screen: screen)
     }
 
+    /// Placement chosen in the Snap Layouts palette: same as a keyboard snap.
+    func snap(_ window: AXWindow, to zone: Zone, on screen: ScreenInfo) {
+        snapAssist?.dismiss()
+        place(window, zone: zone, on: screen)
+        window.raise()
+        offerSnapAssist(after: window, zone: zone, screen: screen)
+    }
+
     /// Placement requested by Snap Assist or the screen watcher (no raise, restore frame preserved).
     func placeExternal(window: AXWindow, zone: Zone, screen: ScreenInfo) {
         place(window, zone: zone, on: screen)
@@ -248,7 +256,7 @@ final class SnapController {
         registry.updateSnappedFrame(window, to: frame)
     }
 
-    private func isManageable(_ window: AXWindow) -> Bool {
+    func isManageable(_ window: AXWindow) -> Bool {
         window.isStandardWindow && !window.isFullScreen
             && !settings.isExcluded(bundleIdentifier: window.bundleIdentifier)
     }

@@ -12,6 +12,7 @@ final class AppController {
     @ObservationIgnored let hotkeys = HotkeyManager()
     @ObservationIgnored let snapController: SnapController
     @ObservationIgnored let snapAssist: SnapAssistController
+    @ObservationIgnored let snapLayouts: SnapLayoutsController
     @ObservationIgnored let screenWatcher: ScreenWatcher
 
     /// True while the global monitors (mouse + hotkeys) are active.
@@ -28,6 +29,7 @@ final class AppController {
         snap.snapAssist = assist
         snapController = snap
         snapAssist = assist
+        snapLayouts = SnapLayoutsController(settings: settings, snapController: snap)
         screenWatcher = ScreenWatcher(snapController: snap)
         hotkeys.onAction = { [weak self] action in self?.perform(action) }
         refresh()
@@ -55,9 +57,11 @@ final class AppController {
             }
             dragMonitor.start()
             hotkeys.register(settings.shortcuts)
+            if settings.snapLayoutsEnabled { snapLayouts.start() } else { snapLayouts.stop() }
         } else {
             dragMonitor.stop()
             hotkeys.unregisterAll()
+            snapLayouts.stop()
             snapController.cancelDrag()
         }
         isRunning = active
@@ -70,6 +74,7 @@ final class AppController {
             _ = settings.isEnabled
             _ = settings.shortcuts
             _ = settings.dragSnapEnabled
+            _ = settings.snapLayoutsEnabled
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.refresh()

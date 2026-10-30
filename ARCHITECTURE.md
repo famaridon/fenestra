@@ -33,6 +33,7 @@ Sources/Fenestra/
     Geometry/ScreenLayout.swift        — ensemble d'écrans : voisinage, écran contenant un point/une fenêtre
     Zones/Zone.swift                   — enum Zone + calcul de cadre
     Zones/SnapAction.swift             — actions clavier + raccourcis par défaut
+    Zones/SnapLayout.swift             — dispositions de la palette Snap Layouts
     Zones/KeyboardShortcut.swift       — raccourci clavier (valeur pure)
     Zones/DragZoneResolver.swift       — pointeur près d'un bord -> Zone ?
     Zones/KeyboardSnapResolver.swift   — action clavier + état -> commande
@@ -59,11 +60,13 @@ Sources/Fenestra/
     ExcludedAppsView.swift             — applications exclues
     SnapPreviewPanel.swift             — NSPanel d'aperçu translucide
     SnapAssistPanel.swift              — panneau Snap Assist (F8)
+    SnapLayoutsPanel.swift             — palette Snap Layouts (bouton vert)
   Controllers/
     SnapController.swift               — orchestration glisser + clavier + restauration
     SharedBorderController.swift       — F5 : propage un redimensionnement aux voisines
     ScreenWatcher.swift                — F7 : réagit aux changements d'écrans
     SnapAssistController.swift         — F8
+    SnapLayoutsController.swift        — survol du bouton vert -> palette Snap Layouts
 Tests/FenestraTests/                   — Swift Testing, surtout sur Core/
 docs/                                  — site Astro Starlight (documentation utilisateur et développeur)
 ```
@@ -346,6 +349,7 @@ Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_,
     var sharedBorderEnabled: Bool            // F5, true
     var snapAssistEnabled: Bool              // F8, true
     var snapAssistPreviews: Bool             // F8, false ; demande l'enregistrement de l'écran
+    var snapLayoutsEnabled: Bool             // true ; palette au survol du bouton vert
     var excludedBundleIdentifiers: [String]
     var shortcuts: [SnapAction: KeyboardShortcut]   // seules les actions assignées ; défaut SnapAction.defaultShortcuts
     var hasCompletedOnboarding: Bool
@@ -395,7 +399,7 @@ struct ExcludedAppsView: View
 ### Controllers (assemblage)
 
 `AppController` (@MainActor, @Observable) possède : `settings`, `permission`,
-`dragMonitor`, `hotkeys`, `snapController`, `screenWatcher`, `snapAssist`.
+`dragMonitor`, `hotkeys`, `snapController`, `screenWatcher`, `snapAssist`, `snapLayouts`.
 Il démarre les moniteurs quand `permission.isGranted && settings.isEnabled`, les arrête
 sinon, et ré-enregistre les raccourcis quand `settings.shortcuts` change.
 Il expose `func perform(_ action: SnapAction)` pour les menus.
