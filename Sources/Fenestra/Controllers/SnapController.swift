@@ -36,7 +36,8 @@ final class SnapController {
     // MARK: Drag
 
     func mouseDown(at point: CGPoint) {
-        snapAssist?.dismiss()
+        // Snap Assist is not dismissed here: clicks on its own tiles reach us through the local
+        // monitor, and the panel already closes itself on clicks anywhere else.
         cancelDrag()
         guard let window = AXWindowFinder.window(at: point),
               isManageable(window), let frame = window.frame else { return }
