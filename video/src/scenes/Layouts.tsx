@@ -3,7 +3,7 @@ import { fade, point, rect, SNAP } from '../anim';
 import { Display, Stage, Window } from '../components/Desktop';
 import { Cursor, paletteZone, SnapLayouts } from '../components/Overlay';
 import { floating, SCREEN, zone, type Zone } from '../geometry';
-import { Clip, SceneCaption, type Scene, type SceneProps } from './shared';
+import { Clip, type Scene, type SceneProps } from './shared';
 
 const ON_BUTTON = 34;
 const OPEN = 46;
@@ -54,9 +54,8 @@ const Layouts = ({ s }: SceneProps) => {
 				/>
 			</Clip>
 			<Cursor at={pointer} pressed={f >= CLICK - 3 && f < CLICK + 3} />
-			<SceneCaption text={s.layouts} />
 		</Stage>
 	);
 };
 
-export const snapLayouts: Scene = { id: 'layouts', duration: CLICK + 60, Component: Layouts };
+export const snapLayouts: Scene = { id: 'layouts', caption: 'layouts', duration: CLICK + 60, Component: Layouts };

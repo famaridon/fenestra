@@ -11,8 +11,13 @@ const box = (r: Rect): CSSProperties => ({
 	height: r.h,
 });
 
-// Video background, behind the displays.
+// Content of a scene. Transparent: the video background stays put while scenes change.
 export const Stage = ({ children }: { children: ReactNode }) => (
+	<AbsoluteFill style={{ fontFamily: theme.font }}>{children}</AbsoluteFill>
+);
+
+// Video background, behind every scene.
+export const Backdrop = ({ children }: { children: ReactNode }) => (
 	<AbsoluteFill style={{ background: theme.stage, fontFamily: theme.font }}>{children}</AbsoluteFill>
 );
 

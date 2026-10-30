@@ -3,7 +3,7 @@ import { num, point } from '../anim';
 import { Display, Stage, Window } from '../components/Desktop';
 import { Cursor } from '../components/Overlay';
 import { GAP, SCREEN, workArea, zone } from '../geometry';
-import { Clip, SceneCaption, type Scene, type SceneProps } from './shared';
+import { Clip, type Scene, type SceneProps } from './shared';
 
 const PRESS = 28;
 const RELEASE = 115;
@@ -44,9 +44,8 @@ const Border = ({ s }: SceneProps) => {
 				/>
 			</Clip>
 			<Cursor at={pointer} resize={f >= PRESS - 4} />
-			<SceneCaption text={s.border} />
 		</Stage>
 	);
 };
 
-export const border: Scene = { id: 'border', duration: RELEASE + 25, Component: Border };
+export const border: Scene = { id: 'border', caption: 'border', duration: RELEASE + 25, Component: Border };

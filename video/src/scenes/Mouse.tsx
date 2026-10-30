@@ -3,7 +3,7 @@ import { dragged, fade, grab, point, rect, SNAP } from '../anim';
 import { Display, Preview, Stage, Window } from '../components/Desktop';
 import { Cursor } from '../components/Overlay';
 import { SCREEN, zone } from '../geometry';
-import { Clip, desk, SceneCaption, type Scene, type SceneProps } from './shared';
+import { Clip, desk, type Scene, type SceneProps } from './shared';
 
 const PRESS = 30;
 const AT_EDGE = 75;
@@ -41,9 +41,8 @@ const Mouse = ({ s }: SceneProps) => {
 				<Window rect={safari} app="safari" title={s.windows.safari} focused />
 			</Clip>
 			<Cursor at={pointer} pressed={f >= PRESS && f < RELEASE} />
-			<SceneCaption text={s.mouse} />
 		</Stage>
 	);
 };
 
-export const mouse: Scene = { id: 'mouse', duration: RELEASE + 45, Component: Mouse };
+export const mouse: Scene = { id: 'mouse', caption: 'mouse', duration: RELEASE + 45, Component: Mouse };

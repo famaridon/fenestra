@@ -3,7 +3,7 @@ import { rect, SNAP, type Stop } from '../anim';
 import { Display, Stage, Window } from '../components/Desktop';
 import { Keys } from '../components/Overlay';
 import { floating, SCREEN, zone, type Rect } from '../geometry';
-import { Clip, SceneCaption, type Scene, type SceneProps } from './shared';
+import { Clip, type Scene, type SceneProps } from './shared';
 
 const restored = floating(SCREEN, 0.27, 0.14, 0.46, 0.56);
 
@@ -33,9 +33,8 @@ const Keyboard = ({ s }: SceneProps) => {
 					<Keys key={at} keys={keys} from={at} to={at + 26} screen={SCREEN} />
 				))}
 			</Clip>
-			<SceneCaption text={s.keyboard} />
 		</Stage>
 	);
 };
 
-export const keyboard: Scene = { id: 'keyboard', duration: 225, Component: Keyboard };
+export const keyboard: Scene = { id: 'keyboard', caption: 'keyboard', duration: 225, Component: Keyboard };

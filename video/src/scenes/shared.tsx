@@ -1,13 +1,11 @@
 import type { ReactNode } from 'react';
-import { useCurrentFrame } from 'remotion';
-import { fade } from '../anim';
-import { Caption } from '../components/Overlay';
 import { floating, SCREEN, type Rect } from '../geometry';
-import type { Strings } from '../i18n';
+import type { CaptionKey, Strings } from '../i18n';
 
 export type SceneProps = { s: Strings };
 
-export type Scene = { id: string; duration: number; Component: (p: SceneProps) => ReactNode };
+// `caption` names the scene's title in the strings; scenes without one (title, outro) are not features.
+export type Scene = { id: string; duration: number; caption?: CaptionKey; Component: (p: SceneProps) => ReactNode };
 
 // Windows drawn in stage coordinates but clipped to their display.
 export const Clip = ({ screen, children }: { screen: Rect; children: ReactNode }) => (
@@ -25,11 +23,6 @@ export const Clip = ({ screen, children }: { screen: Rect; children: ReactNode }
 		<div style={{ position: 'absolute', left: -screen.x, top: -screen.y, width: 1920, height: 1080 }}>{children}</div>
 	</div>
 );
-
-export const SceneCaption = ({ text }: { text: [string, string] }) => {
-	const frame = useCurrentFrame();
-	return <Caption title={text[0]} subtitle={text[1]} opacity={fade(frame, 0, Infinity, 10)} />;
-};
 
 // Starting layout shared by the mouse, Snap Assist and shared border scenes.
 export const desk = {

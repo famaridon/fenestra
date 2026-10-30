@@ -1,35 +1,40 @@
-import { Composition, Freeze, Series, Still } from 'remotion';
+import { TransitionSeries } from '@remotion/transitions';
+import { Composition, Freeze, Still } from 'remotion';
+import { Captions, Progress } from './components/Captions';
+import { Backdrop } from './components/Desktop';
+import { Caption } from './components/Overlay';
 import { type Lang, strings } from './i18n';
 import { assist } from './scenes/Assist';
-import { border } from './scenes/Border';
-import { displays } from './scenes/Displays';
-import { keyboard } from './scenes/Keyboard';
-import { snapLayouts } from './scenes/Layouts';
-import { mouse } from './scenes/Mouse';
-import type { Scene } from './scenes/shared';
-import { outro, title } from './scenes/Title';
+import { duration, FPS, scenes, transitions } from './timeline';
 
-// The video, in order. Add, remove or reorder scenes here.
-const scenes: Scene[] = [title, snapLayouts, mouse, assist, border, keyboard, displays, outro];
-
-const FPS = 30;
-const duration = scenes.reduce((sum, sc) => sum + sc.duration, 0);
-
-const Intro = ({ lang }: { lang: Lang }) => (
-	<Series>
-		{scenes.map(({ id, duration, Component }) => (
-			<Series.Sequence key={id} durationInFrames={duration} name={id}>
-				<Component s={strings[lang]} />
-			</Series.Sequence>
-		))}
-	</Series>
-);
+const Intro = ({ lang }: { lang: Lang }) => {
+	const s = strings[lang];
+	return (
+		<Backdrop>
+			<TransitionSeries>
+				{scenes.flatMap(({ id, duration, Component }, i) => [
+					<TransitionSeries.Sequence key={id} durationInFrames={duration} name={id}>
+						<Component s={s} />
+					</TransitionSeries.Sequence>,
+					...(i < transitions.length
+						? [<TransitionSeries.Transition key={`${id}-out`} timing={transitions[i].timing} presentation={transitions[i].presentation} />]
+						: []),
+				])}
+			</TransitionSeries>
+			<Captions s={s} />
+			<Progress />
+		</Backdrop>
+	);
+};
 
 // Poster image: the Snap Assist list on screen.
 const Poster = ({ lang }: { lang: Lang }) => (
-	<Freeze frame={45}>
-		<assist.Component s={strings[lang]} />
-	</Freeze>
+	<Backdrop>
+		<Freeze frame={45}>
+			<assist.Component s={strings[lang]} />
+		</Freeze>
+		<Caption title={strings[lang].assist[0]} subtitle={strings[lang].assist[1]} />
+	</Backdrop>
 );
 
 export const Root = () => (

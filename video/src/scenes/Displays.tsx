@@ -3,7 +3,7 @@ import { rect, SNAP } from '../anim';
 import { Display, Stage, Window } from '../components/Desktop';
 import { Keys } from '../components/Overlay';
 import { floating, zone, type Rect } from '../geometry';
-import { SceneCaption, type Scene, type SceneProps } from './shared';
+import { type Scene, type SceneProps } from './shared';
 
 // A landscape display and a vertical one on its right.
 const A: Rect = { x: 130, y: 205, w: 1060, h: 596 };
@@ -38,9 +38,8 @@ const Displays = ({ s }: SceneProps) => {
 			<Keys keys={['⌃', '⌥', '⌘', '→']} from={NEXT} to={NEXT + 30} screen={A} />
 			<Keys keys={['⌃', '⌥', '↑']} from={UP} to={UP + 30} screen={B} />
 			<Keys keys={['⌃', '⌥', '←']} from={LEFT} to={LEFT + 30} screen={B} />
-			<SceneCaption text={s.displays} />
 		</Stage>
 	);
 };
 
-export const displays: Scene = { id: 'displays', duration: LEFT + 60, Component: Displays };
+export const displays: Scene = { id: 'displays', caption: 'displays', duration: LEFT + 60, Component: Displays };

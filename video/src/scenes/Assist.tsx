@@ -4,7 +4,7 @@ import { Display, Stage, Window } from '../components/Desktop';
 import { Cursor, SnapAssist } from '../components/Overlay';
 import { SCREEN, zone } from '../geometry';
 import { AFTER_POINTER } from './Mouse';
-import { Clip, desk, SceneCaption, type Scene, type SceneProps } from './shared';
+import { Clip, desk, type Scene, type SceneProps } from './shared';
 
 const HOVER = 40;
 const CLICK = 58;
@@ -47,9 +47,8 @@ const Assist = ({ s }: SceneProps) => {
 				{picked && <Window rect={notes} app="notes" title={s.windows.notes} focused />}
 			</Clip>
 			<Cursor at={pointer} pressed={f >= CLICK - 3 && f < CLICK + 3} />
-			<SceneCaption text={s.assist} />
 		</Stage>
 	);
 };
 
-export const assist: Scene = { id: 'assist', duration: CLICK + 60, Component: Assist };
+export const assist: Scene = { id: 'assist', caption: 'assist', duration: CLICK + 60, Component: Assist };

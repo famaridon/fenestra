@@ -2,6 +2,8 @@
 
 export type Lang = 'en' | 'fr';
 
+export type CaptionKey = 'layouts' | 'mouse' | 'assist' | 'border' | 'keyboard' | 'displays';
+
 export type Strings = {
 	tagline: string;
 	layouts: [string, string];
