@@ -16,6 +16,12 @@ Check, in this order:
 
 Reminder: the pointer must touch the edge, and you grab the window by its title bar.
 
+## Snap Assist shows icons instead of thumbnails
+
+1. Check that **Window previews in Snap Assist** is on in the **General** tab of the settings.
+2. Check that Fenestra is allowed in **System Settings > Privacy & Security > Screen & System Audio Recording**, then relaunch Fenestra.
+3. A window that is hidden, on another desktop (Space) or cannot be captured keeps its app icon: this is expected.
+
 ## The permission disappears after a rebuild
 
 The permission is tied to the signature. Make sure the project is signed with an **Apple Development** certificate and not "ad hoc" (see [Installation](/fenestra/guide/installation/)). If the Fenestra entry is already stale, remove it from the Accessibility list, then relaunch the app to grant the permission again.

@@ -40,6 +40,8 @@ Fenestra lives in the **menu bar**: it has no Dock icon. On first launch, a welc
 Without this permission, Fenestra can neither move nor resize other apps' windows.
 :::
 
+A second permission, **Screen & System Audio Recording**, is optional: it is only needed for [window thumbnails in Snap Assist](/fenestra/guide/snap-assist/#window-thumbnails), and Fenestra only asks for it when you turn that option on.
+
 ## Why an Apple Development signature?
 
 macOS ties the Accessibility permission to the app's signing identity. An "ad hoc" signed build gets a new identity on every build, and the permission is lost. With a stable **Apple Development** certificate, macOS recognizes the app from one build to the next and **keeps the permission**.

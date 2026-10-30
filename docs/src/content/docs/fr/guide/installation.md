@@ -36,6 +36,8 @@ Fenestra vit dans la **barre des menus** : il n'a pas d'icône dans le Dock. Au 
 Sans cette autorisation, Fenestra ne peut ni déplacer ni redimensionner les fenêtres des autres applications.
 :::
 
+Une seconde autorisation, l'**enregistrement de l'écran**, est facultative : elle ne sert qu'aux [miniatures de Snap Assist](/fenestra/fr/guide/snap-assist/#miniatures-des-fenêtres), et Fenestra ne la demande que si vous activez cette option.
+
 ## Pourquoi la signature Apple Development ?
 
 macOS associe l'autorisation d'Accessibilité à l'identité de signature de l'application. Une compilation signée « ad hoc » change d'identité à chaque build, et l'autorisation disparaît. Avec un certificat **Apple Development** stable, macOS reconnaît l'application d'une compilation à l'autre et **conserve l'autorisation**.

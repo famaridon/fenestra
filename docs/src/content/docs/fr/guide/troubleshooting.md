@@ -16,6 +16,12 @@ Vérifiez dans l'ordre :
 
 Rappel : le pointeur doit toucher le bord, et on saisit la fenêtre par sa barre de titre.
 
+## Snap Assist affiche des icônes au lieu des miniatures
+
+1. Vérifiez que **Aperçu des fenêtres dans Snap Assist** est activé dans l'onglet **Général** des réglages.
+2. Vérifiez que Fenestra est autorisé dans **Réglages Système > Confidentialité et sécurité > Enregistrement de l'écran et de l'audio du système**, puis relancez Fenestra.
+3. Une fenêtre masquée, sur un autre bureau (Space) ou impossible à capturer garde l'icône de son application : c'est normal.
+
 ## L'autorisation disparaît après une recompilation
 
 L'autorisation est liée à la signature. Vérifiez que le projet est signé avec un certificat **Apple Development** et non « ad hoc » (voir [Installation](/fenestra/fr/guide/installation/)). Si l'entrée Fenestra est déjà périmée, supprimez-la de la liste Accessibilité puis relancez l'app pour la ré-autoriser.

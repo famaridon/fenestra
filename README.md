@@ -12,7 +12,7 @@
 - Drag snapping: screen edges and corners, translucent preview, original size restored when you unsnap.
 - Configurable global keyboard shortcuts (halves, quarters, thirds, full screen, restore, move to another display).
 - Shared border: resizing a snapped window adjusts its neighbors.
-- Snap Assist: offers your other windows for the remaining space.
+- Snap Assist: after a snap with the mouse or the keyboard, offers your other windows for the remaining space, with optional window thumbnails.
 - Multiple and vertical displays, zones applied again automatically when the display setup changes.
 - Excluded apps, gaps between windows, launch at login.
 
