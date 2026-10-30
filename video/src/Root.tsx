@@ -14,9 +14,6 @@ const scenes: Scene[] = [title, mouse, assist, border, keyboard, displays, outro
 const FPS = 30;
 const duration = scenes.reduce((sum, sc) => sum + sc.duration, 0);
 
-// Frame used for the poster image: the Snap Assist list on screen.
-const POSTER_FRAME = title.duration + mouse.duration + 45;
-
 const Intro = ({ lang }: { lang: Lang }) => (
 	<Series>
 		{scenes.map(({ id, duration, Component }) => (
@@ -27,9 +24,10 @@ const Intro = ({ lang }: { lang: Lang }) => (
 	</Series>
 );
 
+// Poster image: the Snap Assist list on screen.
 const Poster = ({ lang }: { lang: Lang }) => (
-	<Freeze frame={POSTER_FRAME}>
-		<Intro lang={lang} />
+	<Freeze frame={45}>
+		<assist.Component s={strings[lang]} />
 	</Freeze>
 );
 

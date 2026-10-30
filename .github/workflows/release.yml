@@ -5,10 +5,10 @@ on:
     tags: ['v*']
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  release:
+  app:
     runs-on: macos-26
     env:
       TAG: ${{ github.ref_name }}
@@ -48,12 +48,60 @@ jobs:
           ZIP="Fenestra.zip"
           ditto -c -k --keepParent build/Build/Products/Release/Fenestra.app "$ZIP"
           shasum -a 256 "$ZIP" > "$ZIP.sha256"
-          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: app
+          path: Fenestra.zip*
+          if-no-files-found: error
+
+  # Intro video of the documentation, rendered with Remotion from video/.
+  video:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: video/package.json
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: video/pnpm-lock.yaml
+
+      - name: Render
+        working-directory: video
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm render
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: video
+          path: video/out/
+          if-no-files-found: error
+
+  publish:
+    needs: [app, video]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    env:
+      TAG: ${{ github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          merge-multiple: true
 
       - name: Publish the release
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
+          VERSION="${TAG#v}"
+          ZIP="Fenestra.zip"
           cat > notes.md <<EOF
           ## Install
 
@@ -68,5 +116,11 @@ jobs:
           EOF
           PRERELEASE=()
           [[ "$VERSION" == *-* ]] && PRERELEASE=(--prerelease)
-          gh release create "$TAG" "$ZIP" "$ZIP.sha256" --title "Fenestra $VERSION" \
+          gh release create "$TAG" "$ZIP" "$ZIP.sha256" fenestra-intro-* --title "Fenestra $VERSION" \
             --notes-file notes.md --generate-notes "${PRERELEASE[@]}"
+
+      # The documentation serves the video of the latest release: rebuild it.
+      # (A release created with GITHUB_TOKEN does not trigger other workflows by itself.)
+      - name: Rebuild the documentation
+        if: ${{ !contains(github.ref_name, '-') }}
+        run: gh workflow run docs.yml --ref main

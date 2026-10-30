@@ -54,9 +54,21 @@ cd docs && pnpm install && pnpm dev
 
 The site is in English (root) and French (`src/content/docs/fr/`).
 
+### Intro video
+
+The home page video is made with [Remotion](https://www.remotion.dev) in `video/`: one component per scene in `src/scenes/`, texts per language in `src/i18n.ts`, scene order in `src/Root.tsx`.
+
+```sh
+cd video && pnpm install
+pnpm studio     # live preview
+pnpm render     # out/fenestra-intro-{en,fr}.mp4 and .jpg posters
+```
+
+The `Release` workflow renders it and attaches it to the release; the documentation serves the video of the latest release. To preview it in the docs locally, copy `video/out/*` to `docs/public/video/`.
+
 ## Release
 
-Push a `vX.Y.Z` tag (or `vX.Y.Z-beta.1` for a pre-release): the `Release` workflow runs the tests, builds an unsigned arm64 app and publishes `Fenestra.zip` on GitHub Releases.
+Push a `vX.Y.Z` tag (or `vX.Y.Z-beta.1` for a pre-release): the `Release` workflow runs the tests, builds an unsigned arm64 app and publishes `Fenestra.zip` and the intro video on GitHub Releases. For a final version, it then rebuilds the documentation to pick up the new video.
 
 ```sh
 git tag v0.1.0 && git push origin v0.1.0

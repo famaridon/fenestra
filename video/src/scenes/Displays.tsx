@@ -11,6 +11,7 @@ const B: Rect = { x: 1260, y: 80, w: 470, h: 836 };
 
 const NEXT = 25;
 const UP = 95;
+const LEFT = 155;
 
 // A window that is not snapped keeps its relative position on the next display.
 const onA = floating(A, 0.4, 0.15, 0.5, 0.6);
@@ -23,6 +24,9 @@ const Displays = ({ s }: SceneProps) => {
 		[NEXT + 20, onB, SNAP],
 		[UP + 4, onB],
 		[UP + 16, zone(B, 'top'), SNAP],
+		// On a vertical display, ← / → cut the top half into quarters.
+		[LEFT + 4, zone(B, 'top')],
+		[LEFT + 16, zone(B, 'topLeft'), SNAP],
 	]);
 	return (
 		<Stage>
@@ -33,9 +37,10 @@ const Displays = ({ s }: SceneProps) => {
 			<Window rect={terminal} app="terminal" title={s.windows.terminal} focused />
 			<Keys keys={['⌃', '⌥', '⌘', '→']} from={NEXT} to={NEXT + 30} screen={A} />
 			<Keys keys={['⌃', '⌥', '↑']} from={UP} to={UP + 30} screen={B} />
+			<Keys keys={['⌃', '⌥', '←']} from={LEFT} to={LEFT + 30} screen={B} />
 			<SceneCaption text={s.displays} />
 		</Stage>
 	);
 };
 
-export const displays: Scene = { id: 'displays', duration: UP + 60, Component: Displays };
+export const displays: Scene = { id: 'displays', duration: LEFT + 60, Component: Displays };
