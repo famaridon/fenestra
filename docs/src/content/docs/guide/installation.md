@@ -16,7 +16,7 @@ The app's interface is currently in French only. An English version is planned.
 
 ## Download a release
 
-1. Download `Fenestra-x.y.z.zip` from the [latest release](https://github.com/famaridon/fenestra/releases/latest), unzip it and move `Fenestra.app` to `/Applications`.
+1. [Download Fenestra](https://github.com/famaridon/fenestra/releases/latest/download/Fenestra.zip) (latest version, `Fenestra.zip`), unzip it and move `Fenestra.app` to `/Applications`.
 2. Builds are **not signed or notarized yet**, so macOS refuses to open the app on first launch. Remove the quarantine flag in a terminal:
 
    ```sh
@@ -24,6 +24,8 @@ The app's interface is currently in French only. An English version is planned.
    ```
 
 3. Launch Fenestra, then grant the Accessibility permission (see below).
+
+Previous versions and their changes are listed on the [releases page](https://github.com/famaridon/fenestra/releases).
 
 :::caution[Updates]
 An unsigned build changes identity with each version, so macOS forgets the Accessibility permission. After an update, remove the old Fenestra entry from the Accessibility list and grant the permission again.

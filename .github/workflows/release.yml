@@ -44,7 +44,8 @@ jobs:
 
       - name: Package
         run: |
-          ZIP="Fenestra-$VERSION.zip"
+          # Same name in every release, so releases/latest/download/Fenestra.zip always works.
+          ZIP="Fenestra.zip"
           ditto -c -k --keepParent build/Build/Products/Release/Fenestra.app "$ZIP"
           shasum -a 256 "$ZIP" > "$ZIP.sha256"
           echo "ZIP=$ZIP" >> "$GITHUB_ENV"

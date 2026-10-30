@@ -20,7 +20,7 @@ Le besoin complet est décrit dans [BESOIN.md](BESOIN.md), l'architecture et les
 
 ## Installer
 
-Téléchargez la dernière version depuis les [Releases](https://github.com/famaridon/fenestra/releases/latest). Les versions ne sont pas encore signées : voir le [guide d'installation](https://famaridon.github.io/fenestra/fr/guide/installation/#télécharger-une-version) pour ouvrir l'app.
+**[Télécharger Fenestra](https://github.com/famaridon/fenestra/releases/latest/download/Fenestra.zip)** (dernière version ; toutes les versions sur la [page des releases](https://github.com/famaridon/fenestra/releases)). Les versions ne sont pas encore signées : voir le [guide d'installation](https://famaridon.github.io/fenestra/fr/guide/installation/#télécharger-une-version) pour ouvrir l'app.
 
 ## Compiler et lancer
 
@@ -54,7 +54,7 @@ Le site est en anglais (racine) et en français (`src/content/docs/fr/`).
 
 ## Publier une version
 
-Poussez un tag `vX.Y.Z` (ou `vX.Y.Z-beta.1` pour une préversion) : le workflow `Release` lance les tests, compile une app arm64 non signée et publie `Fenestra-X.Y.Z.zip` dans les Releases GitHub.
+Poussez un tag `vX.Y.Z` (ou `vX.Y.Z-beta.1` pour une préversion) : le workflow `Release` lance les tests, compile une app arm64 non signée et publie `Fenestra.zip` dans les Releases GitHub.
 
 ```sh
 git tag v0.1.0 && git push origin v0.1.0

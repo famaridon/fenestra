@@ -12,7 +12,7 @@ Fenestra n'est pas distribué sur l'App Store : l'application ne peut pas être 
 
 ## Télécharger une version
 
-1. Téléchargez `Fenestra-x.y.z.zip` depuis la [dernière version](https://github.com/famaridon/fenestra/releases/latest), décompressez-le et déplacez `Fenestra.app` dans `/Applications`.
+1. [Téléchargez Fenestra](https://github.com/famaridon/fenestra/releases/latest/download/Fenestra.zip) (dernière version, `Fenestra.zip`), décompressez-le et déplacez `Fenestra.app` dans `/Applications`.
 2. Les versions **ne sont pas encore signées ni notarisées** : macOS refuse d'ouvrir l'app au premier lancement. Retirez l'attribut de quarantaine dans un terminal :
 
    ```sh
@@ -20,6 +20,8 @@ Fenestra n'est pas distribué sur l'App Store : l'application ne peut pas être 
    ```
 
 3. Lancez Fenestra, puis accordez l'autorisation d'Accessibilité (voir plus bas).
+
+Les versions précédentes et leurs changements sont sur la [page des releases](https://github.com/famaridon/fenestra/releases).
 
 :::caution[Mises à jour]
 Une version non signée change d'identité à chaque version : macOS oublie l'autorisation d'Accessibilité. Après une mise à jour, supprimez l'ancienne entrée Fenestra de la liste Accessibilité et accordez de nouveau l'autorisation.
