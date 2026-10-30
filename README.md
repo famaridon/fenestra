@@ -20,6 +20,10 @@ The app's interface is currently in French only; an English version is planned.
 
 The full requirements are in [BESOIN.md](BESOIN.md), and the architecture and module contracts in [ARCHITECTURE.md](ARCHITECTURE.md) (both in French).
 
+## Install
+
+Download the latest build from [Releases](https://github.com/famaridon/fenestra/releases/latest). Builds are not signed yet: see the [installation guide](https://famaridon.github.io/fenestra/guide/installation/#download-a-release) to open the app.
+
 ## Build and run
 
 ```sh
@@ -49,3 +53,11 @@ cd docs && pnpm install && pnpm dev
 ```
 
 The site is in English (root) and French (`src/content/docs/fr/`).
+
+## Release
+
+Push a `vX.Y.Z` tag (or `vX.Y.Z-beta.1` for a pre-release): the `Release` workflow runs the tests, builds an unsigned arm64 app and publishes `Fenestra-X.Y.Z.zip` on GitHub Releases.
+
+```sh
+git tag v0.1.0 && git push origin v0.1.0
+```

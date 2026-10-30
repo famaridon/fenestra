@@ -1,18 +1,33 @@
 ---
 title: Installation
-description: Prérequis, compilation depuis les sources et autorisation d'Accessibilité.
+description: Télécharger une version ou compiler depuis les sources, et autoriser l'Accessibilité.
 ---
 
-Fenestra n'est pas distribué sur l'App Store : l'application ne peut pas être sandboxée tout en pilotant les fenêtres via l'Accessibilité. On la compile donc depuis les sources.
+Fenestra n'est pas distribué sur l'App Store : l'application ne peut pas être sandboxée tout en pilotant les fenêtres via l'Accessibilité. Téléchargez une version prête à l'emploi sur GitHub, ou compilez-la depuis les sources.
 
 ## Prérequis
 
 - macOS 26 ou plus récent
 - Mac Apple silicon
-- Xcode (avec un compte donnant un certificat **Apple Development**)
-- [Homebrew](https://brew.sh) pour installer XcodeGen
+
+## Télécharger une version
+
+1. Téléchargez `Fenestra-x.y.z.zip` depuis la [dernière version](https://github.com/famaridon/fenestra/releases/latest), décompressez-le et déplacez `Fenestra.app` dans `/Applications`.
+2. Les versions **ne sont pas encore signées ni notarisées** : macOS refuse d'ouvrir l'app au premier lancement. Retirez l'attribut de quarantaine dans un terminal :
+
+   ```sh
+   xattr -dr com.apple.quarantine /Applications/Fenestra.app
+   ```
+
+3. Lancez Fenestra, puis accordez l'autorisation d'Accessibilité (voir plus bas).
+
+:::caution[Mises à jour]
+Une version non signée change d'identité à chaque version : macOS oublie l'autorisation d'Accessibilité. Après une mise à jour, supprimez l'ancienne entrée Fenestra de la liste Accessibilité et accordez de nouveau l'autorisation.
+:::
 
 ## Compiler depuis les sources
+
+Il faut en plus Xcode (avec un compte donnant un certificat **Apple Development**) et [Homebrew](https://brew.sh) pour installer XcodeGen.
 
 Le projet Xcode est généré par [XcodeGen](https://github.com/yonaskolb/XcodeGen) à partir de `project.yml` ; le `.xcodeproj` n'est pas versionné.
 

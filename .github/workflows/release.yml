@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-26
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Read the version from the tag
+        run: |
+          VERSION="${TAG#v}"
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::Tag $TAG is not vX.Y.Z or vX.Y.Z-suffix"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Generate the Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      # No Developer ID certificate yet: sign ad hoc (required to run on Apple silicon).
+      - name: Test
+        run: |
+          xcodebuild test -project Fenestra.xcodeproj -scheme Fenestra -destination 'platform=macOS' \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=
+
+      - name: Build
+        run: |
+          xcodebuild build -project Fenestra.xcodeproj -scheme Fenestra -configuration Release \
+            -destination 'generic/platform=macOS' -derivedDataPath build ARCHS=arm64 \
+            MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=
+
+      - name: Package
+        run: |
+          ZIP="Fenestra-$VERSION.zip"
+          ditto -c -k --keepParent build/Build/Products/Release/Fenestra.app "$ZIP"
+          shasum -a 256 "$ZIP" > "$ZIP.sha256"
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > notes.md <<EOF
+          ## Install
+
+          1. Download \`$ZIP\`, unzip it and move \`Fenestra.app\` to \`/Applications\`.
+          2. This build is **not signed or notarized**, so macOS blocks it on first launch. Remove the quarantine flag:
+             \`\`\`sh
+             xattr -dr com.apple.quarantine /Applications/Fenestra.app
+             \`\`\`
+          3. Launch Fenestra and grant the Accessibility permission. Unsigned builds change identity with each version: after an update, remove the old Fenestra entry from the Accessibility list and grant it again.
+
+          Requires macOS 26 or later on Apple silicon.
+          EOF
+          PRERELEASE=()
+          [[ "$VERSION" == *-* ]] && PRERELEASE=(--prerelease)
+          gh release create "$TAG" "$ZIP" "$ZIP.sha256" --title "Fenestra $VERSION" \
+            --notes-file notes.md --generate-notes "${PRERELEASE[@]}"
