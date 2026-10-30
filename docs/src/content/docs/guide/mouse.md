@@ -38,4 +38,4 @@ This also works with the [keyboard](/fenestra/guide/keyboard/), and you can mix 
 
 ## Snap Assist
 
-After a drag snap, Fenestra offers to fill the remaining space with another window. See [Snap Assist](/fenestra/guide/snap-assist/).
+After a snap, Fenestra offers to fill the remaining space with another window. See [Snap Assist](/fenestra/guide/snap-assist/).

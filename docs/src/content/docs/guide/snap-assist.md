@@ -3,15 +3,15 @@ title: Snap Assist
 description: After snapping a window, pick another one to fill the remaining space, as on Windows 11.
 ---
 
-As on Windows 11, when you snap a window to one half of the screen, Fenestra offers to **fill the remaining space** with another window. Two clicks are enough to put two windows side by side.
+As on Windows 11, when you snap a window to one half of the screen, with the mouse or the keyboard, Fenestra offers to **fill the remaining space** with another window. Two clicks are enough to put two windows side by side.
 
 ## How it works
 
-1. Drag a window to an edge or a corner (see [Snapping with the mouse](/fenestra/guide/mouse/)).
-2. When you release it, the free space shows the list of your other open windows, with their app icon and title.
+1. Snap a window: drag it to an edge or a corner (see [Snapping with the mouse](/fenestra/guide/mouse/)), or use a shortcut such as `⌃⌥←` (see [Keyboard shortcuts](/fenestra/guide/keyboard/)).
+2. The free space shows the list of your other open windows, with their app icon and title.
 3. **Click** a window: it fills the free space and comes to the front.
 
-**Escape**, or a click anywhere else, closes the list without doing anything.
+**Escape**, a click anywhere else or another shortcut closes the list without doing anything. When you cycle with the arrows, the list follows the window and offers the space left by its new zone.
 
 ## Which space is offered
 
@@ -33,9 +33,11 @@ The window you pick is snapped like any other: it stays **linked** to its neighb
 
 If no window is left, the list does not show up.
 
+The list does not show up either when another snapped window already fills the free space.
+
 ## Limitations
 
-- Snap Assist only shows up after a **drag** snap, not after a keyboard shortcut.
+- You pick a window with the mouse: the list cannot be browsed with the keyboard yet.
 
 ## Turn it off
 

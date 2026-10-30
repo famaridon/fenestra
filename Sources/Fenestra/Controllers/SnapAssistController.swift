@@ -1,6 +1,6 @@
 import AppKit
 
-/// F8: after a drag snap, offers the other windows for the remaining space.
+/// F8: after a snap (drag or keyboard), offers the other windows for the remaining space.
 @MainActor
 final class SnapAssistController {
     private let settings: Settings
@@ -15,7 +15,10 @@ final class SnapAssistController {
 
     func offer(after window: AXWindow, zone: Zone, screen: ScreenInfo) {
         guard let complement = zone.complement else { return }
-        let snapped = Set(snapController.snappedWindows(on: screen.id).map(\.0))
+        let neighbors = snapController.snappedWindows(on: screen.id, excluding: window)
+        // As on Windows, nothing to offer when another snapped window already fills the space.
+        guard !neighbors.contains(where: { $0.1.zone.overlaps(complement) }) else { return }
+        let snapped = Set(neighbors.map(\.0))
         let others = AXWindowFinder.visibleStandardWindows().filter {
             $0 != window && !snapped.contains($0)
                 && !settings.isExcluded(bundleIdentifier: $0.bundleIdentifier)

@@ -56,6 +56,17 @@ struct ZoneTests {
         #expect(Zone.leftThird.complement == nil)
     }
 
+    @Test func overlaps() {
+        #expect(Zone.rightHalf.overlaps(.rightHalf))
+        #expect(Zone.rightHalf.overlaps(.topRight))
+        #expect(Zone.bottomLeft.overlaps(.leftHalf))
+        #expect(Zone.maximize.overlaps(.bottomRight))
+        #expect(Zone.rightThird.overlaps(.rightHalf))
+        #expect(!Zone.leftHalf.overlaps(.rightHalf))
+        #expect(!Zone.topLeft.overlaps(.bottomLeft))
+        #expect(!Zone.topLeft.overlaps(.bottomRight))
+    }
+
     @Test func defaultEnabledExcludesThirds() {
         #expect(Zone.defaultEnabled.contains(.leftHalf))
         #expect(Zone.defaultEnabled.contains(.maximize))

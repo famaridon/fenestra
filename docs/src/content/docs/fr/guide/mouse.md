@@ -38,4 +38,4 @@ Cela fonctionne aussi au [clavier](/fenestra/fr/guide/keyboard/), et les deux m�
 
 ## Snap Assist
 
-Après un snap par glisser, Fenestra propose de remplir l'espace libre avec une autre fenêtre. Voir [Snap Assist](/fenestra/fr/guide/snap-assist/).
+Après un snap, Fenestra propose de remplir l'espace libre avec une autre fenêtre. Voir [Snap Assist](/fenestra/fr/guide/snap-assist/).

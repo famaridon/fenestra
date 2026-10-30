@@ -51,6 +51,7 @@ Clavier
        -> SnapController.perform(action)
           -> KeyboardSnapResolver.command(...)   action + état + écran -> SnapCommand
           -> place(...) | restore(...) | rien
+          -> SnapAssistController            après un place, si la zone a un complément
 ```
 
 Autres flux :

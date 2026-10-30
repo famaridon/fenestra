@@ -58,6 +58,8 @@ Dans l'autre sens, `⌃⌥←` sur une moitié gauche de B renvoie la fenêtre s
 
 Sur un écran vertical, le cycle utilise `↑`/`↓`, voir [Écran vertical](/fenestra/fr/guide/vertical-display/).
 
+Après chaque snap sur une moitié ou un quart, [Snap Assist](/fenestra/fr/guide/snap-assist/) propose vos autres fenêtres pour l'espace libre.
+
 ## Autres actions
 
 - **Quarts, plein écran, tiers** : placent la fenêtre dans la zone sur son écran courant. Si elle y est déjà, rien ne se passe.

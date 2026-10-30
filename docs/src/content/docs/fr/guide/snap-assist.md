@@ -3,15 +3,15 @@ title: Snap Assist
 description: Après un snap, choisir une autre fenêtre pour remplir l'espace libre, comme sous Windows 11.
 ---
 
-Comme sous Windows 11, quand vous collez une fenêtre sur une moitié de l'écran, Fenestra propose de **remplir l'espace libre** avec une autre fenêtre. Deux clics suffisent pour mettre deux fenêtres côte à côte.
+Comme sous Windows 11, quand vous collez une fenêtre sur une moitié de l'écran, à la souris ou au clavier, Fenestra propose de **remplir l'espace libre** avec une autre fenêtre. Deux clics suffisent pour mettre deux fenêtres côte à côte.
 
 ## Fonctionnement
 
-1. Glissez une fenêtre vers un bord ou un coin (voir [Snap à la souris](/fenestra/fr/guide/mouse/)).
-2. Au relâchement, l'espace libre affiche la liste de vos autres fenêtres ouvertes, avec l'icône de l'application et le titre.
+1. Collez une fenêtre : glissez-la vers un bord ou un coin (voir [Snap à la souris](/fenestra/fr/guide/mouse/)), ou utilisez un raccourci comme `⌃⌥←` (voir [Raccourcis clavier](/fenestra/fr/guide/keyboard/)).
+2. L'espace libre affiche la liste de vos autres fenêtres ouvertes, avec l'icône de l'application et le titre.
 3. **Cliquez** une fenêtre : elle remplit l'espace libre et passe au premier plan.
 
-**Échap**, ou un clic ailleurs, ferme la liste sans rien faire.
+**Échap**, un clic ailleurs ou un autre raccourci ferme la liste sans rien faire. Quand vous enchaînez les flèches, la liste suit la fenêtre et propose l'espace laissé par sa nouvelle zone.
 
 ## Quel espace est proposé
 
@@ -33,9 +33,11 @@ La fenêtre choisie est collée comme les autres : elle reste **liée** à sa vo
 
 S'il ne reste aucune fenêtre, la liste ne s'affiche pas.
 
+Elle ne s'affiche pas non plus si une autre fenêtre collée occupe déjà l'espace libre.
+
 ## Limites
 
-- Snap Assist ne s'affiche qu'après un snap **par glisser**, pas après un raccourci clavier.
+- On choisit la fenêtre à la souris : la liste ne se parcourt pas encore au clavier.
 
 ## Le désactiver
 

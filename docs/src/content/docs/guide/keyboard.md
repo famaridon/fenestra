@@ -58,6 +58,8 @@ The other way, `⌃⌥←` on a left half of B sends the window back to A in the
 
 On a vertical display, cycling uses `↑`/`↓`, see [Vertical displays](/fenestra/guide/vertical-display/).
 
+After each snap to a half or a quarter, [Snap Assist](/fenestra/guide/snap-assist/) offers your other windows for the free space.
+
 ## Other actions
 
 - **Quarters, full screen, thirds**: put the window in that zone on its current display. If it is already there, nothing happens.

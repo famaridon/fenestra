@@ -395,7 +395,8 @@ Il expose `func perform(_ action: SnapAction)` pour les menus.
     d'origine une seule fois (origine recalculée pour garder le pointeur au même ratio dans la barre de titre),
     puis retire l'enregistrement. Ensuite `DragZoneResolver` sur l'écran contenant le pointeur → affiche/cache l'aperçu.
 - `mouseUp(at:)` : si une zone est affichée, applique `place(zone, on: screen)` ; cache l'aperçu ; déclenche Snap Assist.
-- `perform(_ action: SnapAction)` : fenêtre active, `KeyboardSnapResolver`, applique la commande ;
+- `perform(_ action: SnapAction)` : ferme Snap Assist, fenêtre active, `KeyboardSnapResolver`, applique la commande ;
+  après un `.place`, déclenche Snap Assist ;
   `nextDisplay/previousDisplay` sur fenêtre non collée : déplacement proportionnel vers l'écran voisin.
 - `place(window, zone, screen)` : calcule `zone.frame(in: screen.visibleFrame, gap:)`, `setFrame`, relit, enregistre.
 - `restore(window)` : `setFrame(record.restoreFrame)` puis `registry.remove`.
@@ -403,6 +404,7 @@ Il expose `func perform(_ action: SnapAction)` pour les menus.
 `ScreenWatcher` : sur `NSApplication.didChangeScreenParametersNotification`, pour chaque fenêtre du registre,
 réapplique sa zone sur son écran (ou sur l'écran principal si l'écran a disparu).
 
-`SnapAssistController` : après un snap par glisser sur une zone qui a un `complement`, affiche
+`SnapAssistController` : après un snap (glisser ou clavier) sur une zone qui a un `complement`, affiche
 `SnapAssistPanel` dans le cadre du complément, listant les autres fenêtres standard (icône + titre).
+Rien n'est proposé si une fenêtre collée sur cet écran occupe déjà le complément (`Zone.overlaps`).
 Un clic place la fenêtre choisie dans le complément. Échap ou clic ailleurs ferme.

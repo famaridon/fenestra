@@ -76,7 +76,7 @@ Priorités : **P0** = indispensable au MVP · **P1** = attendu en v1 · **P2** =
 - Brancher ou débrancher un écran, ou changer sa résolution, ne doit pas laisser de fenêtre hors de l'écran.
 
 ### F8 — Snap Assist · P2
-- Après avoir collé une fenêtre sur une moitié, proposer les autres fenêtres ouvertes pour remplir l'espace restant, comme sous Windows.
+- Après avoir collé une fenêtre sur une moitié, à la souris ou au clavier, proposer les autres fenêtres ouvertes pour remplir l'espace restant, comme sous Windows.
 
 ### F9 — Application et réglages · P0
 - App **dans la barre des menus** uniquement, sans icône dans le Dock.

@@ -97,9 +97,7 @@ final class SnapController {
         }
         guard let (zone, screen) = target else { return }
         place(window, zone: zone, on: screen)
-        if settings.snapAssistEnabled, zone.complement != nil {
-            snapAssist?.offer(after: window, zone: zone, screen: screen)
-        }
+        offerSnapAssist(after: window, zone: zone, screen: screen)
     }
 
     private func startReleaseWatchdog() {
@@ -160,6 +158,8 @@ final class SnapController {
     // MARK: Keyboard
 
     func perform(_ action: SnapAction) {
+        // Hotkeys never reach the panel's Escape monitor: each new action replaces the previous offer.
+        snapAssist?.dismiss()
         guard let window = AXWindowFinder.frontmostWindow(), isManageable(window),
               let frame = window.frame else { return }
         layout = .current()
@@ -176,6 +176,7 @@ final class SnapController {
         case .place(let zone, let target):
             place(window, zone: zone, on: target)
             window.raise()
+            offerSnapAssist(after: window, zone: zone, screen: target)
         case .restore:
             restore(window)
         case .none:
@@ -207,6 +208,11 @@ final class SnapController {
         let target = zone.frame(in: screen.visibleFrame, gap: CGFloat(settings.gap))
         let actual = window.setFrame(target) ?? target
         registry.recordSnap(window, zone: zone, screenID: screen.id, snappedFrame: actual, currentFrame: current)
+    }
+
+    private func offerSnapAssist(after window: AXWindow, zone: Zone, screen: ScreenInfo) {
+        guard settings.snapAssistEnabled, zone.complement != nil else { return }
+        snapAssist?.offer(after: window, zone: zone, screen: screen)
     }
 
     /// Placement requested by Snap Assist or the screen watcher (no raise, restore frame preserved).

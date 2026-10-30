@@ -71,6 +71,14 @@ enum Zone: String, CaseIterable, Codable, Sendable, Identifiable, Hashable {
         }
     }
 
+    /// Whether both zones cover a common area of the same screen (sharing an edge does not count).
+    func overlaps(_ other: Zone) -> Bool {
+        // Divisible by 2 and 3, so `frame(in:gap:)`'s rounding to whole points never shifts an edge.
+        let reference = CGRect(x: 0, y: 0, width: 1200, height: 1200)
+        let shared = frame(in: reference, gap: 0).intersection(other.frame(in: reference, gap: 0))
+        return !shared.isNull && shared.width > 0 && shared.height > 0
+    }
+
     /// Frame of the zone inside `area` (the screen's visible frame, AX coordinates).
     /// `gap` is the margin between windows and with the screen edges: `area` is inset by
     /// `gap / 2`, then each zone is inset by `gap / 2` on every side.
