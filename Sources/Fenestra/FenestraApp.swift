@@ -35,7 +35,7 @@ private struct MenuBarIcon: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        Image(systemName: "rectangle.split.2x1")
+        Image("MenuBarIcon")
             .task {
                 if controller.wantsOnboarding { openWindow(id: "onboarding") }
             }
