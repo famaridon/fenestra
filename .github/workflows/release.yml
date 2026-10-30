@@ -88,7 +88,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      actions: write
     env:
       TAG: ${{ github.ref_name }}
       GH_TOKEN: ${{ github.token }}
@@ -118,9 +117,3 @@ jobs:
           [[ "$VERSION" == *-* ]] && PRERELEASE=(--prerelease)
           gh release create "$TAG" "$ZIP" "$ZIP.sha256" fenestra-intro-* --title "Fenestra $VERSION" \
             --notes-file notes.md --generate-notes "${PRERELEASE[@]}"
-
-      # The documentation serves the video of the latest release: rebuild it.
-      # (A release created with GITHUB_TOKEN does not trigger other workflows by itself.)
-      - name: Rebuild the documentation
-        if: ${{ !contains(github.ref_name, '-') }}
-        run: gh workflow run docs.yml --ref main

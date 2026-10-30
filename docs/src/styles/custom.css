@@ -8,6 +8,30 @@
 	--sl-color-accent: #1d58d6;
 	--sl-color-accent-high: #0f2f73;
 }
+/* Home page: compact hero, the intro video right under it. */
+.hero {
+	grid-template-columns: 100%;
+	gap: 0.5rem;
+	padding-block: 1.5rem 0.5rem;
+}
+.hero h1 {
+	font-size: clamp(var(--sl-text-3xl), calc(0.5rem + 3vw), var(--sl-text-5xl));
+}
+.hero .stack {
+	gap: 1.25rem;
+}
+.hero .stack {
+	text-align: center;
+}
+.hero .copy {
+	gap: 0.5rem;
+}
+.hero .copy,
+.hero .actions {
+	align-items: center;
+	justify-content: center;
+}
+
 .intro-video {
 	display: block;
 	width: 100%;
@@ -15,4 +39,5 @@
 	margin-bottom: 2rem;
 	border-radius: 0.75rem;
 	background: #0b1020;
+	box-shadow: 0 20px 50px rgb(0 0 0 / 0.35);
 }
