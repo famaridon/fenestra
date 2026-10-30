@@ -2,7 +2,7 @@ import AppKit
 import ApplicationServices
 import os
 
-private let log = Logger(subsystem: "com.florentamaridon.Panes", category: "accessibility")
+private let log = Logger(subsystem: "com.florentamaridon.Fenestra", category: "accessibility")
 
 /// Locates windows through the Accessibility API. Points are in AX coordinates.
 @MainActor enum AXWindowFinder {
@@ -38,7 +38,7 @@ private let log = Logger(subsystem: "com.florentamaridon.Panes", category: "acce
         return AXWindow(element: element, pid: pid)
     }
 
-    /// Non-minimized standard windows of every regular application except Panes.
+    /// Non-minimized standard windows of every regular application except Fenestra.
     static func visibleStandardWindows() -> [AXWindow] {
         let ownBundleID = Bundle.main.bundleIdentifier
         var result: [AXWindow] = []

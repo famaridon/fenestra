@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct PanesApp: App {
+struct FenestraApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var controller = AppController()
 
@@ -20,7 +20,7 @@ struct PanesApp: App {
                 .environment(controller)
         }
 
-        Window("Bienvenue dans Panes", id: "onboarding") {
+        Window("Bienvenue dans Fenestra", id: "onboarding") {
             OnboardingView()
                 .environment(controller)
         }
@@ -39,7 +39,7 @@ private struct MenuBarIcon: View {
             .task {
                 if controller.wantsOnboarding { openWindow(id: "onboarding") }
             }
-            .onReceive(NotificationCenter.default.publisher(for: .panesShowOnboarding)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .fenestraShowOnboarding)) { _ in
                 openWindow(id: "onboarding")
             }
     }

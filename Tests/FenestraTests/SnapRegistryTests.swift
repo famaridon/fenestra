@@ -1,6 +1,6 @@
 import CoreGraphics
 import Testing
-@testable import Panes
+@testable import Fenestra
 
 struct SnapRegistryTests {
     let original = CGRect(x: 300, y: 200, width: 640, height: 480)

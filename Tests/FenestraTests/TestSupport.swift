@@ -1,5 +1,5 @@
 import CoreGraphics
-@testable import Panes
+@testable import Fenestra
 
 /// Shared fixtures: a landscape primary display and a portrait display to its right (AX coordinates).
 enum Fixtures {

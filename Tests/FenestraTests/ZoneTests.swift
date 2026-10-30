@@ -1,6 +1,6 @@
 import CoreGraphics
 import Testing
-@testable import Panes
+@testable import Fenestra
 
 struct ZoneTests {
     let area = CGRect(x: 0, y: 0, width: 900, height: 600)

@@ -18,8 +18,8 @@ Toutes les fonctions marchent **sur chaque écran indépendamment** : chaque éc
 
 ## Branchement et débranchement
 
-Brancher ou débrancher un écran, ou changer sa résolution, ne doit laisser aucune fenêtre hors de l'écran. Panes réagit au changement : chaque fenêtre qu'il a collée **voit sa zone réappliquée** sur son écran, ou sur l'écran principal si son écran a disparu.
+Brancher ou débrancher un écran, ou changer sa résolution, ne doit laisser aucune fenêtre hors de l'écran. Fenestra réagit au changement : chaque fenêtre qu'il a collée **voit sa zone réappliquée** sur son écran, ou sur l'écran principal si son écran a disparu.
 
 :::note
-Seules les fenêtres collées par Panes sont réajustées. Les autres restent gérées par macOS.
+Seules les fenêtres collées par Fenestra sont réajustées. Les autres restent gérées par macOS.
 :::

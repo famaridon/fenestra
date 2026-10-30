@@ -13,7 +13,7 @@ final class HotkeyManager {
     }
 
     private static let signature: OSType = 0x504E_4545 // "PNEE"
-    private static let logger = Logger(subsystem: "com.florentamaridon.Panes", category: "hotkeys")
+    private static let logger = Logger(subsystem: "com.florentamaridon.Fenestra", category: "hotkeys")
 
     /// Hot key id -> owning manager. The Carbon callback cannot capture context, so it looks the manager up here.
     private static var owners: [UInt32: HotkeyManager] = [:]

@@ -1,4 +1,4 @@
-# Panes — Expression de besoin
+# Fenestra — Expression de besoin
 
 > Gestionnaire de fenêtres macOS qui reproduit l'expérience de « snap » de Windows et d'Ubuntu.
 
@@ -23,7 +23,7 @@ Sur macOS, aucune solution existante ne couvre l'ensemble :
 | **Rectangle** | Pas de bordure partagée. Les fenêtres collées restent indépendantes. |
 | **Tiling automatique** (KiwiDesk, AeroSpace, yabai…) | Range *toutes* les fenêtres en permanence. Ce n'est pas l'expérience Windows, où l'on choisit ce qu'on colle. Outils jeunes ou configurés par fichier. |
 
-**Panes** comble ce manque : un *snap* manuel comme sous Windows, avec les fenêtres collées qui restent **liées** entre elles.
+**Fenestra** comble ce manque : un *snap* manuel comme sous Windows, avec les fenêtres collées qui restent **liées** entre elles.
 
 ## 2. Objectif
 
@@ -91,9 +91,9 @@ Priorités : **P0** = indispensable au MVP · **P1** = attendu en v1 · **P2** =
 |---|---|
 | NF1 | **Réactivité** : l'aperçu s'affiche en moins de 50 ms après que le pointeur touche le bord. Pendant le glisser de la bordure (F5), les fenêtres liées suivent sans saccade perceptible. |
 | NF2 | **Sobriété** : CPU ≈ 0 % au repos, empreinte mémoire < 50 Mo. |
-| NF3 | **Robustesse** : une application qui ne répond pas ou refuse la taille demandée ne doit ni bloquer ni faire planter Panes. La taille réelle est toujours relue après chaque redimensionnement. |
+| NF3 | **Robustesse** : une application qui ne répond pas ou refuse la taille demandée ne doit ni bloquer ni faire planter Fenestra. La taille réelle est toujours relue après chaque redimensionnement. |
 | NF4 | **API publiques uniquement** (Accessibilité, AppKit). Pas d'API privées, pas de SIP à désactiver. |
-| NF5 | **Coexistence** : Panes cohabite avec le collage natif de macOS. Il recommande de désactiver le glisser natif pour éviter un double snap. |
+| NF5 | **Coexistence** : Fenestra cohabite avec le collage natif de macOS. Il recommande de désactiver le glisser natif pour éviter un double snap. |
 | NF6 | **Confidentialité** : aucune donnée collectée, aucun accès réseau. |
 
 ## 6. Hors périmètre
@@ -140,5 +140,5 @@ Priorités : **P0** = indispensable au MVP · **P1** = attendu en v1 · **P2** =
 
 1. Sur un écran vertical, le bord haut doit-il donner la **moitié haute** ou le **plein écran** (comme sous Windows) ? Hypothèse retenue : moitié haute.
 2. Faut-il des **tiers d'écran** (⅓ / ⅔), utiles sur un écran ultra-large ?
-3. La bordure partagée (F5) doit-elle aussi lier des fenêtres **placées à la main** côte à côte, ou seulement celles collées par Panes ?
+3. La bordure partagée (F5) doit-elle aussi lier des fenêtres **placées à la main** côte à côte, ou seulement celles collées par Fenestra ?
 4. Faut-il des **marges** entre fenêtres par défaut (comme macOS) ou aucune (comme Windows) ?

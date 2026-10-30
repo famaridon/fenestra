@@ -14,7 +14,7 @@ struct MenuBarView: View {
             Button("Autoriser l'accès…") { controller.permission.request() }
         }
         Divider()
-        Toggle("Activer Panes", isOn: $settings.isEnabled)
+        Toggle("Activer Fenestra", isOn: $settings.isEnabled)
         Menu("Disposer la fenêtre") {
             ForEach(SnapAction.allCases) { action in
                 Button {
@@ -34,7 +34,7 @@ struct MenuBarView: View {
             openSettings()
         }
         .keyboardShortcut(",")
-        Button("Quitter Panes") { NSApplication.shared.terminate(nil) }
+        Button("Quitter Fenestra") { NSApplication.shared.terminate(nil) }
             .keyboardShortcut("q")
     }
 }

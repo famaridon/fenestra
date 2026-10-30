@@ -1,6 +1,6 @@
 import CoreGraphics
 import Testing
-@testable import Panes
+@testable import Fenestra
 
 struct DragZoneResolverTests {
     let landscape = Fixtures.primary   // 0,0 1920x1080

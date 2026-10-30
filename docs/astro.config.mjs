@@ -5,7 +5,7 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'Panes',
+			title: 'Fenestra',
 			description: 'Le snap de Windows et Ubuntu, sur macOS.',
 			defaultLocale: 'root',
 			locales: {

@@ -8,10 +8,10 @@ struct OnboardingView: View {
     var body: some View {
         let granted = controller.permission.isGranted
         VStack(alignment: .leading, spacing: 16) {
-            Label("Panes", systemImage: "rectangle.split.2x1")
+            Label("Fenestra", systemImage: "rectangle.split.2x1")
                 .font(.largeTitle.bold())
             VStack(alignment: .leading, spacing: 8) {
-                Text("1. Ouvrez les Réglages Système et autorisez Panes dans Accessibilité.")
+                Text("1. Ouvrez les Réglages Système et autorisez Fenestra dans Accessibilité.")
                 Text("2. Glissez une fenêtre vers un bord ou un coin de l'écran.")
                 Text("3. Relâchez : la fenêtre se place dans la zone affichée.")
             }

@@ -29,7 +29,7 @@ Priorités : **P0** indispensable au MVP, **P1** attendu en v1, **P2** plus tard
 |---|---|
 | NF1 | Réactivité : aperçu en moins de 50 ms ; bordure partagée sans saccade. |
 | NF2 | Sobriété : CPU proche de 0 % au repos, moins de 50 Mo de mémoire. |
-| NF3 | Robustesse : une app qui ne répond pas ou refuse la taille ne bloque pas Panes ; la taille réelle est relue. |
+| NF3 | Robustesse : une app qui ne répond pas ou refuse la taille ne bloque pas Fenestra ; la taille réelle est relue. |
 | NF4 | API publiques uniquement, pas de SIP à désactiver. |
 | NF5 | Coexistence avec le collage natif, avec recommandation de le désactiver. |
 | NF6 | Confidentialité : aucune donnée collectée, aucun accès réseau. |
@@ -47,7 +47,7 @@ Priorités : **P0** indispensable au MVP, **P1** attendu en v1, **P2** plus tard
 |---|---|
 | Écran vertical : bord haut = moitié haute ou plein écran ? | **Moitié haute** par défaut, option pour maximiser. |
 | Tiers d'écran (⅓ / ⅔) ? | Prévus, **au clavier seulement**, sans raccourci par défaut. |
-| Bordure partagée sur des fenêtres placées à la main ? | **Uniquement** les fenêtres collées par Panes. |
+| Bordure partagée sur des fenêtres placées à la main ? | **Uniquement** les fenêtres collées par Fenestra. |
 | Marges entre fenêtres par défaut ? | **0**, comme sous Windows. |
 
 ## Jalons

@@ -2,7 +2,7 @@ import AppKit
 import ApplicationServices
 import os
 
-private let log = Logger(subsystem: "com.florentamaridon.Panes", category: "accessibility")
+private let log = Logger(subsystem: "com.florentamaridon.Fenestra", category: "accessibility")
 
 /// Wraps a window `AXUIElement`. Coordinates are in the AX space
 /// (origin top-left of the primary screen, y pointing down).

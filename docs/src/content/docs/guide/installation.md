@@ -3,7 +3,7 @@ title: Installation
 description: Prérequis, compilation depuis les sources et autorisation d'Accessibilité.
 ---
 
-Panes n'est pas distribué sur l'App Store : l'application ne peut pas être sandboxée tout en pilotant les fenêtres via l'Accessibilité. On la compile donc depuis les sources.
+Fenestra n'est pas distribué sur l'App Store : l'application ne peut pas être sandboxée tout en pilotant les fenêtres via l'Accessibilité. On la compile donc depuis les sources.
 
 ## Prérequis
 
@@ -19,21 +19,21 @@ Le projet Xcode est généré par [XcodeGen](https://github.com/yonaskolb/XcodeG
 ```sh
 brew install xcodegen
 xcodegen generate
-open Panes.xcodeproj
+open Fenestra.xcodeproj
 ```
 
-Dans Xcode, sélectionnez le schéma **Panes** puis lancez avec **Run** (⌘R).
+Dans Xcode, sélectionnez le schéma **Fenestra** puis lancez avec **Run** (⌘R).
 
 ## Premier lancement et autorisation d'Accessibilité
 
-Panes vit dans la **barre des menus** : il n'a pas d'icône dans le Dock. Au premier lancement, une fenêtre d'accueil vous guide pour accorder l'autorisation d'Accessibilité et affiche son état en temps réel.
+Fenestra vit dans la **barre des menus** : il n'a pas d'icône dans le Dock. Au premier lancement, une fenêtre d'accueil vous guide pour accorder l'autorisation d'Accessibilité et affiche son état en temps réel.
 
 1. Ouvrez **Réglages Système > Confidentialité et sécurité > Accessibilité**.
-2. Activez l'interrupteur à côté de **Panes**.
-3. Revenez à la fenêtre d'accueil : l'état passe à « accordé » et Panes démarre ses moniteurs.
+2. Activez l'interrupteur à côté de **Fenestra**.
+3. Revenez à la fenêtre d'accueil : l'état passe à « accordé » et Fenestra démarre ses moniteurs.
 
 :::note
-Sans cette autorisation, Panes ne peut ni déplacer ni redimensionner les fenêtres des autres applications.
+Sans cette autorisation, Fenestra ne peut ni déplacer ni redimensionner les fenêtres des autres applications.
 :::
 
 ## Pourquoi la signature Apple Development ?
@@ -46,8 +46,8 @@ macOS 26 propose son propre collage de fenêtres. Pour éviter que les deux syst
 
 **Réglages Système > Bureau et Dock > Fenêtres**, puis désactivez le collage des fenêtres au glissement vers les bords de l'écran.
 
-Panes cohabite avec le collage natif, mais le désactiver est recommandé.
+Fenestra cohabite avec le collage natif, mais le désactiver est recommandé.
 
 ## Lancer à l'ouverture de session
 
-Dans les réglages de Panes (onglet **Général**), activez **Lancer à l'ouverture de session**. Panes utilise pour cela `SMAppService`.
+Dans les réglages de Fenestra (onglet **Général**), activez **Lancer à l'ouverture de session**. Fenestra utilise pour cela `SMAppService`.

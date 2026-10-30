@@ -66,8 +66,8 @@ Sur un écran vertical, le cycle utilise `↑`/`↓`, voir [Écran vertical](/gu
 
 ## Changer les raccourcis
 
-Ouvrez les réglages de Panes (depuis le menu de la barre des menus), onglet **Raccourcis** : cliquez sur un raccourci, saisissez la nouvelle combinaison. Un bouton permet de rétablir les raccourcis par défaut. Voir [Réglages](/guide/reglages/).
+Ouvrez les réglages de Fenestra (depuis le menu de la barre des menus), onglet **Raccourcis** : cliquez sur un raccourci, saisissez la nouvelle combinaison. Un bouton permet de rétablir les raccourcis par défaut. Voir [Réglages](/guide/reglages/).
 
 :::caution
-Un raccourci déjà pris par le système ou une autre application peut échouer à s'enregistrer : Panes l'ignore alors (il est consigné dans le journal).
+Un raccourci déjà pris par le système ou une autre application peut échouer à s'enregistrer : Fenestra l'ignore alors (il est consigné dans le journal).
 :::

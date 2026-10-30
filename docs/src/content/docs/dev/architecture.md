@@ -10,7 +10,7 @@ Cette page résume `ARCHITECTURE.md` (à la racine du dépôt), qui reste la ré
 - **Swift 6**, mode strict de concurrence. Tout ce qui touche AppKit, l'Accessibilité ou les événements souris est `@MainActor`.
 - **Pas d'API privée** (NF4) et **aucune dépendance tierce** (pas de SwiftPM externe).
 - Textes d'interface en français, identifiants de code en anglais.
-- Pas de `print` : journalisation avec `os.Logger` (sous-système `com.florentamaridon.Panes`, une catégorie par module).
+- Pas de `print` : journalisation avec `os.Logger` (sous-système `com.florentamaridon.Fenestra`, une catégorie par module).
 
 ## Modules
 
@@ -68,7 +68,7 @@ Chaque `AXUIElementCreateApplication` reçoit un délai de messagerie de 0,25 s.
 Les tests (Swift Testing) portent surtout sur `Core/`.
 
 ```sh
-xcodebuild test -scheme Panes -destination 'platform=macOS'
+xcodebuild test -scheme Fenestra -destination 'platform=macOS'
 ```
 
 ## Documentation

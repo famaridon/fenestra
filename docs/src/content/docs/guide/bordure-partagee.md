@@ -7,7 +7,7 @@ Comme les *snap groups* de Windows 11, des fenêtres collées côte à côte res
 
 ## Fonctionnement
 
-1. Collez deux fenêtres ou plus avec Panes (par exemple une à gauche et une à droite).
+1. Collez deux fenêtres ou plus avec Fenestra (par exemple une à gauche et une à droite).
 2. Tirez le bord commun d'une des fenêtres avec la souris.
 3. Les fenêtres voisines qui partageaient ce bord se redimensionnent pour rester **jointives** : si l'une s'agrandit, l'autre rétrécit d'autant.
 
@@ -27,8 +27,8 @@ Le lien entre fenêtres disparaît dès que l'une d'elles est :
 
 ## Limites
 
-- Seules les fenêtres **collées par Panes** sont liées. Deux fenêtres placées à la main côte à côte ne le sont pas.
+- Seules les fenêtres **collées par Fenestra** sont liées. Deux fenêtres placées à la main côte à côte ne le sont pas.
 - Les fenêtres des applications exclues ou non standard sont ignorées.
-- Une application qui refuse la taille demandée peut laisser un petit écart : Panes relit toujours la taille réelle après chaque redimensionnement.
+- Une application qui refuse la taille demandée peut laisser un petit écart : Fenestra relit toujours la taille réelle après chaque redimensionnement.
 
 La fonction se désactive dans l'onglet **Général** des [réglages](/guide/reglages/).

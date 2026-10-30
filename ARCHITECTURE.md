@@ -1,4 +1,4 @@
-# Panes — Architecture et contrat entre modules
+# Fenestra — Architecture et contrat entre modules
 
 Ce document fixe le découpage du code et les API partagées. Chaque module est
 développé indépendamment ; le respect strict des signatures ci-dessous est ce
@@ -16,13 +16,13 @@ qui permet l'assemblage final.
 - Pas d'API privée (NF4). Pas de dépendance externe (pas de SwiftPM tiers).
 - Textes d'interface en **français**. Identifiants de code en anglais.
 - Pas de `print` de debug dans le code livré ; utiliser `os.Logger`
-  (`Logger(subsystem: "com.florentamaridon.Panes", category: "<module>")`).
+  (`Logger(subsystem: "com.florentamaridon.Fenestra", category: "<module>")`).
 
 ## Arborescence
 
 ```
-Sources/Panes/
-  PanesApp.swift                       — @main, scènes SwiftUI (MenuBarExtra, Settings, fenêtre d'accueil)
+Sources/Fenestra/
+  FenestraApp.swift                    — @main, scènes SwiftUI (MenuBarExtra, Settings, fenêtre d'accueil)
   App/
     AppDelegate.swift                  — NSApplicationDelegate (fenêtre d'accueil au 1er lancement)
     AppController.swift                — point d'assemblage : possède Settings, DragMonitor, HotkeyManager, SnapController…
@@ -60,7 +60,7 @@ Sources/Panes/
     SharedBorderController.swift       — F5 : propage un redimensionnement aux voisines
     ScreenWatcher.swift                — F7 : réagit aux changements d'écrans
     SnapAssistController.swift         — F8
-Tests/PanesTests/                      — Swift Testing, surtout sur Core/
+Tests/FenestraTests/                   — Swift Testing, surtout sur Core/
 docs/                                  — site Astro Starlight (documentation utilisateur et développeur)
 ```
 

@@ -1,6 +1,6 @@
 import CoreGraphics
 import Testing
-@testable import Panes
+@testable import Fenestra
 
 struct ScreenLayoutTests {
     let primary = Fixtures.primary

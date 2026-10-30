@@ -1,7 +1,7 @@
 import ApplicationServices
 import Observation
 
-/// Tracks whether Panes is trusted to drive other apps' windows through the Accessibility API.
+/// Tracks whether Fenestra is trusted to drive other apps' windows through the Accessibility API.
 @MainActor
 @Observable
 final class AccessibilityPermission {

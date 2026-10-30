@@ -2,14 +2,14 @@ import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Editable list of applications Panes never snaps.
+/// Editable list of applications Fenestra never snaps.
 struct ExcludedAppsView: View {
     @Environment(AppController.self) private var controller
     @State private var selection: String?
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Panes ne déplace jamais les fenêtres de ces applications.")
+            Text("Fenestra ne déplace jamais les fenêtres de ces applications.")
                 .foregroundStyle(.secondary)
             List(controller.settings.excludedBundleIdentifiers, id: \.self, selection: $selection) { id in
                 HStack {

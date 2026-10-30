@@ -3,18 +3,18 @@ title: Réglages
 description: Toutes les options de la fenêtre Réglages, par onglet.
 ---
 
-Ouvrez les réglages depuis le menu de Panes dans la barre des menus. Chaque option est enregistrée immédiatement dans les préférences de l'utilisateur.
+Ouvrez les réglages depuis le menu de Fenestra dans la barre des menus. Chaque option est enregistrée immédiatement dans les préférences de l'utilisateur.
 
 ## Général
 
 | Réglage | Défaut | Effet |
 |---|---|---|
-| Activer Panes | activé | Interrupteur général (aussi dans la barre des menus). |
+| Activer Fenestra | activé | Interrupteur général (aussi dans la barre des menus). |
 | Snap par glisser | activé | Active le snap à la souris. |
 | Restaurer la taille au décollage | activé | Rend la taille d'avant le snap quand on décolle une fenêtre. |
 | Bordure partagée | activé | Lie les fenêtres collées, voir [Bordure partagée](/guide/bordure-partagee/). |
 | Snap Assist | activé | Propose les autres fenêtres après un snap, voir [Snap à la souris](/guide/souris/). |
-| Lancer à l'ouverture de session | désactivé | Démarre Panes à la connexion. |
+| Lancer à l'ouverture de session | désactivé | Démarre Fenestra à la connexion. |
 
 ## Zones
 
@@ -37,4 +37,4 @@ Liste des **applications exclues** : aucun snap (souris, clavier, bordure) n'est
 
 ## À propos
 
-Informations sur l'application (version). Aucune donnée n'est collectée et Panes n'accède pas au réseau.
+Informations sur l'application (version). Aucune donnée n'est collectée et Fenestra n'accède pas au réseau.

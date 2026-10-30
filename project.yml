@@ -1,4 +1,4 @@
-name: Panes
+name: Fenestra
 options:
   bundleIdPrefix: com.florentamaridon
   deploymentTarget:
@@ -14,38 +14,38 @@ settings:
     CODE_SIGN_IDENTITY: "Apple Development"
     ENABLE_HARDENED_RUNTIME: YES
 targets:
-  Panes:
+  Fenestra:
     type: application
     platform: macOS
     sources:
-      - Sources/Panes
+      - Sources/Fenestra
     info:
-      path: Sources/Panes/Info.plist
+      path: Sources/Fenestra/Info.plist
       properties:
-        CFBundleDisplayName: Panes
+        CFBundleDisplayName: Fenestra
         LSUIElement: true
         NSHumanReadableCopyright: ""
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.florentamaridon.Panes
+        PRODUCT_BUNDLE_IDENTIFIER: com.florentamaridon.Fenestra
         ENABLE_APP_SANDBOX: NO
         GENERATE_INFOPLIST_FILE: NO
-  PanesTests:
+  FenestraTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - Tests/PanesTests
+      - Tests/FenestraTests
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
-      - target: Panes
+      - target: Fenestra
 schemes:
-  Panes:
+  Fenestra:
     build:
       targets:
-        Panes: all
-        PanesTests: [test]
+        Fenestra: all
+        FenestraTests: [test]
     test:
       targets:
-        - PanesTests
+        - FenestraTests

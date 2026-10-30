@@ -1,4 +1,4 @@
-# Panes
+# Fenestra
 
 Gestionnaire de fenêtres macOS (barre des menus) façon Windows / Ubuntu.
 
@@ -18,21 +18,21 @@ Le besoin complet est décrit dans [BESOIN.md](BESOIN.md), l'architecture et les
 ```sh
 brew install xcodegen   # si besoin
 xcodegen generate
-open Panes.xcodeproj    # puis Cmd+R
+open Fenestra.xcodeproj    # puis Cmd+R
 ```
 
 En ligne de commande :
 
 ```sh
-xcodebuild -project Panes.xcodeproj -scheme Panes -destination 'platform=macOS' build
+xcodebuild -project Fenestra.xcodeproj -scheme Fenestra -destination 'platform=macOS' build
 ```
 
-Au premier lancement, autoriser Panes dans **Réglages Système > Confidentialité et sécurité > Accessibilité**.
+Au premier lancement, autoriser Fenestra dans **Réglages Système > Confidentialité et sécurité > Accessibilité**.
 
 ## Tests
 
 ```sh
-xcodebuild -project Panes.xcodeproj -scheme Panes -destination 'platform=macOS' test
+xcodebuild -project Fenestra.xcodeproj -scheme Fenestra -destination 'platform=macOS' test
 ```
 
 ## Documentation

@@ -1,4 +1,4 @@
-# Documentation de Panes
+# Documentation de Fenestra
 
 Site de documentation (français) construit avec [Astro Starlight](https://starlight.astro.build).
 

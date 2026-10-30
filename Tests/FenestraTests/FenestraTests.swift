@@ -1,5 +1,5 @@
 import Testing
-@testable import Panes
+@testable import Fenestra
 
 @Test func appModuleLoads() {
     #expect(Bool(true))

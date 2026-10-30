@@ -1,6 +1,6 @@
 import CoreGraphics
 import Testing
-@testable import Panes
+@testable import Fenestra
 
 struct KeyboardSnapResolverTests {
     let landscape = Fixtures.primary  // id 1

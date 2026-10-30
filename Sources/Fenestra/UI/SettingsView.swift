@@ -132,7 +132,7 @@ private struct AboutTab: View {
     var body: some View {
         VStack(spacing: 10) {
             Image(systemName: "rectangle.split.2x1").font(.system(size: 48))
-            Text("Panes").font(.title.bold())
+            Text("Fenestra").font(.title.bold())
             Text(version).foregroundStyle(.secondary)
             Text("Placement de fenêtres par glisser ou au clavier, comme sous Windows.")
                 .multilineTextAlignment(.center)

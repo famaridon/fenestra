@@ -1,7 +1,7 @@
 import CoreGraphics
 import Foundation
 
-/// What Panes remembers about a snapped window.
+/// What Fenestra remembers about a snapped window.
 struct SnapRecord: Sendable, Equatable {
     var zone: Zone
     var screenID: CGDirectDisplayID

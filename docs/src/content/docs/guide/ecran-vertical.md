@@ -5,7 +5,7 @@ description: Haut / bas au lieu de gauche / droite sur un écran en orientation 
 
 ## Détection
 
-Panes détecte l'orientation de **chaque écran** : si sa hauteur est supérieure à sa largeur, il est traité comme vertical. Aucun réglage n'est nécessaire.
+Fenestra détecte l'orientation de **chaque écran** : si sa hauteur est supérieure à sa largeur, il est traité comme vertical. Aucun réglage n'est nécessaire.
 
 ## Découpage haut / bas
 
