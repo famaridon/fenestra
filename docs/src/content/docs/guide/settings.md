@@ -15,7 +15,7 @@ The main **Enable Fenestra** switch is in the menu bar menu.
 | Snap windows by dragging them to an edge | on | Turns on snapping with the mouse. |
 | Restore original size when unsnapping | on | Gives back the pre-snap size when you unsnap a window. |
 | Shared border between snapped windows | on | Links snapped windows, see [Shared border](/fenestra/guide/shared-border/). |
-| Snap Assist | on | Offers your other windows after a snap, see [Snapping with the mouse](/fenestra/guide/mouse/). |
+| Snap Assist | on | Offers your other windows after a snap, see [Snap Assist](/fenestra/guide/snap-assist/). |
 | Gap between windows | 0 pt | Space between windows and with the screen edges. |
 | Corner size | 120 pt | Length of edge counted as a corner when dragging. |
 | Trigger band between two displays | 24 pt | Width of the area that triggers a snap along an edge shared with another display. Outer edges keep a 2-point threshold. |

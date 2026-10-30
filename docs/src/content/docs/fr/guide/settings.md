@@ -15,7 +15,7 @@ L'interrupteur général **Activer Fenestra** se trouve dans le menu de la barre
 | Placer les fenêtres en les glissant vers un bord | activé | Active le snap à la souris. |
 | Restaurer la taille d'origine au décollage | activé | Rend la taille d'avant le snap quand on décolle une fenêtre. |
 | Bordure partagée entre fenêtres collées | activé | Lie les fenêtres collées, voir [Bordure partagée](/fenestra/fr/guide/shared-border/). |
-| Snap Assist | activé | Propose les autres fenêtres après un snap, voir [Snap à la souris](/fenestra/fr/guide/mouse/). |
+| Snap Assist | activé | Propose les autres fenêtres après un snap, voir [Snap Assist](/fenestra/fr/guide/snap-assist/). |
 | Marge entre fenêtres | 0 pt | Espace entre fenêtres et avec les bords de l'écran. |
 | Taille des coins | 120 pt | Longueur de bord comptée comme coin pour le glisser. |
 | Bande de déclenchement entre deux écrans | 24 pt | Largeur de la zone qui déclenche le snap le long d'un bord partagé avec un autre écran. Les bords extérieurs gardent un seuil de 2 points. |

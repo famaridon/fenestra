@@ -38,9 +38,4 @@ This also works with the [keyboard](/fenestra/guide/keyboard/), and you can mix 
 
 ## Snap Assist
 
-After snapping a window to a half (or a quarter) by dragging, Fenestra shows the list of your other open windows (icon and title) in the remaining space.
-
-- **Click** a window: it fills the remaining space.
-- **Escape** (or a click elsewhere) closes the list.
-
-Snap Assist can be turned off in the [settings](/fenestra/guide/settings/).
+After a drag snap, Fenestra offers to fill the remaining space with another window. See [Snap Assist](/fenestra/guide/snap-assist/).

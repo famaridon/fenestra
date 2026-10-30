@@ -26,6 +26,7 @@ export default defineConfig({
 						{ slug: 'guide/vertical-display' },
 						{ slug: 'guide/multiple-displays' },
 						{ slug: 'guide/shared-border' },
+						{ slug: 'guide/snap-assist' },
 						{ slug: 'guide/settings' },
 						{ slug: 'guide/troubleshooting' },
 					],
