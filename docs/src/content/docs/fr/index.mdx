@@ -1,0 +1,32 @@
+---
+title: Fenestra
+description: Le snap de Windows et Ubuntu, sur macOS.
+template: splash
+hero:
+  title: Fenestra — le snap de Windows et Ubuntu, sur macOS
+  tagline: Glissez une fenêtre vers un bord, elle prend sa place. Instantané, à la souris comme au clavier, avec un écran vertical bien géré.
+  actions:
+    - text: Installer Fenestra
+      link: /fenestra/fr/guide/installation/
+      icon: right-arrow
+    - text: Découvrir l'utilisation
+      link: /fenestra/fr/guide/mouse/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Glisser vers un bord" icon="rocket">
+    Le pointeur touche un bord, l'aperçu s'affiche immédiatement. Les coins donnent des quarts. [En savoir plus](/fenestra/fr/guide/mouse/).
+  </Card>
+  <Card title="Raccourcis façon Win + flèches" icon="pencil">
+    `⌃⌥` + flèches pour les moitiés, avec passage à l'écran voisin en appuyant de nouveau. [Voir les raccourcis](/fenestra/fr/guide/keyboard/).
+  </Card>
+  <Card title="Écran vertical" icon="laptop">
+    Sur un écran en portrait, le découpage principal est haut / bas. [Détails](/fenestra/fr/guide/vertical-display/).
+  </Card>
+  <Card title="Bordure partagée" icon="random">
+    Tirez la bordure commune de deux fenêtres collées : les voisines suivent. [Comment ça marche](/fenestra/fr/guide/shared-border/).
+  </Card>
+</CardGrid>

@@ -31,4 +31,4 @@ Le lien entre fenêtres disparaît dès que l'une d'elles est :
 - Les fenêtres des applications exclues ou non standard sont ignorées.
 - Une application qui refuse la taille demandée peut laisser un petit écart : Fenestra relit toujours la taille réelle après chaque redimensionnement.
 
-La fonction se désactive dans l'onglet **Général** des [réglages](/fenestra/guide/reglages/).
+La fonction se désactive dans l'onglet **Général** des [réglages](/fenestra/fr/guide/settings/).

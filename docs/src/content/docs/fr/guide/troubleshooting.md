@@ -18,7 +18,7 @@ Rappel : le pointeur doit toucher le bord, et on saisit la fenêtre par sa barre
 
 ## L'autorisation disparaît après une recompilation
 
-L'autorisation est liée à la signature. Vérifiez que le projet est signé avec un certificat **Apple Development** et non « ad hoc » (voir [Installation](/fenestra/guide/installation/)). Si l'entrée Fenestra est déjà périmée, supprimez-la de la liste Accessibilité puis relancez l'app pour la ré-autoriser.
+L'autorisation est liée à la signature. Vérifiez que le projet est signé avec un certificat **Apple Development** et non « ad hoc » (voir [Installation](/fenestra/fr/guide/installation/)). Si l'entrée Fenestra est déjà périmée, supprimez-la de la liste Accessibilité puis relancez l'app pour la ré-autoriser.
 
 ## Une application refuse la taille demandée
 

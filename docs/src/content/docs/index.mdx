@@ -1,32 +1,32 @@
 ---
 title: Fenestra
-description: Le snap de Windows et Ubuntu, sur macOS.
+description: Windows and Ubuntu-style window snapping for macOS.
 template: splash
 hero:
-  title: Fenestra — le snap de Windows et Ubuntu, sur macOS
-  tagline: Glissez une fenêtre vers un bord, elle prend sa place. Instantané, à la souris comme au clavier, avec un écran vertical bien géré.
+  title: Fenestra — Windows and Ubuntu-style snapping, on macOS
+  tagline: Drag a window to an edge and it snaps into place. Instant, with the mouse or the keyboard, and with proper support for vertical displays.
   actions:
-    - text: Installer Fenestra
+    - text: Install Fenestra
       link: /fenestra/guide/installation/
       icon: right-arrow
-    - text: Découvrir l'utilisation
-      link: /fenestra/guide/souris/
+    - text: See how it works
+      link: /fenestra/guide/mouse/
       variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid stagger>
-  <Card title="Glisser vers un bord" icon="rocket">
-    Le pointeur touche un bord, l'aperçu s'affiche immédiatement. Les coins donnent des quarts. [En savoir plus](/fenestra/guide/souris/).
+  <Card title="Drag to an edge" icon="rocket">
+    As soon as the pointer touches an edge, the preview appears. Corners give quarters. [Learn more](/fenestra/guide/mouse/).
   </Card>
-  <Card title="Raccourcis façon Win + flèches" icon="pencil">
-    `⌃⌥` + flèches pour les moitiés, avec passage à l'écran voisin en appuyant de nouveau. [Voir les raccourcis](/fenestra/guide/clavier/).
+  <Card title="Win + arrow shortcuts" icon="pencil">
+    `⌃⌥` + arrows for halves; press again to move to the next display. [See the shortcuts](/fenestra/guide/keyboard/).
   </Card>
-  <Card title="Écran vertical" icon="laptop">
-    Sur un écran en portrait, le découpage principal est haut / bas. [Détails](/fenestra/guide/ecran-vertical/).
+  <Card title="Vertical displays" icon="laptop">
+    On a portrait display, the main split is top / bottom. [Details](/fenestra/guide/vertical-display/).
   </Card>
-  <Card title="Bordure partagée" icon="random">
-    Tirez la bordure commune de deux fenêtres collées : les voisines suivent. [Comment ça marche](/fenestra/guide/bordure-partagee/).
+  <Card title="Shared border" icon="random">
+    Drag the common border of two snapped windows and the neighbors follow. [How it works](/fenestra/guide/shared-border/).
   </Card>
 </CardGrid>

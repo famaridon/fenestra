@@ -9,7 +9,7 @@ Toutes les fonctions marchent **sur chaque écran indépendamment** : chaque éc
 
 ## Changer une fenêtre d'écran
 
-- **Avec les flèches** : appuyer de nouveau sur `⌃⌥←` ou `⌃⌥→` sur une fenêtre déjà collée de ce côté la fait passer à l'écran voisin, voir [Raccourcis clavier](/fenestra/guide/clavier/).
+- **Avec les flèches** : appuyer de nouveau sur `⌃⌥←` ou `⌃⌥→` sur une fenêtre déjà collée de ce côté la fait passer à l'écran voisin, voir [Raccourcis clavier](/fenestra/fr/guide/keyboard/).
 - **Écran suivant** `⌃⌥⌘→` / **écran précédent** `⌃⌥⌘←` : envoie la fenêtre sur l'écran suivant ou précédent. L'ordre est celui de lecture (de gauche à droite, puis de haut en bas) et boucle.
   - Une fenêtre collée garde sa zone sur le nouvel écran.
   - Une fenêtre non collée est déplacée proportionnellement.

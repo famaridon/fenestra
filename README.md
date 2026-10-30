@@ -4,35 +4,37 @@
 
 <h1 align="center">Fenestra</h1>
 
-<p align="center">Gestionnaire de fenêtres macOS (barre des menus) façon Windows / Ubuntu.<br>
-<a href="https://famaridon.github.io/fenestra/">Documentation</a></p>
+<p align="center">Windows and Ubuntu-style window snapping for macOS, from the menu bar.<br>
+<a href="https://famaridon.github.io/fenestra/">Documentation</a> · <a href="README.fr.md">Français</a></p>
 
-## Fonctionnalités
+## Features
 
-- Snap par glisser : bords et coins de l'écran, aperçu translucide, restauration de la taille d'origine au détachement.
-- Raccourcis clavier globaux configurables (moitiés, quarts, tiers, plein écran, restauration, changement d'écran).
-- Bordure partagée : redimensionner une fenêtre collée ajuste ses voisines.
-- Snap Assist : propose les autres fenêtres pour l'espace restant.
-- Écrans multiples et verticaux, réapplication automatique au changement de configuration.
-- Applications exclues, marges entre fenêtres, lancement à la connexion.
+- Drag snapping: screen edges and corners, translucent preview, original size restored when you unsnap.
+- Configurable global keyboard shortcuts (halves, quarters, thirds, full screen, restore, move to another display).
+- Shared border: resizing a snapped window adjusts its neighbors.
+- Snap Assist: offers your other windows for the remaining space.
+- Multiple and vertical displays, zones applied again automatically when the display setup changes.
+- Excluded apps, gaps between windows, launch at login.
 
-Le besoin complet est décrit dans [BESOIN.md](BESOIN.md), l'architecture et les contrats entre modules dans [ARCHITECTURE.md](ARCHITECTURE.md).
+The app's interface is currently in French only; an English version is planned.
 
-## Compiler et lancer
+The full requirements are in [BESOIN.md](BESOIN.md), and the architecture and module contracts in [ARCHITECTURE.md](ARCHITECTURE.md) (both in French).
+
+## Build and run
 
 ```sh
-brew install xcodegen   # si besoin
+brew install xcodegen   # if needed
 xcodegen generate
-open Fenestra.xcodeproj    # puis Cmd+R
+open Fenestra.xcodeproj    # then Cmd+R
 ```
 
-En ligne de commande :
+From the command line:
 
 ```sh
 xcodebuild -project Fenestra.xcodeproj -scheme Fenestra -destination 'platform=macOS' build
 ```
 
-Au premier lancement, autoriser Fenestra dans **Réglages Système > Confidentialité et sécurité > Accessibilité**.
+On first launch, allow Fenestra in **System Settings > Privacy & Security > Accessibility**.
 
 ## Tests
 
@@ -45,3 +47,5 @@ xcodebuild -project Fenestra.xcodeproj -scheme Fenestra -destination 'platform=m
 ```sh
 cd docs && pnpm install && pnpm dev
 ```
+
+The site is in English (root) and French (`src/content/docs/fr/`).
