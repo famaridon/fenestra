@@ -8,6 +8,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'Fenestra',
+			logo: { src: './src/assets/logo.svg' },
 			description: 'Le snap de Windows et Ubuntu, sur macOS.',
 			defaultLocale: 'root',
 			locales: {

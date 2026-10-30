@@ -1,6 +1,11 @@
-# Fenestra
+<p align="center">
+  <img src="docs/src/assets/logo.svg" alt="" width="128" height="128">
+</p>
 
-Gestionnaire de fenêtres macOS (barre des menus) façon Windows / Ubuntu.
+<h1 align="center">Fenestra</h1>
+
+<p align="center">Gestionnaire de fenêtres macOS (barre des menus) façon Windows / Ubuntu.<br>
+<a href="https://famaridon.github.io/fenestra/">Documentation</a></p>
 
 ## Fonctionnalités
 
