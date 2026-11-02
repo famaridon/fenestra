@@ -8,7 +8,7 @@ extension Notification.Name {
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        if !Settings.shared.hasCompletedOnboarding || !AccessibilityPermission.isTrusted {
+        if !Settings.shared.hasCompletedOnboarding || !AXAccessibilityTrust().isTrusted {
             NSApp.activate(ignoringOtherApps: true)
             NotificationCenter.default.post(name: .fenestraShowOnboarding, object: nil)
         }
