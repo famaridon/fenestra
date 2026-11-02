@@ -29,6 +29,8 @@ final class Settings {
             storeJSON(Dictionary(uniqueKeysWithValues: shortcuts.map { ($0.key.rawValue, $0.value) }), "shortcuts")
         }
     }
+    /// Control socket for the `fenestra` tool: scripts and AI agents (MCP) can arrange windows.
+    var externalControlEnabled: Bool { didSet { store(externalControlEnabled, "externalControlEnabled") } }
     var hasCompletedOnboarding: Bool { didSet { store(hasCompletedOnboarding, "hasCompletedOnboarding") } }
 
     @ObservationIgnored private let defaults: UserDefaults
@@ -57,6 +59,7 @@ final class Settings {
         } else {
             shortcuts = SnapAction.defaultShortcuts
         }
+        externalControlEnabled = defaults.object(forKey: "externalControlEnabled") as? Bool ?? true
         hasCompletedOnboarding = defaults.object(forKey: "hasCompletedOnboarding") as? Bool ?? false
     }
 

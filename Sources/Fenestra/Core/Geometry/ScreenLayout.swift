@@ -79,11 +79,14 @@ struct ScreenLayout: Sendable {
         step(from: screen, by: -1)
     }
 
+    /// Displays in reading order: minX, then minY.
+    var readingOrder: [ScreenInfo] {
+        screens.sorted { ($0.frame.minX, $0.frame.minY) < ($1.frame.minX, $1.frame.minY) }
+    }
+
     private func step(from screen: ScreenInfo, by offset: Int) -> ScreenInfo? {
         guard screens.count > 1 else { return nil }
-        let ordered = screens.sorted {
-            ($0.frame.minX, $0.frame.minY) < ($1.frame.minX, $1.frame.minY)
-        }
+        let ordered = readingOrder
         guard let index = ordered.firstIndex(where: { $0.id == screen.id }) else { return nil }
         return ordered[(index + offset + ordered.count) % ordered.count]
     }

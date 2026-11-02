@@ -22,6 +22,15 @@ targets:
     platform: macOS
     sources:
       - Sources/Fenestra
+      - Sources/Shared
+    dependencies:
+      # Command-line tool and MCP server, shipped at Contents/Helpers/fenestra.
+      - target: FenestraCLI
+        embed: true
+        codeSign: true
+        copy:
+          destination: wrapper
+          subpath: Contents/Helpers
     info:
       path: Sources/Fenestra/Info.plist
       properties:
@@ -36,6 +45,18 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.florentamaridon.Fenestra
         ENABLE_APP_SANDBOX: NO
         GENERATE_INFOPLIST_FILE: NO
+  FenestraCLI:
+    type: tool
+    platform: macOS
+    sources:
+      - Sources/FenestraCLI
+      - Sources/Shared
+    settings:
+      base:
+        PRODUCT_NAME: fenestra
+        PRODUCT_MODULE_NAME: FenestraCLI
+        PRODUCT_BUNDLE_IDENTIFIER: com.florentamaridon.Fenestra.cli
+        SKIP_INSTALL: YES
   FenestraTests:
     type: bundle.unit-test
     platform: macOS

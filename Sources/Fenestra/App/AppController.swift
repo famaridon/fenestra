@@ -14,6 +14,8 @@ final class AppController {
     @ObservationIgnored let snapAssist: SnapAssistController
     @ObservationIgnored let snapLayouts: SnapLayoutsController
     @ObservationIgnored let screenWatcher: ScreenWatcher
+    @ObservationIgnored let commands: CommandService
+    @ObservationIgnored private let controlServer: ControlServer
 
     /// True while the global monitors (mouse + hotkeys) are active.
     private(set) var isRunning = false
@@ -31,6 +33,9 @@ final class AppController {
         snapAssist = assist
         snapLayouts = SnapLayoutsController(settings: settings, snapController: snap)
         screenWatcher = ScreenWatcher(snapController: snap)
+        let commands = CommandService(settings: settings, snapController: snap)
+        self.commands = commands
+        controlServer = ControlServer { request in await commands.handle(request) }
         hotkeys.onAction = { [weak self] action in self?.perform(action) }
         refresh()
         observeChanges()
@@ -65,6 +70,8 @@ final class AppController {
             snapController.cancelDrag()
         }
         isRunning = active
+        // Independent of `active`: the tool then gets a clear error instead of no answer.
+        if settings.externalControlEnabled { controlServer.start() } else { controlServer.stop() }
     }
 
     /// Re-runs `refresh()` whenever one of the inputs changes (re-armed after each change).
@@ -75,6 +82,7 @@ final class AppController {
             _ = settings.shortcuts
             _ = settings.dragSnapEnabled
             _ = settings.snapLayoutsEnabled
+            _ = settings.externalControlEnabled
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.refresh()

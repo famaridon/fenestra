@@ -227,6 +227,12 @@ final class SnapController {
         place(window, zone: zone, on: screen)
     }
 
+    /// Placement to an arbitrary frame (layout commands): the window is no longer in a zone.
+    func placeCustom(_ window: AXWindow, frame: CGRect) -> CGRect? {
+        registry.remove(window)
+        return window.setFrame(frame)
+    }
+
     func restore(_ window: AXWindow) {
         guard let record = registry.remove(window) else { return }
         window.setFrame(record.restoreFrame)

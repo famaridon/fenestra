@@ -14,6 +14,8 @@ struct SettingsView: View {
                 .tabItem { Label("Shortcuts", systemImage: "keyboard") }
             ExcludedAppsView()
                 .tabItem { Label("Exclusions", systemImage: "nosign") }
+            AgentsTab(settings: controller.settings)
+                .tabItem { Label("Agents", systemImage: "sparkles") }
             AboutTab()
                 .tabItem { Label("About", systemImage: "info.circle") }
         }
@@ -142,6 +144,83 @@ private struct ShortcutsTab: View {
             Button("Restore Default Shortcuts") { settings.resetShortcuts() }
         }
         .formStyle(.grouped)
+    }
+}
+
+private struct AgentsTab: View {
+    @Bindable var settings: Settings
+
+    /// The `fenestra` tool of this copy of the app.
+    private static var toolPath: String {
+        Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/fenestra").path
+    }
+
+    private static var claudeCodeCommand: String {
+        let path = toolPath
+        let quoted = path.contains(" ") ? "'\(path.replacingOccurrences(of: "'", with: "'\\''"))'" : path
+        return "claude mcp add fenestra -- \(quoted) mcp"
+    }
+
+    private static var mcpConfiguration: String {
+        let config = ["mcpServers": ["fenestra": ["command": toolPath, "args": ["mcp"]]]]
+        guard let data = try? JSONSerialization.data(
+            withJSONObject: config, options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]) else { return "" }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    var body: some View {
+        Form {
+            Section {
+                Toggle("Allow AI agents and scripts to arrange windows", isOn: $settings.externalControlEnabled)
+                Text("AI agents such as Claude connect to Fenestra through the Model Context Protocol (MCP), with the fenestra tool bundled in the app. They can list your displays and windows and arrange them; nothing leaves your Mac.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Group {
+                Section {
+                    CopyableSnippet(text: Self.claudeCodeCommand)
+                } header: {
+                    Text(verbatim: "Claude Code")
+                } footer: {
+                    Text("Run in a terminal.")
+                }
+                Section {
+                    CopyableSnippet(text: Self.mcpConfiguration)
+                } header: {
+                    Text("Claude Desktop, Cursor and other MCP apps")
+                } footer: {
+                    Text("Add to the app's MCP configuration file. These settings point to this copy of Fenestra: copy them again if you move the app.")
+                }
+            }
+            .disabled(!settings.externalControlEnabled)
+        }
+        .formStyle(.grouped)
+    }
+}
+
+/// Monospaced text with a button that copies it to the clipboard.
+private struct CopyableSnippet: View {
+    let text: String
+    @State private var copied = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(verbatim: text)
+                .font(.system(.caption, design: .monospaced))
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Button {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(text, forType: .string)
+                copied = true
+                Task {
+                    try? await Task.sleep(for: .seconds(2))
+                    copied = false
+                }
+            } label: {
+                Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc")
+            }
+        }
     }
 }
 

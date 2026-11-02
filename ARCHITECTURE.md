@@ -40,6 +40,7 @@ Sources/Fenestra/
     Snap/SnapRegistry.swift            — mémoire des fenêtres collées (restauration F2)
     Snap/SharedBorderResolver.swift    — calcul de la bordure partagée (F5)
     Capture/WindowMatcher.swift        — associe une fenêtre AX à une fenêtre ScreenCaptureKit (F8)
+    Commands/LayoutSpec.swift          — disposition « one shot » (LayoutSpec) et LayoutPlanner : fenêtres -> cadres
   Accessibility/
     AXWindow.swift                     — enveloppe d'une fenêtre AXUIElement
     AXWindowFinder.swift               — fenêtre sous le pointeur, fenêtre active, toutes les fenêtres
@@ -61,12 +62,17 @@ Sources/Fenestra/
     SnapPreviewPanel.swift             — NSPanel d'aperçu translucide
     SnapAssistPanel.swift              — panneau Snap Assist (F8)
     SnapLayoutsPanel.swift             — palette Snap Layouts (bouton vert)
+  Commands/
+    CommandService.swift               — commandes list_displays / list_windows / apply_layout
+    ControlServer.swift                — socket Unix local (~/Library/Application Support/Fenestra/control.sock)
   Controllers/
     SnapController.swift               — orchestration glisser + clavier + restauration
     SharedBorderController.swift       — F5 : propage un redimensionnement aux voisines
     ScreenWatcher.swift                — F7 : réagit aux changements d'écrans
     SnapAssistController.swift         — F8
     SnapLayoutsController.swift        — survol du bouton vert -> palette Snap Layouts
+Sources/Shared/ControlSocket.swift     — protocole du socket, partagé par l'app et l'outil
+Sources/FenestraCLI/main.swift         — outil `fenestra` (Contents/Helpers) : CLI + serveur MCP stdio
 Tests/FenestraTests/                   — Swift Testing, surtout sur Core/
 docs/                                  — site Astro Starlight (documentation utilisateur et développeur)
 ```
@@ -352,6 +358,7 @@ Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_,
     var snapAssistPreviews: Bool             // F8, false ; demande l'enregistrement de l'écran
     var snapLayoutsEnabled: Bool             // true ; palette au survol du bouton vert
     var excludedBundleIdentifiers: [String]
+    var externalControlEnabled: Bool         // true ; socket de commandes pour l'outil fenestra (MCP)
     var shortcuts: [SnapAction: KeyboardShortcut]   // seules les actions assignées ; défaut SnapAction.defaultShortcuts
     var hasCompletedOnboarding: Bool
     func resetShortcuts()
@@ -431,3 +438,20 @@ Avec `snapAssistPreviews` et l'autorisation d'enregistrement de l'écran, le pan
 icônes, puis `WindowThumbnailer` remplit `SnapAssistModel.thumbnails` une fenêtre après l'autre. L'API
 d'Accessibilité ne donne pas de `CGWindowID` public (NF4) : chaque fenêtre est associée à sa fenêtre
 ScreenCaptureKit par processus, cadre et titre (`WindowMatcher`). Une fenêtre non associée garde son icône.
+
+## Commandes externes et MCP
+
+L'app écoute sur un socket Unix (droits 0600). Requête : une ligne JSON
+`{"command": "...", "arguments": {...}}` ; réponse : `{"ok": true, "result": ...}` ou
+`{"ok": false, "error": "..."}`. Commandes : `list_displays`, `list_windows`, `apply_layout`.
+
+`apply_layout` reçoit un `LayoutSpec` : une liste de placements `{app, title?, display?, zone | rect}`
+(rect en fractions 0…1 de la zone utile de l'écran) et `launch_apps`. `LayoutPlanner` (pur, testé)
+attribue une fenêtre distincte à chaque placement — ceux qui ont un titre choisissent d'abord — et
+calcule les cadres avec la même règle d'écart que `Zone`. Les placements en zone passent par le
+registre (la restauration fonctionne) ; les rect sortent la fenêtre du registre.
+
+L'outil `fenestra` (pas de dépendance externe) relaie ces commandes : en ligne de commande, ou comme
+serveur MCP stdio (`fenestra mcp`, JSON-RPC écrit à la main : initialize, ping, tools/list, tools/call).
+Il lance l'app en arrière-plan si le socket ne répond pas. Le socket n'est ouvert que si
+`Settings.externalControlEnabled` (onglet Agents des réglages, qui donne aussi la config MCP à copier).

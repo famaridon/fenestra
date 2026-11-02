@@ -61,6 +61,46 @@
         }
       }
     },
+    "Add to the app's MCP configuration file. These settings point to this copy of Fenestra: copy them again if you move the app." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À ajouter au fichier de configuration MCP de l'app. Ces réglages désignent cet exemplaire de Fenestra : copiez-les de nouveau si vous déplacez l'app."
+          }
+        }
+      }
+    },
+    "Agents" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agents"
+          }
+        }
+      }
+    },
+    "AI agents such as Claude connect to Fenestra through the Model Context Protocol (MCP), with the fenestra tool bundled in the app. They can list your displays and windows and arrange them; nothing leaves your Mac." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les agents IA comme Claude se connectent à Fenestra par le Model Context Protocol (MCP), avec l'outil fenestra fourni dans l'app. Ils peuvent lister vos écrans et vos fenêtres et les disposer ; rien ne quitte votre Mac."
+          }
+        }
+      }
+    },
+    "Allow AI agents and scripts to arrange windows" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser les agents IA et les scripts à disposer les fenêtres"
+          }
+        }
+      }
+    },
     "Arrange Window" : {
       "localizations" : {
         "fr" : {
@@ -111,6 +151,16 @@
         }
       }
     },
+    "Claude Desktop, Cursor and other MCP apps" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Desktop, Cursor et autres apps MCP"
+          }
+        }
+      }
+    },
     "Clear Shortcut" : {
       "localizations" : {
         "fr" : {
@@ -127,6 +177,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cliquer pour définir"
+          }
+        }
+      }
+    },
+    "Copied" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copié"
+          }
+        }
+      }
+    },
+    "Copy" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copier"
           }
         }
       }
@@ -470,6 +540,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deux tiers droits"
+          }
+        }
+      }
+    },
+    "Run in a terminal." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À lancer dans un terminal."
           }
         }
       }
