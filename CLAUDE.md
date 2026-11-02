@@ -24,6 +24,7 @@ Snapping stays manual, as on Windows: no automatic tiling of every window. No Sp
 
 ```sh
 xcodegen generate        # after any change to project.yml or added/removed files; .xcodeproj is not versioned
+                         # signing: ad hoc by default; a team goes in Config/Signing.local.xcconfig (not versioned)
 xcodebuild test -project Fenestra.xcodeproj -scheme Fenestra -destination 'platform=macOS' -derivedDataPath build
 cd docs && pnpm dev       # http://localhost:4321/fenestra/
 cd docs && pnpm build

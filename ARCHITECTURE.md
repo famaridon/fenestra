@@ -119,6 +119,7 @@ Sources/Fenestra/
     Presentation/OnboardingView.swift   — accueil
   MenuBar/
     Presentation/MenuBarView.swift      — contenu du MenuBarExtra
+Config/Signing.xcconfig                 — signature des builds locaux : ad hoc, ou votre équipe dans Config/Signing.local.xcconfig (non versionné)
 Sources/Shared/ControlSocket.swift      — protocole du socket, partagé par l'app et l'outil
 Sources/FenestraCLI/main.swift          — outil `fenestra` (Contents/Helpers) : CLI + serveur MCP stdio
 Tests/FenestraTests/<Feature>/          — Swift Testing : Domain, et use cases avec des fakes des ports (Support/Fakes.swift)

@@ -29,9 +29,16 @@ Une version non signée change d'identité à chaque version : macOS oublie l'au
 
 ## Compiler depuis les sources
 
-Il faut en plus Xcode (avec un compte donnant un certificat **Apple Development**) et [Homebrew](https://brew.sh) pour installer XcodeGen.
+Il faut en plus Xcode et [Homebrew](https://brew.sh) pour installer XcodeGen. Un compte donnant un certificat **Apple Development** est recommandé (voir plus bas).
 
-Le projet Xcode est généré par [XcodeGen](https://github.com/yonaskolb/XcodeGen) à partir de `project.yml` ; le `.xcodeproj` n'est pas versionné. `project.yml` signe avec l'équipe du mainteneur (`DEVELOPMENT_TEAM`) : remplacez-la par l'identifiant de votre équipe avant `xcodegen generate`, sinon la compilation ne sera pas signée.
+Le projet Xcode est généré par [XcodeGen](https://github.com/yonaskolb/XcodeGen) à partir de `project.yml` ; le `.xcodeproj` n'est pas versionné. Par défaut, la compilation est signée « ad hoc », sans équipe. Pour signer avec votre propre certificat, créez `Config/Signing.local.xcconfig` (non versionné) avec l'identifiant de votre équipe :
+
+```sh
+cat > Config/Signing.local.xcconfig <<'EOF'
+DEVELOPMENT_TEAM = ABCDE12345
+CODE_SIGN_IDENTITY = Apple Development
+EOF
+```
 
 ```sh
 brew install xcodegen
@@ -57,7 +64,7 @@ Une seconde autorisation, l'**enregistrement de l'écran**, est facultative : el
 
 ## Pourquoi la signature Apple Development ?
 
-macOS associe l'autorisation d'Accessibilité à l'identité de signature de l'application. Une compilation signée « ad hoc » change d'identité à chaque build, et l'autorisation disparaît. Avec un certificat **Apple Development** stable, macOS reconnaît l'application d'une compilation à l'autre et **conserve l'autorisation**.
+macOS associe l'autorisation d'Accessibilité à l'identité de signature de l'application. Une compilation signée « ad hoc » change d'identité à chaque build, et l'autorisation disparaît. Avec un certificat **Apple Development** stable, déclaré dans `Config/Signing.local.xcconfig`, macOS reconnaît l'application d'une compilation à l'autre et **conserve l'autorisation**.
 
 ## Éviter le double snap
 
