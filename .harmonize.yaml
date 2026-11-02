@@ -1,0 +1,6 @@
+# Harmonize (architecture tests) scans the Swift files from this folder down.
+excludes:
+  - build
+  - docs
+  - video
+  - node_modules

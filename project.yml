@@ -5,6 +5,11 @@ options:
     macOS: "26.0"
   createIntermediateGroups: true
   developmentLanguage: en
+packages:
+  # Test-only: architecture rules (Tests/FenestraTests/Architecture). The app and the CLI have no dependency.
+  Harmonize:
+    url: https://github.com/perrystreetsoftware/Harmonize.git
+    exactVersion: 1.3.0
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -67,6 +72,8 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: Fenestra
+      - package: Harmonize
+        product: Harmonize
 schemes:
   Fenestra:
     build:
