@@ -2,7 +2,7 @@
 
 export type Lang = 'en' | 'fr';
 
-export type CaptionKey = 'layouts' | 'mouse' | 'assist' | 'border' | 'keyboard' | 'displays';
+export type CaptionKey = 'layouts' | 'mouse' | 'assist' | 'border' | 'keyboard' | 'displays' | 'agent';
 
 export type Strings = {
 	tagline: string;
@@ -12,6 +12,9 @@ export type Strings = {
 	border: [string, string];
 	keyboard: [string, string];
 	displays: [string, string];
+	agent: [string, string];
+	// Prompt typed to the agent, tool it calls, result shown once the windows are placed.
+	agentPrompt: [string, string, string];
 	outro: [string, string];
 	windows: { safari: string; notes: string; terminal: string; mail: string };
 };
@@ -25,6 +28,8 @@ export const strings: Record<Lang, Strings> = {
 		border: ['Shared border', 'Resize snapped windows together'],
 		keyboard: ['Keyboard shortcuts', 'Halves, quarters, full screen and restore'],
 		displays: ['Multiple and vertical displays', 'Send windows across, top / bottom split in portrait'],
+		agent: ['AI agents', 'Ask Claude to arrange all your windows at once'],
+		agentPrompt: ['Safari on the left, Terminal and Notes on the right', 'apply_layout', '3 windows placed'],
 		outro: ['Download Fenestra', 'famaridon.github.io/fenestra'],
 		windows: { safari: 'Safari — Fenestra', notes: 'Notes', terminal: 'Terminal — zsh', mail: 'Mail — Inbox' },
 	},
@@ -36,6 +41,8 @@ export const strings: Record<Lang, Strings> = {
 		border: ['Bordure partagée', 'Redimensionnez les fenêtres ancrées ensemble'],
 		keyboard: ['Raccourcis clavier', 'Moitiés, quarts, plein écran et restauration'],
 		displays: ['Plusieurs écrans, écran vertical', 'Envoyez les fenêtres d’un écran à l’autre, haut / bas en portrait'],
+		agent: ['Agents IA', 'Demandez à Claude de placer toutes vos fenêtres d’un coup'],
+		agentPrompt: ['Safari à gauche, Terminal et Notes à droite', 'apply_layout', '3 fenêtres placées'],
 		outro: ['Téléchargez Fenestra', 'famaridon.github.io/fenestra'],
 		windows: { safari: 'Safari — Fenestra', notes: 'Notes', terminal: 'Terminal — zsh', mail: 'Mail — Boîte de réception' },
 	},

@@ -1,4 +1,5 @@
 import { springTiming, type TransitionPresentation, type TransitionTiming } from '@remotion/transitions';
+import { agent } from './scenes/Agent';
 import { assist } from './scenes/Assist';
 import { border } from './scenes/Border';
 import { displays } from './scenes/Displays';
@@ -6,11 +7,12 @@ import { keyboard } from './scenes/Keyboard';
 import { snapLayouts } from './scenes/Layouts';
 import { mouse } from './scenes/Mouse';
 import type { Scene } from './scenes/shared';
+import { strings } from './i18n';
 import { outro, title } from './scenes/Title';
 import { push, zoomFade } from './transitions';
 
 // The video, in order. Add, remove or reorder scenes here.
-export const scenes: Scene[] = [title, mouse, assist, border, keyboard, displays, snapLayouts, outro];
+export const scenes: Scene[] = [title, mouse, assist, border, keyboard, displays, snapLayouts, agent(Object.values(strings).map((s) => s.agentPrompt[0])), outro];
 
 export const FPS = 30;
 
