@@ -94,7 +94,14 @@ final class SnapController {
             if wasSnapped && settings.sharedBorderEnabled { sharedBorder.finishResize(window) }
             return
         }
-        guard let (zone, screen) = target else { return }
+        guard let (zone, screen) = target else {
+            // Dropped outside any zone (restoration off): the window is no longer snapped.
+            if wasSnapped, let frame = window.frame,
+               !registry.isStillSnapped(window, frame: frame, tolerance: Self.tolerance) {
+                registry.remove(window)
+            }
+            return
+        }
         place(window, zone: zone, on: screen)
         offerSnapAssist(after: window, zone: zone, screen: screen)
     }
@@ -136,7 +143,7 @@ final class SnapController {
     }
 
     private func updatePreview(pointer: CGPoint) {
-        guard let screen = layout.screen(containing: pointer) else { return }
+        guard settings.dragSnapEnabled, let screen = layout.screen(containing: pointer) else { return }
         let zone = resolver.zone(forPointer: pointer, on: screen, innerEdges: layout.innerEdges(of: screen))
             .flatMap { settings.enabledZones.contains($0) ? $0 : nil }
         guard zone != pending?.zone || screen.id != pending?.screen.id else { return }
@@ -172,6 +179,9 @@ final class SnapController {
             }
         }
         switch settings.keyboardResolver.command(for: action, state: state, on: screen, layout: layout) {
+        case .place(let zone, _) where !settings.enabledZones.contains(zone):
+            // A disabled zone is never used, and there is no fallback to another one.
+            return
         case .place(let zone, let target):
             place(window, zone: zone, on: target)
             window.raise()
@@ -210,7 +220,8 @@ final class SnapController {
     }
 
     private func offerSnapAssist(after window: AXWindow, zone: Zone, screen: ScreenInfo) {
-        guard settings.snapAssistEnabled, zone.complement != nil else { return }
+        guard settings.snapAssistEnabled, let complement = zone.complement,
+              settings.enabledZones.contains(complement) else { return }
         snapAssist?.offer(after: window, zone: zone, screen: screen)
     }
 
@@ -262,8 +273,12 @@ final class SnapController {
         registry.updateSnappedFrame(window, to: frame)
     }
 
+    /// Gap between windows, in points.
+    var gap: CGFloat { CGFloat(settings.gap) }
+
+    /// Standard, resizable, not full screen and not excluded: fixed-size windows are left alone.
     func isManageable(_ window: AXWindow) -> Bool {
-        window.isStandardWindow && !window.isFullScreen
+        window.isStandardWindow && !window.isFullScreen && window.isResizable
             && !settings.isExcluded(bundleIdentifier: window.bundleIdentifier)
     }
 }

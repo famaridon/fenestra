@@ -21,15 +21,15 @@ enum SharedBorderResolver {
     private static let epsilon: CGFloat = 0.5
 
     /// A snapped window went from `oldFrame` to `newFrame` (user resize). For every edge that moved,
-    /// the neighbours whose opposite edge sat on the old edge position (within `tolerance`) and that
-    /// overlap the window on the perpendicular axis are "attached": their opposite edge follows the
-    /// new position, their far edge stays put. Minimum sizes are respected: if the border cannot go
+    /// the neighbours whose opposite edge sat `gap` points beyond the old edge position (within
+    /// `tolerance`) and that overlap the window on the perpendicular axis are "attached": their
+    /// opposite edge follows the new position, keeping the gap, and their far edge stays put. Minimum sizes are respected: if the border cannot go
     /// as far as requested it is clamped, the clamped position is applied to every attached
     /// neighbour, and the changed window gets an adjustment pulling it back to that position.
     /// Only frames that really change (> 0.5 pt) are returned. Pure, no side effects.
     static func adjustments<Key>(changed: Key, oldFrame: CGRect, newFrame: CGRect,
                                  neighbours: [BorderWindow<Key>], minSizeOfChanged: CGSize,
-                                 tolerance: CGFloat) -> [BorderAdjustment<Key>] {
+                                 tolerance: CGFloat, gap: CGFloat = 0) -> [BorderAdjustment<Key>] {
         let others = neighbours.filter { $0.id != changed }
         var state = State(
             old: oldFrame,
@@ -42,9 +42,9 @@ enum SharedBorderResolver {
 
         // Horizontal borders are handled by the same code as vertical ones on the transposed
         // geometry (x and y swapped): resolve minX/maxX, transpose, resolve again, transpose back.
-        resolveVerticalBorders(&state, tolerance: tolerance)
+        resolveVerticalBorders(&state, tolerance: tolerance, gap: gap)
         state = state.transposed()
-        resolveVerticalBorders(&state, tolerance: tolerance)
+        resolveVerticalBorders(&state, tolerance: tolerance, gap: gap)
         state = state.transposed()
 
         var result: [BorderAdjustment<Key>] = []
@@ -81,35 +81,35 @@ enum SharedBorderResolver {
     }
 
     /// Handles the changed window's left and right edges (the borders that are vertical lines).
-    private static func resolveVerticalBorders(_ s: inout State, tolerance: CGFloat) {
-        // Right edge moved: neighbours on the right have their minX on the old maxX.
+    private static func resolveVerticalBorders(_ s: inout State, tolerance: CGFloat, gap: CGFloat) {
+        // Right edge moved: neighbours on the right have their minX `gap` after the old maxX.
         if abs(s.changed.maxX - s.old.maxX) > epsilon {
-            let attached = attachedIndices(s, tolerance: tolerance) { s.originals[$0].minX - s.old.maxX }
+            let attached = attachedIndices(s, tolerance: tolerance) { s.originals[$0].minX - s.old.maxX - gap }
             if !attached.isEmpty {
                 // Neighbours cannot start beyond (their maxX - min width); the changed window
                 // cannot be narrower than its own minimum.
-                let upper = attached.map { s.originals[$0].maxX - s.minSizes[$0].width }.min()!
+                let upper = attached.map { s.originals[$0].maxX - s.minSizes[$0].width }.min()! - gap
                 let lower = s.changed.minX + s.minChanged.width
                 let x = min(max(s.changed.maxX, lower), upper)
                 s.changed = rect(minX: s.changed.minX, maxX: x, like: s.changed)
-                for i in attached { s.frames[i] = rect(minX: x, maxX: s.frames[i].maxX, like: s.frames[i]) }
+                for i in attached { s.frames[i] = rect(minX: x + gap, maxX: s.frames[i].maxX, like: s.frames[i]) }
             }
         }
-        // Left edge moved: neighbours on the left have their maxX on the old minX.
+        // Left edge moved: neighbours on the left have their maxX `gap` before the old minX.
         if abs(s.changed.minX - s.old.minX) > epsilon {
-            let attached = attachedIndices(s, tolerance: tolerance) { s.originals[$0].maxX - s.old.minX }
+            let attached = attachedIndices(s, tolerance: tolerance) { s.originals[$0].maxX - s.old.minX + gap }
             if !attached.isEmpty {
-                let lower = attached.map { s.originals[$0].minX + s.minSizes[$0].width }.max()!
+                let lower = attached.map { s.originals[$0].minX + s.minSizes[$0].width }.max()! + gap
                 let upper = s.changed.maxX - s.minChanged.width
                 let x = max(min(s.changed.minX, upper), lower)
                 s.changed = rect(minX: x, maxX: s.changed.maxX, like: s.changed)
-                for i in attached { s.frames[i] = rect(minX: s.frames[i].minX, maxX: x, like: s.frames[i]) }
+                for i in attached { s.frames[i] = rect(minX: s.frames[i].minX, maxX: x - gap, like: s.frames[i]) }
             }
         }
     }
 
-    /// Neighbours whose facing edge is within tolerance of the old border (`offset` gives the
-    /// distance) and whose y range overlaps the changed window's old y range.
+    /// Neighbours whose facing edge is within tolerance of its expected place across the old border
+    /// (`offset` gives the distance to that place) and whose y range overlaps the changed window's old y range.
     private static func attachedIndices(_ s: State, tolerance: CGFloat, offset: (Int) -> CGFloat) -> [Int] {
         s.originals.indices.filter { i in
             let o = s.originals[i]

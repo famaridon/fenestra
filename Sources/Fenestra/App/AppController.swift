@@ -50,7 +50,8 @@ final class AppController {
     func refresh() {
         let active = permission.isGranted && settings.isEnabled
         if active {
-            if settings.dragSnapEnabled {
+            // The mouse also drives unsnap restoration and the shared border, not only drag snapping.
+            if settings.dragSnapEnabled || settings.restoreOnUnsnap || settings.sharedBorderEnabled {
                 dragMonitor.onMouseDown = { [snapController] in snapController.mouseDown(at: $0) }
                 dragMonitor.onMouseDragged = { [snapController] in snapController.mouseDragged(at: $0) }
                 dragMonitor.onMouseUp = { [snapController] in snapController.mouseUp(at: $0) }
@@ -58,8 +59,8 @@ final class AppController {
                 dragMonitor.onMouseDown = nil
                 dragMonitor.onMouseDragged = nil
                 dragMonitor.onMouseUp = nil
-                snapController.cancelDrag()
             }
+            snapController.cancelDrag()
             dragMonitor.start()
             hotkeys.register(settings.shortcuts)
             if settings.snapLayoutsEnabled { snapLayouts.start() } else { snapLayouts.stop() }
@@ -81,6 +82,8 @@ final class AppController {
             _ = settings.isEnabled
             _ = settings.shortcuts
             _ = settings.dragSnapEnabled
+            _ = settings.restoreOnUnsnap
+            _ = settings.sharedBorderEnabled
             _ = settings.snapLayoutsEnabled
             _ = settings.externalControlEnabled
         } onChange: { [weak self] in

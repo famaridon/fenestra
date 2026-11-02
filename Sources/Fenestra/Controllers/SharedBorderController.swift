@@ -21,18 +21,19 @@ final class SharedBorderController {
         for (other, frame) in frames {
             if let moved = shifted(frame, old: old, new: new) { pairs.append((other, frame, moved)) }
         }
+        let gap = snapController.gap
         let neighbours = frames.map { BorderWindow(id: $0.key, frame: $0.value, minSize: .zero) }
         for (key, from, to) in pairs {
             let others = neighbours.filter { $0.id != key }
             let adjustments = SharedBorderResolver.adjustments(
                 changed: key, oldFrame: from, newFrame: to,
-                neighbours: others, minSizeOfChanged: .zero, tolerance: Self.tolerance)
+                neighbours: others, minSizeOfChanged: .zero, tolerance: Self.tolerance, gap: gap)
             if key != window { apply(key, to) }
             for adjustment in adjustments {
                 let actual = apply(adjustment.id, adjustment.frame)
                 if adjustment.id != key, !close(actual, adjustment.frame) {
                     // The app refused (minimum size): pull the changed window back onto the real edge.
-                    apply(key, corrected(to, requested: adjustment.frame, actual: actual))
+                    apply(key, corrected(to, requested: adjustment.frame, actual: actual, gap: gap))
                 }
             }
         }
@@ -63,12 +64,12 @@ final class SharedBorderController {
     }
 
     /// Moves the edge of `frame` that touched the requested neighbour frame onto the neighbour's actual edge.
-    private func corrected(_ frame: CGRect, requested: CGRect, actual: CGRect) -> CGRect {
+    private func corrected(_ frame: CGRect, requested: CGRect, actual: CGRect, gap: CGFloat) -> CGRect {
         var minX = frame.minX, maxX = frame.maxX, minY = frame.minY, maxY = frame.maxY
-        if abs(maxX - requested.minX) <= 1 { maxX = actual.minX }
-        if abs(minX - requested.maxX) <= 1 { minX = actual.maxX }
-        if abs(maxY - requested.minY) <= 1 { maxY = actual.minY }
-        if abs(minY - requested.maxY) <= 1 { minY = actual.maxY }
+        if abs(maxX + gap - requested.minX) <= 1 { maxX = actual.minX - gap }
+        if abs(minX - gap - requested.maxX) <= 1 { minX = actual.maxX + gap }
+        if abs(maxY + gap - requested.minY) <= 1 { maxY = actual.minY - gap }
+        if abs(minY - gap - requested.maxY) <= 1 { minY = actual.maxY + gap }
         return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
 

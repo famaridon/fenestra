@@ -23,8 +23,7 @@ final class SnapAssistController {
         guard !neighbors.contains(where: { $0.1.zone.overlaps(complement) }) else { return }
         let snapped = Set(neighbors.map(\.0))
         let others = AXWindowFinder.visibleStandardWindows().filter {
-            $0 != window && !snapped.contains($0)
-                && !settings.isExcluded(bundleIdentifier: $0.bundleIdentifier)
+            $0 != window && !snapped.contains($0) && snapController.isManageable($0)
         }
         guard !others.isEmpty else { return }
         windows = Dictionary(uniqueKeysWithValues: others.enumerated().map { ($0.offset, $0.element) })

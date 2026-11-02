@@ -126,9 +126,34 @@ struct SharedBorderResolverTests {
     }
 
     @Test func gapsBetweenWindowsAreNotSnappedAwayBeyondTolerance() {
-        // With a 10 pt gap the neighbour is not attached at a 4 pt tolerance.
+        // With a 10 pt gap the neighbour is not attached at a 4 pt tolerance when no gap is expected.
         let b = window("B", 510, 0, 490, 800)
         #expect(resolve(old: leftHalf, new: CGRect(x: 0, y: 0, width: 600, height: 800), neighbours: [b]).isEmpty)
+    }
+
+    @Test func gapIsKeptWhenTheBorderMoves() {
+        let b = window("B", 510, 0, 490, 800)
+        let right = SharedBorderResolver.adjustments(
+            changed: "A", oldFrame: leftHalf, newFrame: CGRect(x: 0, y: 0, width: 600, height: 800),
+            neighbours: [b], minSizeOfChanged: .zero, tolerance: 4, gap: 10)
+        #expect(right == [BorderAdjustment(id: "B", frame: CGRect(x: 610, y: 0, width: 390, height: 800))])
+
+        let a = window("A", 0, 0, 500, 800)
+        let left = SharedBorderResolver.adjustments(
+            changed: "B", oldFrame: b.frame, newFrame: CGRect(x: 410, y: 0, width: 590, height: 800),
+            neighbours: [a], minSizeOfChanged: .zero, tolerance: 4, gap: 10)
+        #expect(left == [BorderAdjustment(id: "A", frame: CGRect(x: 0, y: 0, width: 400, height: 800))])
+    }
+
+    @Test func gapIsKeptOnHorizontalBordersAndMinSizeClamp() {
+        let top = CGRect(x: 0, y: 0, width: 500, height: 395)
+        let bottom = window("B", 0, 405, 500, 395, min: CGSize(width: 0, height: 200))
+        let result = SharedBorderResolver.adjustments(
+            changed: "A", oldFrame: top, newFrame: CGRect(x: 0, y: 0, width: 500, height: 700),
+            neighbours: [bottom], minSizeOfChanged: .zero, tolerance: 4, gap: 10)
+        // The neighbour keeps 200 pt and the 10 pt gap: the border stops at 800 - 200 - 10 = 590.
+        #expect(frame(of: "B", in: result) == CGRect(x: 0, y: 600, width: 500, height: 200))
+        #expect(frame(of: "A", in: result) == CGRect(x: 0, y: 0, width: 500, height: 590))
     }
 
     @Test func unchangedOrTinyChangesProduceNothing() {
