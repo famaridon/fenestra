@@ -1,9 +1,12 @@
 import SwiftUI
 
 /// Welcome window: guides the user through granting the Accessibility permission.
-struct OnboardingView: View {
+/// `ShortcutImport`: the block offering to reuse another window manager's shortcuts, built by the
+/// composition root; nil when no such app is in use.
+struct OnboardingView<ShortcutImport: View>: View {
     let settings: Settings
     let permission: AccessibilityPermission
+    let shortcutImport: ShortcutImport?
     /// Called once the user is done (the monitors may start).
     let onDone: () -> Void
     @Environment(\.dismissWindow) private var dismissWindow
@@ -26,6 +29,9 @@ struct OnboardingView: View {
             Text("Recommended: turn off the built-in macOS tiling in System Settings > Desktop & Dock > Windows.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
+            if let shortcutImport {
+                shortcutImport
+            }
             Spacer()
             HStack {
                 Spacer()
@@ -39,6 +45,6 @@ struct OnboardingView: View {
             }
         }
         .padding(24)
-        .frame(width: 420, height: 380)
+        .frame(width: 420, height: shortcutImport == nil ? 380 : 470)
     }
 }

@@ -84,3 +84,19 @@ Ouvrez les réglages de Fenestra (depuis le menu de la barre des menus), onglet 
 :::caution
 Un raccourci déjà pris par le système ou une autre application peut échouer à s'enregistrer : Fenestra l'ignore alors (il est consigné dans le journal).
 :::
+
+## Garder les raccourcis de Rectangle, Magnet ou AeroSpace
+
+Si vous venez de **Rectangle**, **Magnet** ou **AeroSpace**, Fenestra trouve leurs réglages sur votre Mac et propose de reprendre leurs raccourcis : dans la fenêtre d'accueil au premier lancement, et en bas de l'onglet **Raccourcis** des réglages. Cliquez sur **Importer depuis Rectangle** (ou Magnet, ou AeroSpace) : les raccourcis des actions qui existent dans Fenestra remplacent les vôtres, les autres ne bougent pas. Rien n'est lu dans l'autre application avant le clic, et elle n'est jamais modifiée.
+
+| Application | Où c'est lu | Ce qui est importé |
+|---|---|---|
+| Rectangle | ses préférences (`com.knollsoft.Rectangle`) | moitiés, quarts, plein écran, restauration, écran suivant / précédent, tiers ; une action laissée sans raccourci dans Rectangle le perd aussi dans Fenestra ; les entrées absentes suivent les défauts de Rectangle (jeu recommandé ou jeu Spectacle) |
+| Magnet | ses préférences (`com.crowdcafe.windowmagnet`) | moitiés, quarts, tiers, plein écran, restauration ; les entrées absentes suivent les raccourcis d'usine de Magnet ; les raccourcis d'écran gardent ceux de Fenestra (qui sont aussi ceux de Magnet) |
+| AeroSpace | `~/.aerospace.toml` ou `~/.config/aerospace/aerospace.toml`, table `[mode.main.binding]` | `move left/right/up/down` → les actions fléchées, `fullscreen` → plein écran, `move-node-to-monitor left/prev/right/next` → écran précédent / suivant ; les noms de touches sont lus comme sur un clavier QWERTY |
+
+Un raccourci repris par un import est retiré de toute autre action qui l'utilisait, pour qu'un raccourci garde une seule action. Les raccourcis sans équivalent (*Center* de Rectangle, `focus` ou `workspace` d'AeroSpace…) sont comptés dans la fenêtre et listés dans le journal (Console, sous-système `com.florentamaridon.Fenestra`, catégorie `shortcut-import`). Vous pouvez importer de nouveau à tout moment, ou rétablir les raccourcis par défaut.
+
+:::tip
+Quittez l'autre application (ou désactivez ses raccourcis) avant d'utiliser ceux de Fenestra : deux applications qui enregistrent le même raccourci global ne font pas bon ménage.
+:::

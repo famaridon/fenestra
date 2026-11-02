@@ -17,15 +17,22 @@ struct FenestraApp: App {
 
         SwiftUI.Settings {
             SettingsView(settings: controller.settings, loginItem: controller.loginItem,
-                         screenRecording: controller.screenRecording)
+                         screenRecording: controller.screenRecording, shortcutImport: shortcutImport)
         }
 
         Window("Welcome to Fenestra", id: "onboarding") {
             OnboardingView(settings: controller.settings, permission: controller.permission,
-                           onDone: { controller.refresh() })
+                           shortcutImport: shortcutImport, onDone: { controller.refresh() })
         }
         .windowResizability(.contentSize)
         .defaultLaunchBehavior(.suppressed)
+    }
+
+    /// Offer to reuse the shortcuts of Rectangle, Magnet or AeroSpace; nil when none is in use on this Mac.
+    /// Looked up when a window is built, so a newly installed app shows up at the next opening.
+    private var shortcutImport: ShortcutImportView? {
+        let sources = controller.detectShortcutSources.execute()
+        return sources.isEmpty ? nil : ShortcutImportView(sources: sources, importShortcuts: controller.importShortcuts)
     }
 }
 

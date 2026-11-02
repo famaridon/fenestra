@@ -10,6 +10,9 @@ final class AppController {
     let permission: AccessibilityPermission
     @ObservationIgnored let loginItem: any LoginItem = LaunchAtLogin()
     @ObservationIgnored let screenRecording: any ScreenRecordingAccess = ScreenRecordingPermission()
+    /// Shortcuts of Rectangle, Magnet or AeroSpace (welcome window and Shortcuts tab).
+    @ObservationIgnored let detectShortcutSources: DetectShortcutSources
+    @ObservationIgnored let importShortcuts: ImportShortcuts
 
     @ObservationIgnored private let dragMonitor = DragMonitor()
     @ObservationIgnored private let hotkeys = HotkeyManager()
@@ -28,6 +31,10 @@ final class AppController {
     init(settings: Settings = .shared, trust: any AccessibilityTrust = AXAccessibilityTrust()) {
         self.settings = settings
         permission = AccessibilityPermission(trust: trust)
+
+        let shortcutSources = SystemShortcutSourceReader()
+        detectShortcutSources = DetectShortcutSources(reader: shortcutSources)
+        importShortcuts = ImportShortcuts(reader: shortcutSources, store: settings)
 
         // Adapters shared by every feature.
         let windows = AXWindowSystem()

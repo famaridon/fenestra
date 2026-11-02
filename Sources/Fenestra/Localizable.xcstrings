@@ -31,6 +31,26 @@
         }
       }
     },
+    "^[%lld binding](inflect: true) without equivalent in Fenestra (listed in the log)." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld raccourci](inflect: true) sans équivalent dans Fenestra (détail dans le journal)."
+          }
+        }
+      }
+    },
+    "^[%lld shortcut](inflect: true) imported from %@." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld raccourci](inflect: true) importé depuis %2$@."
+          }
+        }
+      }
+    },
     "About" : {
       "localizations" : {
         "fr" : {
@@ -254,6 +274,16 @@
     "Fenestra" : {
       "shouldTranslate" : false
     },
+    "Fenestra can reuse the shortcuts of the window managers found on this Mac." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fenestra peut reprendre les raccourcis des gestionnaires de fenêtres trouvés sur ce Mac."
+          }
+        }
+      }
+    },
     "Fenestra never moves the windows of these apps." : {
       "localizations" : {
         "fr" : {
@@ -310,6 +340,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moitiés"
+          }
+        }
+      }
+    },
+    "Import" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import"
+          }
+        }
+      }
+    },
+    "Import from %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer depuis %@"
           }
         }
       }

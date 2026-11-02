@@ -35,6 +35,8 @@ The main **Enable Fenestra** switch is in the menu bar menu.
 
 One row per action with a field to record the shortcut, and a button to **restore the default shortcuts**. See [Keyboard shortcuts](/fenestra/guide/keyboard/).
 
+When Rectangle, Magnet or AeroSpace is in use on the Mac, an **Import** section offers one button per app to **reuse its shortcuts**. See [Keep the shortcuts of Rectangle, Magnet or AeroSpace](/fenestra/guide/keyboard/#keep-the-shortcuts-of-rectangle-magnet-or-aerospace).
+
 ## Exclusions
 
 List of **excluded apps**: no snapping (mouse, keyboard, border) is applied to their windows. Add or remove apps in this list.

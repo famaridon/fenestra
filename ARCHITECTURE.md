@@ -109,8 +109,17 @@ Sources/Fenestra/
     Infrastructure/CommandDispatcher.swift — JSON -> use case -> réponse
     Infrastructure/ControlServer.swift  — socket Unix local (~/Library/Application Support/Fenestra/control.sock)
     Infrastructure/WorkspaceAppLauncher.swift — lance les apps (NSWorkspace)
+  ShortcutImport/                       — reprise des raccourcis de Rectangle, Magnet et AeroSpace
+    Domain/ShortcutSource.swift         — ShortcutSource, ShortcutSourceData, ImportedShortcuts (fusion), PreferenceShortcut
+    Domain/RectangleShortcuts.swift     — préférences de Rectangle -> ImportedShortcuts (défauts recommandés / Spectacle)
+    Domain/MagnetShortcuts.swift        — préférences de Magnet -> ImportedShortcuts
+    Domain/AeroSpaceShortcuts.swift     — ~/.aerospace.toml ([mode.main.binding]) -> ImportedShortcuts ; mini-lecteur TOML
+    Application/ShortcutImportPorts.swift — ports ShortcutSourceReader, ShortcutsStore
+    Application/DetectShortcutSources.swift, ImportShortcuts.swift — use cases
+    Infrastructure/SystemShortcutSourceReader.swift — UserDefaults (ou conteneur sandbox) et fichiers du dossier personnel
+    Presentation/ShortcutImportView.swift — bloc « Importer depuis … », injecté dans l'accueil et l'onglet Raccourcis par App
   Settings/
-    Application/Settings.swift          — modèle @Observable persisté dans UserDefaults (+ snapSettings) ; port LoginItem
+    Application/Settings.swift          — modèle @Observable persisté dans UserDefaults (+ snapSettings) ; port LoginItem ; implémente ShortcutsStore
     Infrastructure/LaunchAtLogin.swift  — SMAppService
     Presentation/SettingsView.swift, ShortcutRecorderView.swift, ExcludedAppsView.swift
   Onboarding/
@@ -487,6 +496,41 @@ struct SnapAssistCandidate: Identifiable, Sendable, Equatable { let id: Int; let
 @MainActor protocol AppLauncher: AnyObject { func launch(_ apps: [String]) async }                // WorkspaceAppLauncher
 @MainActor protocol LoginItem: AnyObject { var isEnabled: Bool { get }; func set(_ enabled: Bool) throws }  // LaunchAtLogin
 @MainActor protocol AccessibilityTrust: AnyObject { var isTrusted: Bool { get }; func requestTrust() -> Bool }  // AXAccessibilityTrust
+
+// ShortcutImport
+@MainActor protocol ShortcutSourceReader: AnyObject { func read(_ source: ShortcutSource) -> ShortcutSourceData? }  // SystemShortcutSourceReader ; nil : app non utilisée
+@MainActor protocol ShortcutsStore: AnyObject { var shortcuts: [SnapAction: KeyboardShortcut] { get set } }        // Settings
+```
+
+### ShortcutImport/Domain
+
+```swift
+enum ShortcutSource: String, CaseIterable { case rectangle, magnet, aerospace
+    var name: String                      // nom du produit, jamais traduit
+    var preferencesDomain: String?        // com.knollsoft.Rectangle, com.crowdcafe.windowmagnet ; nil pour AeroSpace
+    var configurationPaths: [String]      // AeroSpace : .aerospace.toml, .config/aerospace/aerospace.toml (relatifs au dossier personnel)
+    func parse(_ data: ShortcutSourceData) -> ImportedShortcuts
+}
+enum ShortcutSourceData { case preferences([String: Any]); case text(String) }
+struct ImportedShortcuts: Equatable, Sendable {
+    var shortcuts: [SnapAction: KeyboardShortcut]   // actions qui ont un équivalent dans la source
+    var cleared: Set<SnapAction>                    // actions laissées sans raccourci dans la source
+    var unmapped: [String]                          // raccourcis de la source sans équivalent (nommés comme elle)
+    /// Importés remplacent les leurs ; `cleared` perdent le leur ; une autre action qui utilisait un raccourci
+    /// importé le perd (un raccourci, une action) ; les actions inconnues de la source gardent le leur.
+    func merged(into current: [SnapAction: KeyboardShortcut]) -> [SnapAction: KeyboardShortcut]
+}
+/// Dictionnaire MASShortcut `{keyCode, modifierFlags}` (Rectangle, Magnet) : `{}` = retiré par l'utilisateur,
+/// clé absente = défaut de l'app, sans modificateur ou malformé = inutilisable.
+enum PreferenceShortcut { case shortcut(KeyboardShortcut), removed, absent, unusable; init(_ raw: Any?) }
+enum RectangleShortcuts { static func parse(_ preferences: [String: Any]) -> ImportedShortcuts }  // défauts selon alternateDefaultShortcuts
+enum MagnetShortcuts { static func parse(_ preferences: [String: Any]) -> ImportedShortcuts }     // défauts d'usine ; écrans non lus
+enum AeroSpaceShortcuts {                                                                           // [mode.main.binding] seulement
+    static func parse(_ toml: String) -> ImportedShortcuts
+    static func mainBindings(in toml: String) -> [Binding]            // clé -> commandes (chaîne ou tableau)
+    static func shortcut(forKey key: String) -> KeyboardShortcut?     // "alt-shift-h" (QWERTY) ; nil sans modificateur
+    static func action(for commands: [String]) -> SnapAction?         // move ←→↑↓, fullscreen, move-node-to-monitor left/prev/right/next
+}
 ```
 
 Tous les cadres qui traversent un port sont en repère AX.
@@ -546,6 +590,12 @@ l'écran de la fenêtre ; un clic sur une zone → `SnapWindowToZone`.
 
 `ListDisplays`, `ListWindows`, `ApplyLayout` (ExternalControl) : voir « Commandes externes et MCP ».
 
+`DetectShortcutSources.execute()` (ShortcutImport) : les sources dont `ShortcutSourceReader.read` rend quelque chose,
+dans l'ordre de `ShortcutSource.allCases`. `ImportShortcuts.execute(from:)` : lit, `parse`, puis
+`store.shortcuts = imported.merged(into: store.shortcuts)` ; rend `ImportedShortcuts` (nil si la source n'est pas
+utilisée : rien ne change) et consigne les raccourcis sans équivalent (catégorie `shortcut-import`). L'autre app n'est
+jamais modifiée.
+
 ### Infrastructure et Presentation
 
 ```swift
@@ -575,10 +625,17 @@ convertissent avec `ScreenGeometry.toCocoa(_:)`. `SnapAssistPanel` lit l'icône 
 Les vues SwiftUI reçoivent ce qu'elles utilisent à l'`init` (`Settings`, `AccessibilityPermission`, ports
 `LoginItem` et `ScreenRecordingAccess`, closure d'action) : aucune ne connaît `AppController`.
 
+Une Presentation n'utilise pas la Presentation d'une autre feature : `ShortcutImportView` (ShortcutImport) est
+donc injectée par `FenestraApp` dans `SettingsView` et `OnboardingView` via un paramètre générique
+`ShortcutImport: View` (nil quand `DetectShortcutSources` ne trouve rien, et le bloc n'apparaît pas).
+`SystemShortcutSourceReader` lit les préférences d'une autre app par `UserDefaults.persistentDomain(forName:)`,
+puis dans son conteneur sandbox (`~/Library/Containers/<domaine>/Data/Library/Preferences/`, cas de Magnet,
+App Store), et les fichiers de configuration dans le dossier personnel (`.config/…` suit `$XDG_CONFIG_HOME`).
+
 ### Settings
 
 ```swift
-@MainActor @Observable final class Settings: SnapSettingsProvider {
+@MainActor @Observable final class Settings: SnapSettingsProvider, ShortcutsStore {
     static let shared: Settings
     var isEnabled: Bool                      // interrupteur général (barre des menus), true
     var dragSnapEnabled: Bool                // glisser vers un bord, true

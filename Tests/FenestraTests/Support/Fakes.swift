@@ -198,3 +198,22 @@ struct SnappingHarness {
         return window
     }
 }
+
+// MARK: Shortcut import
+
+@MainActor
+final class FakeShortcutSourceReader: ShortcutSourceReader {
+    var preferences: [ShortcutSource: [String: Any]] = [:]
+    var files: [ShortcutSource: String] = [:]
+
+    func read(_ source: ShortcutSource) -> ShortcutSourceData? {
+        if let values = preferences[source] { return .preferences(values) }
+        if let text = files[source] { return .text(text) }
+        return nil
+    }
+}
+
+@MainActor
+final class FakeShortcutsStore: ShortcutsStore {
+    var shortcuts: [SnapAction: KeyboardShortcut] = SnapAction.defaultShortcuts
+}

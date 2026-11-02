@@ -19,7 +19,7 @@ The agent lists your windows and displays, then places **every window in a singl
 
 - AI agents and scripts: Claude and other MCP apps (or a shell script) arrange several windows in one call through the bundled `fenestra` tool.
 - Drag snapping: screen edges and corners, translucent preview, original size restored when you unsnap.
-- Configurable global keyboard shortcuts (halves, quarters, thirds, full screen, restore, move to another display).
+- Configurable global keyboard shortcuts (halves, quarters, thirds, full screen, restore, move to another display); coming from Rectangle, Magnet or AeroSpace, import their shortcuts in one click.
 - Shared border: resizing a snapped window adjusts its neighbors.
 - Snap Layouts: rest the pointer on a window's green button and pick a zone in a palette of layouts, as on Windows 11.
 - Snap Assist: after a snap with the mouse or the keyboard, offers your other windows for the remaining space, with optional window thumbnails.

@@ -1,10 +1,13 @@
 import SwiftUI
 
 /// Settings window with one tab per topic.
-struct SettingsView: View {
+/// `ShortcutImport`: the block offering to reuse another window manager's shortcuts, built by the
+/// composition root; nil when no such app is in use.
+struct SettingsView<ShortcutImport: View>: View {
     let settings: Settings
     let loginItem: any LoginItem
     let screenRecording: any ScreenRecordingAccess
+    let shortcutImport: ShortcutImport?
 
     var body: some View {
         TabView {
@@ -12,7 +15,7 @@ struct SettingsView: View {
                 .tabItem { Label("General", systemImage: "gearshape") }
             ZonesTab(settings: settings)
                 .tabItem { Label("Zones", systemImage: "rectangle.split.2x2") }
-            ShortcutsTab(settings: settings)
+            ShortcutsTab(settings: settings, shortcutImport: shortcutImport)
                 .tabItem { Label("Shortcuts", systemImage: "keyboard") }
             ExcludedAppsView(settings: settings)
                 .tabItem { Label("Exclusions", systemImage: "nosign") }
@@ -140,8 +143,9 @@ private struct ZonesTab: View {
     }
 }
 
-private struct ShortcutsTab: View {
+private struct ShortcutsTab<ShortcutImport: View>: View {
     @Bindable var settings: Settings
+    let shortcutImport: ShortcutImport?
 
     var body: some View {
         Form {
@@ -154,6 +158,9 @@ private struct ShortcutsTab: View {
                 }
             }
             Button("Restore Default Shortcuts") { settings.resetShortcuts() }
+            if let shortcutImport {
+                Section("Import") { shortcutImport }
+            }
         }
         .formStyle(.grouped)
     }

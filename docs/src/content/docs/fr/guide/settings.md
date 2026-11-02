@@ -35,6 +35,8 @@ L'interrupteur général **Activer Fenestra** se trouve dans le menu de la barre
 
 Une ligne par action avec un champ de saisie du raccourci, et un bouton pour **rétablir les raccourcis par défaut**. Voir [Raccourcis clavier](/fenestra/fr/guide/keyboard/).
 
+Quand Rectangle, Magnet ou AeroSpace est utilisé sur le Mac, une section **Import** propose un bouton par application pour **reprendre ses raccourcis**. Voir [Garder les raccourcis de Rectangle, Magnet ou AeroSpace](/fenestra/fr/guide/keyboard/#garder-les-raccourcis-de-rectangle-magnet-ou-aerospace).
+
 ## Exclusions
 
 Liste des **applications exclues** : aucun snap (souris, clavier, bordure) n'est appliqué à leurs fenêtres. Ajoutez ou retirez des applications dans cette liste.

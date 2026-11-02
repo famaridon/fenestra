@@ -84,3 +84,19 @@ Open Fenestra's settings (from the menu bar menu), **Shortcuts** tab: click a sh
 :::caution
 A shortcut already used by the system or another app may fail to register: Fenestra then skips it (and logs it).
 :::
+
+## Keep the shortcuts of Rectangle, Magnet or AeroSpace
+
+If you come from **Rectangle**, **Magnet** or **AeroSpace**, Fenestra finds their settings on your Mac and offers to reuse their shortcuts: in the welcome window at first launch, and at the bottom of the **Shortcuts** tab of the settings. Click **Import from Rectangle** (or Magnet, or AeroSpace): the shortcuts of the actions that exist in Fenestra replace yours, the others are untouched. Nothing is read from the other app until you click, and it is never modified.
+
+| App | Where it is read | What is imported |
+|---|---|---|
+| Rectangle | its preferences (`com.knollsoft.Rectangle`) | halves, quarters, full screen, restore, next / previous display, thirds; an action you left without shortcut in Rectangle loses it in Fenestra too; absent entries follow Rectangle's defaults (recommended or Spectacle set) |
+| Magnet | its preferences (`com.crowdcafe.windowmagnet`) | halves, quarters, thirds, full screen, restore; absent entries follow Magnet's factory shortcuts; the display shortcuts keep Fenestra's (which are Magnet's too) |
+| AeroSpace | `~/.aerospace.toml` or `~/.config/aerospace/aerospace.toml`, table `[mode.main.binding]` | `move left/right/up/down` → the arrow actions, `fullscreen` → full screen, `move-node-to-monitor left/prev/right/next` → previous / next display; key names are read as on a QWERTY layout |
+
+A shortcut taken over by an import is removed from any other action that used it, so each shortcut keeps a single action. Bindings with no equivalent (Rectangle's *Center*, AeroSpace's `focus`, `workspace`…) are counted in the window and listed in the log (Console, subsystem `com.florentamaridon.Fenestra`, category `shortcut-import`). You can import again at any time, or restore the defaults.
+
+:::tip
+Quit the other app (or turn off its shortcuts) before using Fenestra's: two apps registering the same global shortcut do not get along.
+:::

@@ -2,9 +2,10 @@ import Foundation
 import Observation
 
 /// User settings, persisted to UserDefaults in each property's `didSet` and read back in `init`.
+/// `ShortcutsStore`: the shortcut import writes `shortcuts`.
 @MainActor
 @Observable
-final class Settings {
+final class Settings: ShortcutsStore {
     static let shared = Settings()
 
     var isEnabled: Bool { didSet { store(isEnabled, "isEnabled") } }
