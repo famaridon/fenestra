@@ -1,6 +1,6 @@
 import AppKit
 
-/// F8: after a snap (drag or keyboard), offers the other windows for the remaining space.
+/// Snap Assist: after a snap (drag or keyboard), offers the other windows for the remaining space.
 @MainActor
 final class SnapAssistController {
     private let settings: Settings

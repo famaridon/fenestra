@@ -14,7 +14,7 @@ private let log = Logger(subsystem: "com.florentamaridon.Fenestra", category: "a
     init(element: AXUIElement, pid: pid_t) {
         self.element = element
         self.pid = pid
-        // NF3: an unresponsive app must never block us for long.
+        // An unresponsive app must never block us for long.
         AXUIElementSetMessagingTimeout(element, 0.25)
     }
 

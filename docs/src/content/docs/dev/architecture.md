@@ -8,7 +8,7 @@ This page summarizes `ARCHITECTURE.md` (at the repository root, in French), whic
 ## Conventions
 
 - **Swift 6**, strict concurrency mode. Everything that touches AppKit, Accessibility or mouse events is `@MainActor`.
-- **No private API** (NF4) and **no third-party dependency** (no external SwiftPM package).
+- **No private API** and **no third-party dependency** (no external SwiftPM package).
 - UI text written in English in the code and translated in `Localizable.xcstrings` (French); code identifiers in English.
 - No `print`: logging goes through `os.Logger` (subsystem `com.florentamaridon.Fenestra`, one category per module).
 

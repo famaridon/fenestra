@@ -1,6 +1,6 @@
 import AppKit
 
-/// F7: re-applies every snapped window's zone when the display configuration changes.
+/// Re-applies every snapped window's zone when the display configuration changes.
 @MainActor
 final class ScreenWatcher {
     private unowned let snapController: SnapController

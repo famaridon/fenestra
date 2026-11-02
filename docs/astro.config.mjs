@@ -36,7 +36,7 @@ export default defineConfig({
 				{
 					label: 'Development',
 					translations: { fr: 'Développement' },
-					items: [{ slug: 'dev/architecture' }, { slug: 'dev/requirements' }],
+					items: [{ slug: 'dev/architecture' }],
 				},
 			],
 		}),

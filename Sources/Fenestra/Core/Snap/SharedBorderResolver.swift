@@ -15,7 +15,7 @@ struct BorderAdjustment<Key: Hashable & Sendable>: Sendable, Equatable {
     var frame: CGRect
 }
 
-/// Computes how windows glued to a resized window must follow it (F5).
+/// Computes how windows glued to a resized window must follow it.
 enum SharedBorderResolver {
     /// A change smaller than this (points) is ignored.
     private static let epsilon: CGFloat = 0.5

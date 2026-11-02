@@ -1,6 +1,6 @@
 import CoreGraphics
 
-/// F5: propagates a resize of a snapped window to the snapped windows sharing its border.
+/// Shared border: propagates a resize of a snapped window to the snapped windows sharing its border.
 @MainActor
 final class SharedBorderController {
     private static let tolerance: CGFloat = 4
@@ -31,7 +31,7 @@ final class SharedBorderController {
             for adjustment in adjustments {
                 let actual = apply(adjustment.id, adjustment.frame)
                 if adjustment.id != key, !close(actual, adjustment.frame) {
-                    // The app refused (minimum size): pull the changed window back onto the real edge (NF3).
+                    // The app refused (minimum size): pull the changed window back onto the real edge.
                     apply(key, corrected(to, requested: adjustment.frame, actual: actual))
                 }
             }

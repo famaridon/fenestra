@@ -22,7 +22,7 @@ final class SnapAssistModel {
     }
 }
 
-/// Panel listing the windows that can fill the space left by a snap (F8).
+/// Panel listing the windows that can fill the space left by a snap.
 @MainActor
 final class SnapAssistPanel {
     private let panel: NSPanel

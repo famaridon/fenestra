@@ -28,7 +28,7 @@ L'agent liste vos fenêtres et vos écrans, puis place **toutes les fenêtres en
 
 L'app est en anglais et en français, selon la langue de macOS.
 
-Le besoin complet est décrit dans [BESOIN.md](BESOIN.md), l'architecture et les contrats entre modules dans [ARCHITECTURE.md](ARCHITECTURE.md).
+L'architecture et les contrats entre modules sont décrits dans [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Installer
 

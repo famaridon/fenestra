@@ -5,12 +5,15 @@ macOS menu bar app that snaps windows like Windows and Ubuntu: drag to edges, ke
 ## Where things are
 
 - `ARCHITECTURE.md` (French): module layout and the contract between modules. **Authoritative**: keep it in sync when you add a type, a setting, a file or a command.
-- `BESOIN.md` (French): requirements (F1…, NF1…).
 - `Sources/Fenestra/Core/`: pure Swift (Foundation + CoreGraphics), all logic that can be tested lives here, tested in `Tests/FenestraTests/` with Swift Testing.
 - `Sources/Fenestra/` (outside Core): AppKit, Accessibility, monitors, SwiftUI UI, controllers. `Commands/` is the control socket for the CLI.
 - `Sources/FenestraCLI/`: the `fenestra` tool (CLI and `fenestra mcp` stdio server), embedded in the app at `Contents/Helpers/fenestra`. `Sources/Shared/`: code compiled into both targets.
 - `docs/`: Astro Starlight site, English at the root, French in `src/content/docs/fr/`, published to https://famaridon.github.io/fenestra/.
 - `video/`: Remotion intro video (scenes in `src/scenes/`, order and transitions in `src/timeline.ts`, on-screen text in `src/i18n.ts`).
+
+## Non-goals
+
+Snapping stays manual, as on Windows: no automatic tiling of every window. No Spaces management (no public API), no per-window Alt+Tab (AltTab covers it), no App Store build (Accessibility can't be sandboxed).
 
 ## Commands
 
@@ -28,7 +31,7 @@ UI behavior (panels, hover, drag) can only be checked by running the app from Xc
 
 - Swift 6 strict concurrency; anything touching AppKit, Accessibility or mouse events is `@MainActor`.
 - One coordinate space in the logic: AX (origin top-left of the primary display, y down). Convert to/from Cocoa only through `ScreenGeometry`.
-- Public APIs only (NF4), no SwiftPM dependency, `os.Logger` (subsystem `com.florentamaridon.Fenestra`), never `print`.
+- Public APIs only (no private API, no SIP to disable), no SwiftPM dependency, `os.Logger` (subsystem `com.florentamaridon.Fenestra`), never `print`.
 - UI strings are written in English in code and translated to French in `Sources/Fenestra/Localizable.xcstrings`. Every new string needs its French entry; after a build, the keys in `build/**/*.stringsdata` must match the catalog exactly (no missing, no unused).
 - Settings: one property in `Settings.swift` (persisted in `didSet`, default in `init`), a control in `SettingsView`, a line in `ARCHITECTURE.md` and a row in the docs settings tables (both languages).
 - Accessibility quirk: the green button reports the subrole `AXFullScreenButton` on recent macOS, not only `AXZoomButton`.

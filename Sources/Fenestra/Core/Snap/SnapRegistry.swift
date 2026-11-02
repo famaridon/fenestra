@@ -7,7 +7,7 @@ struct SnapRecord: Sendable, Equatable {
     var screenID: CGDirectDisplayID
     /// Frame actually obtained after the snap (read back from the window).
     var snappedFrame: CGRect
-    /// Frame before the first snap, given back on unsnap (F2).
+    /// Frame before the first snap, given back on unsnap.
     var restoreFrame: CGRect
 }
 

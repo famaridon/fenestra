@@ -13,7 +13,7 @@ qui permet l'assemblage final.
   C'est le repère de `AXUIElement` et de `CGEvent`. `NSScreen` et
   `NSEvent.mouseLocation` utilisent l'origine en bas à gauche : la conversion
   se fait **uniquement** dans `ScreenGeometry`.
-- Pas d'API privée (NF4). Pas de dépendance externe (pas de SwiftPM tiers).
+- Pas d'API privée. Pas de dépendance externe (pas de SwiftPM tiers).
 - Textes d'interface écrits en **anglais** dans le code et traduits dans `Sources/Fenestra/Localizable.xcstrings` (français) ; l'app suit la langue de macOS. Identifiants de code en anglais.
 - Pas de `print` de debug dans le code livré ; utiliser `os.Logger`
   (`Logger(subsystem: "com.florentamaridon.Fenestra", category: "<module>")`).
@@ -37,15 +37,15 @@ Sources/Fenestra/
     Zones/KeyboardShortcut.swift       — raccourci clavier (valeur pure)
     Zones/DragZoneResolver.swift       — pointeur près d'un bord -> Zone ?
     Zones/KeyboardSnapResolver.swift   — action clavier + état -> commande
-    Snap/SnapRegistry.swift            — mémoire des fenêtres collées (restauration F2)
-    Snap/SharedBorderResolver.swift    — calcul de la bordure partagée (F5)
-    Capture/WindowMatcher.swift        — associe une fenêtre AX à une fenêtre ScreenCaptureKit (F8)
+    Snap/SnapRegistry.swift            — mémoire des fenêtres collées (restauration au décollage)
+    Snap/SharedBorderResolver.swift    — calcul de la bordure partagée
+    Capture/WindowMatcher.swift        — associe une fenêtre AX à une fenêtre ScreenCaptureKit (Snap Assist)
     Commands/LayoutSpec.swift          — disposition « one shot » (LayoutSpec) et LayoutPlanner : fenêtres -> cadres
   Accessibility/
     AXWindow.swift                     — enveloppe d'une fenêtre AXUIElement
     AXWindowFinder.swift               — fenêtre sous le pointeur, fenêtre active, toutes les fenêtres
   Capture/
-    ScreenRecordingPermission.swift    — autorisation d'enregistrement de l'écran (aperçus F8 uniquement)
+    ScreenRecordingPermission.swift    — autorisation d'enregistrement de l'écran (aperçus de Snap Assist uniquement)
     WindowThumbnailer.swift            — miniatures des fenêtres (ScreenCaptureKit)
   Input/
     DragMonitor.swift                  — événements souris globaux (repère AX)
@@ -60,16 +60,16 @@ Sources/Fenestra/
     ShortcutRecorderView.swift         — saisie d'un raccourci
     ExcludedAppsView.swift             — applications exclues
     SnapPreviewPanel.swift             — NSPanel d'aperçu translucide
-    SnapAssistPanel.swift              — panneau Snap Assist (F8)
+    SnapAssistPanel.swift              — panneau Snap Assist
     SnapLayoutsPanel.swift             — palette Snap Layouts (bouton vert)
   Commands/
     CommandService.swift               — commandes list_displays / list_windows / apply_layout
     ControlServer.swift                — socket Unix local (~/Library/Application Support/Fenestra/control.sock)
   Controllers/
     SnapController.swift               — orchestration glisser + clavier + restauration
-    SharedBorderController.swift       — F5 : propage un redimensionnement aux voisines
-    ScreenWatcher.swift                — F7 : réagit aux changements d'écrans
-    SnapAssistController.swift         — F8
+    SharedBorderController.swift       — bordure partagée : propage un redimensionnement aux voisines
+    ScreenWatcher.swift                — réagit aux changements d'écrans
+    SnapAssistController.swift         — Snap Assist : propose les fenêtres pour l'espace restant
     SnapLayoutsController.swift        — survol du bouton vert -> palette Snap Layouts
 Sources/Shared/ControlSocket.swift     — protocole du socket, partagé par l'app et l'outil
 Sources/FenestraCLI/main.swift         — outil `fenestra` (Contents/Helpers) : CLI + serveur MCP stdio
@@ -244,7 +244,7 @@ struct SnapRecord: Sendable, Equatable {
     var zone: Zone
     var screenID: CGDirectDisplayID
     var snappedFrame: CGRect     // cadre réellement obtenu après le snap (relu)
-    var restoreFrame: CGRect     // cadre d'avant le premier snap (F2)
+    var restoreFrame: CGRect     // cadre d'avant le premier snap (restauration)
 }
 
 struct SnapRegistry<Key: Hashable & Sendable>: Sendable {
@@ -316,7 +316,7 @@ enum SharedBorderResolver {
 }
 ```
 
-Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_, 0.25)` (NF3).
+Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_, 0.25)` : une app qui ne répond pas ne bloque jamais Fenestra.
 
 ### Input
 
@@ -345,17 +345,17 @@ Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_,
 @MainActor @Observable final class Settings {
     static let shared: Settings
     var isEnabled: Bool                      // interrupteur général (barre des menus), true
-    var dragSnapEnabled: Bool                // F1, true
-    var restoreOnUnsnap: Bool                // F2, true
+    var dragSnapEnabled: Bool                // glisser vers un bord, true
+    var restoreOnUnsnap: Bool                // restauration au décollage, true
     var gap: Double                          // 0 par défaut
     var cornerLength: Double                 // 120
     var enabledZones: Set<Zone>              // Zone.defaultEnabled
     var portraitTopEdgeMaximizes: Bool       // false
     var portraitSideEdgesEnabled: Bool       // true
     var portraitArrowsSplitHalves: Bool      // true ; voir KeyboardSnapResolver
-    var sharedBorderEnabled: Bool            // F5, true
-    var snapAssistEnabled: Bool              // F8, true
-    var snapAssistPreviews: Bool             // F8, false ; demande l'enregistrement de l'écran
+    var sharedBorderEnabled: Bool            // bordure partagée, true
+    var snapAssistEnabled: Bool              // Snap Assist, true
+    var snapAssistPreviews: Bool             // Snap Assist, false ; demande l'enregistrement de l'écran
     var snapLayoutsEnabled: Bool             // true ; palette au survol du bouton vert
     var excludedBundleIdentifiers: [String]
     var externalControlEnabled: Bool         // true ; socket de commandes pour l'outil fenestra (MCP)
@@ -436,7 +436,7 @@ Rien n'est proposé si une fenêtre collée sur cet écran occupe déjà le comp
 Un clic place la fenêtre choisie dans le complément. Échap ou clic ailleurs ferme.
 Avec `snapAssistPreviews` et l'autorisation d'enregistrement de l'écran, le panneau s'affiche d'abord avec les
 icônes, puis `WindowThumbnailer` remplit `SnapAssistModel.thumbnails` une fenêtre après l'autre. L'API
-d'Accessibilité ne donne pas de `CGWindowID` public (NF4) : chaque fenêtre est associée à sa fenêtre
+d'Accessibilité ne donne pas de `CGWindowID` public : chaque fenêtre est associée à sa fenêtre
 ScreenCaptureKit par processus, cadre et titre (`WindowMatcher`). Une fenêtre non associée garde son icône.
 
 ## Commandes externes et MCP
