@@ -39,6 +39,14 @@ Une ligne par action avec un champ de saisie du raccourci, et un bouton pour **r
 
 Liste des **applications exclues** : aucun snap (souris, clavier, bordure) n'est appliqué à leurs fenêtres. Ajoutez ou retirez des applications dans cette liste.
 
+## Agents
+
+| Réglage | Par défaut | Effet |
+|---|---|---|
+| Autoriser les agents IA et les scripts à disposer les fenêtres | activé | Permet à l'outil `fenestra`, et aux agents IA qui passent par lui (MCP), de lister et de disposer vos fenêtres. Voir [Agents IA et scripts](/fenestra/fr/guide/ai-agents/). |
+
+Sous l'interrupteur, la configuration pour connecter **Claude Code** ou une autre **app MCP** (Claude Desktop, Cursor…), chacune avec un bouton **Copier**.
+
 ## À propos
 
 Informations sur l'application (version). Aucune donnée n'est collectée et Fenestra n'accède pas au réseau.

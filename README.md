@@ -14,6 +14,7 @@
 - Shared border: resizing a snapped window adjusts its neighbors.
 - Snap Layouts: rest the pointer on a window's green button and pick a zone in a palette of layouts, as on Windows 11.
 - Snap Assist: after a snap with the mouse or the keyboard, offers your other windows for the remaining space, with optional window thumbnails.
+- AI agents and scripts: Claude and other MCP apps (or a shell script) arrange several windows in one call through the bundled `fenestra` tool.
 - Multiple and vertical displays, zones applied again automatically when the display setup changes.
 - Excluded apps, gaps between windows, launch at login.
 

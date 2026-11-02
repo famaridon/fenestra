@@ -39,6 +39,14 @@ One row per action with a field to record the shortcut, and a button to **restor
 
 List of **excluded apps**: no snapping (mouse, keyboard, border) is applied to their windows. Add or remove apps in this list.
 
+## Agents
+
+| Setting | Default | Effect |
+|---|---|---|
+| Allow AI agents and scripts to arrange windows | on | Lets the `fenestra` tool, and AI agents through it (MCP), list and arrange your windows. See [AI agents and scripts](/fenestra/guide/ai-agents/). |
+
+Below the switch, the configuration to connect **Claude Code** or another **MCP app** (Claude Desktop, Cursor…), each with a **Copy** button.
+
 ## About
 
 App information (version). No data is collected and Fenestra does not access the network.

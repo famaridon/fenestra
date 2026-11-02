@@ -24,6 +24,8 @@ Cette page résume `ARCHITECTURE.md` (à la racine du dépôt), qui reste la ré
 | `Settings/` | Modèle `Settings` observable, persisté dans `UserDefaults`, et `LaunchAtLogin` (`SMAppService`). |
 | `UI/` | Barre des menus, accueil, réglages, saisie de raccourci, panneaux d'aperçu et de Snap Assist. |
 | `Controllers/` | `SnapController`, `SharedBorderController`, `ScreenWatcher`, `SnapAssistController`. |
+| `Commands/` | `CommandService` (`list_displays`, `list_windows`, `apply_layout`) et `ControlServer` (socket Unix local). Le calcul des dispositions est pur, dans `Core/Commands/`. |
+| `Sources/FenestraCLI/` | L'outil `fenestra`, livré dans `Contents/Helpers/` : ligne de commande et serveur MCP sur stdio, sans dépendance tierce. |
 
 ## Un seul repère de coordonnées
 
