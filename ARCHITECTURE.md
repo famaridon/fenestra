@@ -205,7 +205,7 @@ Table de `KeyboardSnapResolver` (P = portrait, L = paysage, « voisin » = `layo
 | up (L) | non collée, topHalf, bottomHalf, tiers | maximize |
 | up (L) | leftHalf / rightHalf | topLeft / topRight |
 | up (L) | bottomLeft / bottomRight | leftHalf / rightHalf |
-| up (L) | maximize, topLeft, topRight | none |
+| up (L) | maximize / topLeft / topRight | voisin haut : maximize / bottomLeft / bottomRight sur le voisin ; sinon none |
 | up (P) | non collée, tiers | topHalf |
 | up (P) | topHalf | maximize |
 | up (P) | bottomHalf | voisin haut : bottomHalf sur le voisin ; sinon topHalf |
@@ -213,7 +213,8 @@ Table de `KeyboardSnapResolver` (P = portrait, L = paysage, « voisin » = `layo
 | up (P) | bottomLeft / bottomRight | split : topLeft / topRight ; sinon leftHalf / rightHalf |
 | up (P) | maximize, topLeft, topRight | none |
 | down (L) | non collée | none |
-| down (L) | maximize, bottomLeft, bottomRight, topHalf, bottomHalf, tiers | restore |
+| down (L) | maximize / bottomLeft / bottomRight | voisin bas : maximize / topLeft / topRight sur le voisin ; sinon restore |
+| down (L) | topHalf, bottomHalf, tiers | restore |
 | down (L) | leftHalf / rightHalf | bottomLeft / bottomRight |
 | down (L) | topLeft / topRight | leftHalf / rightHalf |
 | down (P) | non collée, tiers | bottomHalf |

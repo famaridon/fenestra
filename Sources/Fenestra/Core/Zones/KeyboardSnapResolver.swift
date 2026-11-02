@@ -34,9 +34,9 @@ struct KeyboardSnapResolver: Sendable {
             }
             return horizontal(direction, zone: zone, screen: screen, layout: layout)
         case .up:
-            return portrait ? upPortrait(zone: zone, screen: screen, layout: layout) : upLandscape(zone: zone, screen: screen)
+            return portrait ? upPortrait(zone: zone, screen: screen, layout: layout) : upLandscape(zone: zone, screen: screen, layout: layout)
         case .down:
-            return portrait ? downPortrait(zone: zone, screen: screen, layout: layout) : downLandscape(zone: zone, screen: screen)
+            return portrait ? downPortrait(zone: zone, screen: screen, layout: layout) : downLandscape(zone: zone, screen: screen, layout: layout)
         case .topLeft: return direct(.topLeft, zone, screen)
         case .topRight: return direct(.topRight, zone, screen)
         case .bottomLeft: return direct(.bottomLeft, zone, screen)
@@ -100,8 +100,9 @@ struct KeyboardSnapResolver: Sendable {
 
     // MARK: Up / down
 
-    private func upLandscape(zone: Zone?, screen: ScreenInfo) -> SnapCommand {
-        switch zone {
+    private func upLandscape(zone: Zone?, screen: ScreenInfo, layout: ScreenLayout) -> SnapCommand {
+        if let hop = vertical(.up, zone: zone, screen: screen, layout: layout) { return hop }
+        return switch zone {
         case .leftHalf: .place(.topLeft, on: screen)
         case .rightHalf: .place(.topRight, on: screen)
         case .bottomLeft: .place(.leftHalf, on: screen)
@@ -109,6 +110,19 @@ struct KeyboardSnapResolver: Sendable {
         case .maximize, .topLeft, .topRight: .none
         default: .place(.maximize, on: screen)  // nil, topHalf, bottomHalf, thirds
         }
+    }
+
+    /// Landscape: a window already against the edge we are heading to hops to the screen on that
+    /// side, like ← / → do. Quarters arrive as the mirror quarter, maximize stays maximized.
+    /// Nil when there is no such screen or the zone is not against that edge.
+    private func vertical(_ direction: Direction, zone: Zone?, screen: ScreenInfo, layout: ScreenLayout) -> SnapCommand? {
+        let isUp = direction == .up
+        // Index-aligned: the zone against the edge, and where it lands on the neighbour.
+        let towards: [Zone] = isUp ? [.topLeft, .topRight, .maximize] : [.bottomLeft, .bottomRight, .maximize]
+        let arrival: [Zone] = isUp ? [.bottomLeft, .bottomRight, .maximize] : [.topLeft, .topRight, .maximize]
+        guard let zone, let i = towards.firstIndex(of: zone),
+              let neighbour = layout.neighbor(of: screen, toward: direction) else { return nil }
+        return .place(arrival[i], on: neighbour)
     }
 
     private func upPortrait(zone: Zone?, screen: ScreenInfo, layout: ScreenLayout) -> SnapCommand {
@@ -126,8 +140,9 @@ struct KeyboardSnapResolver: Sendable {
         }
     }
 
-    private func downLandscape(zone: Zone?, screen: ScreenInfo) -> SnapCommand {
-        switch zone {
+    private func downLandscape(zone: Zone?, screen: ScreenInfo, layout: ScreenLayout) -> SnapCommand {
+        if let hop = vertical(.down, zone: zone, screen: screen, layout: layout) { return hop }
+        return switch zone {
         case nil: .none
         case .leftHalf: .place(.bottomLeft, on: screen)
         case .rightHalf: .place(.bottomRight, on: screen)

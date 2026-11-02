@@ -9,7 +9,7 @@ Every feature works **on each display independently**: each display has its own 
 
 ## Move a window to another display
 
-- **With the arrows**: pressing `⌃⌥←` or `⌃⌥→` again on a window already snapped on that side moves it to the neighboring display, see [Keyboard shortcuts](/fenestra/guide/keyboard/).
+- **With the arrows**: pressing `⌃⌥←` or `⌃⌥→` again on a window already snapped on that side moves it to the neighboring display. With stacked displays, `⌃⌥↓` / `⌃⌥↑` do the same from a full-screen window or a bottom / top quarter. See [Keyboard shortcuts](/fenestra/guide/keyboard/).
 - **Next display** `⌃⌥⌘→` / **previous display** `⌃⌥⌘←`: sends the window to the next or previous display. The order is reading order (left to right, then top to bottom) and wraps around.
   - A snapped window keeps its zone on the new display.
   - A window that is not snapped is moved proportionally.

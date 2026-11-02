@@ -43,7 +43,7 @@ Partons d'une fenêtre non collée.
 Autres repères sur un écran paysage :
 
 - `⌃⌥↑` sur une fenêtre non collée : plein écran. Sur une moitié : le quart du haut.
-- `⌃⌥↓` sur une fenêtre pleine écran : restauration. Sur une moitié : le quart du bas.
+- `⌃⌥↓` sur une fenêtre pleine écran : restauration (ou, s'il y a un écran en dessous, passage sur cet écran ; voir plus bas). Sur une moitié : le quart du bas.
 - `⌃⌥→` sur une moitié gauche : moitié droite (et inversement avec `←`).
 
 ### Deux écrans côte à côte
@@ -55,6 +55,13 @@ Autres repères sur un écran paysage :
 3. `⌃⌥→` encore : moitié droite de B. Une nouvelle pression, faute de voisin à droite, restaure la fenêtre.
 
 Dans l'autre sens, `⌃⌥←` sur une moitié gauche de B renvoie la fenêtre sur A en moitié droite.
+
+### Deux écrans l'un au-dessus de l'autre
+
+Écran A en haut, écran B en dessous (un portable sous un moniteur, par exemple).
+
+- `⌃⌥↓` sur une fenêtre plein écran de A : la fenêtre passe sur B, toujours en plein écran. `⌃⌥↑` la ramène.
+- `⌃⌥↓` sur un quart du bas de A : la fenêtre passe sur B, dans le quart du **haut** correspondant (zone miroir). `⌃⌥↑` sur un quart du haut de B fait l'inverse.
 
 Sur un écran vertical, le cycle utilise `↑`/`↓`, voir [Écran vertical](/fenestra/fr/guide/vertical-display/).
 

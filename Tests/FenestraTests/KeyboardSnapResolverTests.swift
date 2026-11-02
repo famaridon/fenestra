@@ -191,6 +191,39 @@ struct KeyboardSnapResolverTests {
         ])
     }
 
+    /// A laptop (id 5) centred under the landscape screen, as when the Mac sits below a monitor.
+    var laptopBelow: (laptop: ScreenInfo, layout: ScreenLayout) {
+        let laptop = ScreenInfo(id: 5, frame: CGRect(x: 240, y: 1080, width: 1440, height: 900),
+                                visibleFrame: CGRect(x: 240, y: 1105, width: 1440, height: 875))
+        return (laptop, ScreenLayout(screens: [landscape, laptop]))
+    }
+
+    @Test func downLandscapeHopsToScreenBelow() {
+        let (laptop, layout) = laptopBelow
+        #expect(run(.down, .bottomLeft, on: landscape, layout: layout) == .place(.topLeft, on: laptop))
+        #expect(run(.down, .bottomRight, on: landscape, layout: layout) == .place(.topRight, on: laptop))
+        #expect(run(.down, .maximize, on: landscape, layout: layout) == .place(.maximize, on: laptop))
+        // Not against the bottom edge: unchanged.
+        check(.down, on: landscape, layout: layout, [
+            (nil, .none),
+            (.leftHalf, .place(.bottomLeft)),
+            (.topLeft, .place(.leftHalf)),
+            (.bottomHalf, .restore),
+        ])
+    }
+
+    @Test func upLandscapeHopsToScreenAbove() {
+        let (laptop, layout) = laptopBelow
+        #expect(run(.up, .topLeft, on: laptop, layout: layout) == .place(.bottomLeft, on: landscape))
+        #expect(run(.up, .topRight, on: laptop, layout: layout) == .place(.bottomRight, on: landscape))
+        #expect(run(.up, .maximize, on: laptop, layout: layout) == .place(.maximize, on: landscape))
+        check(.up, on: laptop, layout: layout, [
+            (nil, .place(.maximize)),
+            (.leftHalf, .place(.topLeft)),
+            (.bottomLeft, .place(.leftHalf)),
+        ])
+    }
+
     // MARK: up / down, portrait
 
     @Test func upPortraitWithoutNeighbour() {

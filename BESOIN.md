@@ -51,7 +51,7 @@ Priorités : **P0** = indispensable au MVP · **P1** = attendu en v1 · **P2** =
 ### F3 — Raccourcis clavier façon `Win + flèches` · P0
 - Raccourcis par défaut : `⌃⌥ + ←/→/↑/↓`. Ils sont configurables.
 - `←` / `→` : moitié gauche / droite. Appuyer de nouveau du même côté **passe à l'écran voisin**, comme sous Windows.
-- `↑` : plein écran (paysage) ou moitié haute (vertical). `↓` : restaure la taille, ou moitié basse sur un écran vertical.
+- `↑` : plein écran (paysage) ou moitié haute (vertical). `↓` : restaure la taille, ou moitié basse sur un écran vertical. Avec des écrans superposés, `↓` / `↑` sur une fenêtre plein écran ou un quart collé au bord **passe à l'écran voisin**.
 - Raccourcis dédiés pour les quarts et pour envoyer la fenêtre vers l'écran suivant ou précédent.
 
 ### F4 — Dispositions composées · P0

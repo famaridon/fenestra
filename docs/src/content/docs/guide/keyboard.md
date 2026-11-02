@@ -43,7 +43,7 @@ Starting from a window that is not snapped:
 More on a landscape display:
 
 - `⌃⌥↑` on a window that is not snapped: full screen. On a half: the top quarter.
-- `⌃⌥↓` on a full-screen window: restore. On a half: the bottom quarter.
+- `⌃⌥↓` on a full-screen window: restore (or, with a display below, move there; see below). On a half: the bottom quarter.
 - `⌃⌥→` on a left half: right half (and the other way around with `←`).
 
 ### Two displays side by side
@@ -55,6 +55,13 @@ Display A on the left, display B on the right, a window that is not snapped on A
 3. `⌃⌥→` again: right half of B. One more press, with no display further right, restores the window.
 
 The other way, `⌃⌥←` on a left half of B sends the window back to A in the right half.
+
+### Two displays stacked
+
+Display A above, display B below (a laptop under a monitor, for example).
+
+- `⌃⌥↓` on a full-screen window of A: the window moves to B, still full screen. `⌃⌥↑` brings it back.
+- `⌃⌥↓` on a bottom quarter of A: the window moves to B, in the matching **top** quarter (mirror zone). `⌃⌥↑` on a top quarter of B does the opposite.
 
 On a vertical display, cycling uses `↑`/`↓`, see [Vertical displays](/fenestra/guide/vertical-display/).
 
