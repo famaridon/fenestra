@@ -10,9 +10,9 @@ Check, in this order:
 1. **Accessibility permission**: in System Settings > Privacy & Security > Accessibility, Fenestra must be turned on.
 2. **Fenestra is enabled** (switch in the menu) and drag snapping is on in the settings.
 3. **Is the app excluded?** See the Exclusions tab.
-4. **Non-standard window**: Fenestra ignores panels, palettes and windows that are not standard or not resizable.
+4. **Non-standard window**: Fenestra ignores panels, palettes, native full-screen windows and windows that are not standard or not resizable (fixed-size windows).
 5. **Native tiling is on**: macOS tiling can interfere. Turn it off in System Settings > Desktop & Dock > Windows.
-6. **Disabled zone**: the zone you are aiming for may be unchecked in the Zones tab.
+6. **Disabled zone**: the zone you are aiming for may be unchecked in the Zones tab. This also applies to keyboard shortcuts.
 
 Reminder: the pointer must touch the edge, and you grab the window by its title bar.
 
@@ -42,4 +42,4 @@ Quit Fenestra, then run in a terminal:
 defaults delete com.florentamaridon.Fenestra
 ```
 
-On the next launch, every setting goes back to its default value (and the welcome window shows up again).
+On the next launch, every setting goes back to its default value (and the welcome window shows up again). **Launch at login** is kept: it is managed by macOS (System Settings > General > Login Items & Extensions), not stored in the preferences.

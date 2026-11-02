@@ -28,7 +28,7 @@ The window you pick is snapped like any other: it stays **linked** to its neighb
 
 ## Which windows are listed
 
-- The visible standard windows of every app (minimized windows are not listed).
+- The visible standard, resizable windows of every app (minimized windows are not listed).
 - Except the window you just snapped, windows already snapped on that display, and windows of [excluded apps](/fenestra/guide/settings/#exclusions).
 
 If no window is left, the list does not show up.

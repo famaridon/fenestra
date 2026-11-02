@@ -10,9 +10,9 @@ Vérifiez dans l'ordre :
 1. **Autorisation d'Accessibilité** : Réglages Système > Confidentialité et sécurité > Accessibilité, Fenestra doit être activé.
 2. **Fenestra est activé** (interrupteur du menu) et le snap par glisser est actif dans les réglages.
 3. **L'application est-elle exclue ?** Voir l'onglet Exclusions.
-4. **Fenêtre non standard** : Fenestra ignore les panneaux, palettes et fenêtres qui ne sont pas des fenêtres standard ou ne sont pas redimensionnables.
+4. **Fenêtre non standard** : Fenestra ignore les panneaux, palettes, fenêtres en plein écran natif et fenêtres qui ne sont pas des fenêtres standard ou ne sont pas redimensionnables (fenêtres de taille fixe).
 5. **Snap natif activé** : le collage de macOS peut interférer. Désactivez-le dans Réglages Système > Bureau et Dock > Fenêtres.
-6. **Zone désactivée** : la zone visée est peut-être décochée dans l'onglet Zones.
+6. **Zone désactivée** : la zone visée est peut-être décochée dans l'onglet Zones. Cela vaut aussi pour les raccourcis clavier.
 
 Rappel : le pointeur doit toucher le bord, et on saisit la fenêtre par sa barre de titre.
 
@@ -42,4 +42,4 @@ Quittez Fenestra puis lancez dans un terminal :
 defaults delete com.florentamaridon.Fenestra
 ```
 
-Au prochain lancement, tous les réglages reviennent à leurs valeurs par défaut (et l'accueil réapparaît).
+Au prochain lancement, tous les réglages reviennent à leurs valeurs par défaut (et l'accueil réapparaît). **Lancer à l'ouverture de session** est conservé : c'est macOS qui le gère (Réglages Système > Général > Ouverture et extensions), pas les préférences.

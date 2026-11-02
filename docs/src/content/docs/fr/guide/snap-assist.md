@@ -28,7 +28,7 @@ La fenêtre choisie est collée comme les autres : elle reste **liée** à sa vo
 
 ## Quelles fenêtres sont proposées
 
-- Les fenêtres standard visibles de toutes les applications (les fenêtres réduites ne sont pas listées).
+- Les fenêtres standard et redimensionnables visibles de toutes les applications (les fenêtres réduites ne sont pas listées).
 - Sauf la fenêtre que vous venez de coller, les fenêtres déjà collées sur cet écran et celles des [applications exclues](/fenestra/fr/guide/settings/#exclusions).
 
 S'il ne reste aucune fenêtre, la liste ne s'affiche pas.

@@ -22,7 +22,7 @@ description: Actions, raccourcis par défaut et comportement en cycle façon Win
 | Tiers (⅓, ⅔) | aucun par défaut |
 
 :::note
-Les tiers (gauche, centre, droit, deux tiers gauche, deux tiers droite) existent comme actions, mais n'ont **pas de raccourci par défaut** : à vous d'en assigner dans les réglages. Ils ne sont pas accessibles à la souris.
+Les tiers (gauche, centre, droit, deux tiers gauche, deux tiers droite) existent comme actions, mais n'ont **pas de raccourci par défaut** : à vous d'en assigner dans les réglages. Ils sont aussi **désactivés** par défaut dans l'onglet **Zones** : activez-les, sinon leurs raccourcis ne font rien. Glisser vers un bord ne donne jamais un tiers ; la palette [Snap Layouts](/fenestra/fr/guide/snap-layouts/) les propose une fois activés.
 :::
 
 ## Le cycle des flèches
@@ -38,12 +38,12 @@ Partons d'une fenêtre non collée.
 3. `⌃⌥↓` : retour à la moitié gauche.
 4. `⌃⌥↓` encore : quart bas gauche.
 5. `⌃⌥↑` : moitié gauche de nouveau.
-6. `⌃⌥←` : il n'y a pas d'écran voisin, la fenêtre est **restaurée** à sa taille d'origine.
+6. `⌃⌥←` : il n'y a pas d'écran voisin, la fenêtre est **restaurée** (taille et position d'avant le premier snap).
 
 Autres repères sur un écran paysage :
 
-- `⌃⌥↑` sur une fenêtre non collée : plein écran. Sur une moitié : le quart du haut.
-- `⌃⌥↓` sur une fenêtre pleine écran : restauration (ou, s'il y a un écran en dessous, passage sur cet écran ; voir plus bas). Sur une moitié : le quart du bas.
+- `⌃⌥↑` sur une fenêtre non collée : plein écran. Sur une moitié : le quart du haut. Sur une fenêtre plein écran ou un quart du haut, sans écran au-dessus : rien.
+- `⌃⌥↓` sur une fenêtre non collée : rien (contrairement à Windows, elle n'est pas réduite). Sur une fenêtre plein écran : restauration (ou, s'il y a un écran en dessous, passage sur cet écran ; voir plus bas). Sur une moitié : le quart du bas.
 - `⌃⌥→` sur une moitié gauche : moitié droite (et inversement avec `←`).
 
 ### Deux écrans côte à côte
@@ -58,7 +58,7 @@ Dans l'autre sens, `⌃⌥←` sur une moitié gauche de B renvoie la fenêtre s
 
 ### Deux écrans l'un au-dessus de l'autre
 
-Écran A en haut, écran B en dessous (un portable sous un moniteur, par exemple).
+Écran A en haut, écran B en dessous (un portable sous un moniteur, par exemple), tous deux en paysage. Sur un écran vertical, `↑`/`↓` suivent d'autres règles, voir [Écran vertical](/fenestra/fr/guide/vertical-display/).
 
 - `⌃⌥↓` sur une fenêtre plein écran de A : la fenêtre passe sur B, toujours en plein écran. `⌃⌥↑` la ramène.
 - `⌃⌥↓` sur un quart du bas de A : la fenêtre passe sur B, dans le quart du **haut** correspondant (zone miroir). `⌃⌥↑` sur un quart du haut de B fait l'inverse.
@@ -70,8 +70,12 @@ Après chaque snap sur une moitié ou un quart, [Snap Assist](/fenestra/fr/guide
 ## Autres actions
 
 - **Quarts, plein écran, tiers** : placent la fenêtre dans la zone sur son écran courant. Si elle y est déjà, rien ne se passe.
-- **Restaurer** : rend à la fenêtre sa taille d'avant le premier snap (sans effet si elle n'est pas collée).
-- **Écran suivant / précédent** : envoie la fenêtre sur l'écran suivant ou précédent. Une fenêtre collée garde sa zone ; une fenêtre non collée est déplacée proportionnellement. Voir [Multi-écrans](/fenestra/fr/guide/multiple-displays/).
+- **Restaurer** : remet la fenêtre là où elle était avant le premier snap, taille et position (sans effet si elle n'est pas collée).
+- **Écran suivant / précédent** : envoie la fenêtre sur l'écran suivant ou précédent. Une fenêtre collée garde sa zone ; une fenêtre non collée garde sa position relative et sa taille (réduite si elle ne tient pas). Voir [Multi-écrans](/fenestra/fr/guide/multiple-displays/).
+
+:::note
+Une zone désactivée dans l'onglet **Zones** des [réglages](/fenestra/fr/guide/settings/) n'est pas non plus utilisée au clavier : quand un raccourci y mènerait, rien ne se passe.
+:::
 
 ## Changer les raccourcis
 

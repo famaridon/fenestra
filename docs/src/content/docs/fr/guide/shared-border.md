@@ -9,9 +9,9 @@ Comme les *snap groups* de Windows 11, des fenêtres collées côte à côte res
 
 1. Collez deux fenêtres ou plus avec Fenestra (par exemple une à gauche et une à droite).
 2. Tirez le bord commun d'une des fenêtres avec la souris.
-3. Les fenêtres voisines qui partageaient ce bord se redimensionnent pour rester **jointives** : si l'une s'agrandit, l'autre rétrécit d'autant.
+3. Les fenêtres voisines qui partageaient ce bord se redimensionnent pour rester **jointives** (en gardant la marge entre fenêtres, si vous en avez réglé une) : si l'une s'agrandit, l'autre rétrécit d'autant.
 
-Cela marche sur les bordures **verticales** (entre gauche et droite) et **horizontales** (par exemple entre deux quarts empilés). Avec plusieurs voisines le long du même bord, toutes suivent.
+Cela marche sur les bordures **verticales** (entre gauche et droite) et **horizontales** (par exemple entre deux quarts empilés). Avec plusieurs voisines le long du même bord, toutes suivent. Les fenêtres alignées sur le bord tiré, du même côté, suivent aussi : élargir le quart haut gauche élargit aussi le quart bas gauche. Les liens n'existent qu'entre fenêtres d'un même écran.
 
 ## Tailles minimales
 
@@ -31,4 +31,4 @@ Le lien entre fenêtres disparaît dès que l'une d'elles est :
 - Les fenêtres des applications exclues ou non standard sont ignorées.
 - Une application qui refuse la taille demandée peut laisser un petit écart : Fenestra relit toujours la taille réelle après chaque redimensionnement.
 
-La fonction se désactive dans l'onglet **Général** des [réglages](/fenestra/fr/guide/settings/).
+La fonction se désactive dans l'onglet **Général** des [réglages](/fenestra/fr/guide/settings/). Elle ne dépend pas du snap au glisser : elle marche même quand cette option est désactivée.

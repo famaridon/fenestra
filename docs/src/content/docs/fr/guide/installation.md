@@ -31,7 +31,7 @@ Une version non signée change d'identité à chaque version : macOS oublie l'au
 
 Il faut en plus Xcode (avec un compte donnant un certificat **Apple Development**) et [Homebrew](https://brew.sh) pour installer XcodeGen.
 
-Le projet Xcode est généré par [XcodeGen](https://github.com/yonaskolb/XcodeGen) à partir de `project.yml` ; le `.xcodeproj` n'est pas versionné.
+Le projet Xcode est généré par [XcodeGen](https://github.com/yonaskolb/XcodeGen) à partir de `project.yml` ; le `.xcodeproj` n'est pas versionné. `project.yml` signe avec l'équipe du mainteneur (`DEVELOPMENT_TEAM`) : remplacez-la par l'identifiant de votre équipe avant `xcodegen generate`, sinon la compilation ne sera pas signée.
 
 ```sh
 brew install xcodegen

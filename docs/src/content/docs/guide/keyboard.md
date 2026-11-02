@@ -22,7 +22,7 @@ description: Actions, default shortcuts and Win + arrow cycling.
 | Thirds (⅓, ⅔) | none by default |
 
 :::note
-Thirds (left, center, right, left two thirds, right two thirds) exist as actions but have **no default shortcut**: assign your own in the settings. They are not available with the mouse.
+Thirds (left, center, right, left two thirds, right two thirds) exist as actions but have **no default shortcut**: assign your own in the settings. They are also **turned off** in the **Zones** tab by default: turn them on there, or their shortcuts do nothing. Dragging to an edge never gives a third; the [Snap Layouts](/fenestra/guide/snap-layouts/) palette offers them once they are on.
 :::
 
 ## Arrow cycling
@@ -38,12 +38,12 @@ Starting from a window that is not snapped:
 3. `⌃⌥↓`: back to the left half.
 4. `⌃⌥↓` again: bottom-left quarter.
 5. `⌃⌥↑`: left half again.
-6. `⌃⌥←`: there is no neighboring display, so the window is **restored** to its original size.
+6. `⌃⌥←`: there is no neighboring display, so the window is **restored** (size and position from before the first snap).
 
 More on a landscape display:
 
-- `⌃⌥↑` on a window that is not snapped: full screen. On a half: the top quarter.
-- `⌃⌥↓` on a full-screen window: restore (or, with a display below, move there; see below). On a half: the bottom quarter.
+- `⌃⌥↑` on a window that is not snapped: full screen. On a half: the top quarter. On a full-screen window or a top quarter, with no display above: nothing.
+- `⌃⌥↓` on a window that is not snapped: nothing (unlike Windows, it is not minimized). On a full-screen window: restore (or, with a display below, move there; see below). On a half: the bottom quarter.
 - `⌃⌥→` on a left half: right half (and the other way around with `←`).
 
 ### Two displays side by side
@@ -58,7 +58,7 @@ The other way, `⌃⌥←` on a left half of B sends the window back to A in the
 
 ### Two displays stacked
 
-Display A above, display B below (a laptop under a monitor, for example).
+Display A above, display B below (a laptop under a monitor, for example), both landscape. On a vertical display, `↑`/`↓` follow other rules, see [Vertical displays](/fenestra/guide/vertical-display/).
 
 - `⌃⌥↓` on a full-screen window of A: the window moves to B, still full screen. `⌃⌥↑` brings it back.
 - `⌃⌥↓` on a bottom quarter of A: the window moves to B, in the matching **top** quarter (mirror zone). `⌃⌥↑` on a top quarter of B does the opposite.
@@ -70,8 +70,12 @@ After each snap to a half or a quarter, [Snap Assist](/fenestra/guide/snap-assis
 ## Other actions
 
 - **Quarters, full screen, thirds**: put the window in that zone on its current display. If it is already there, nothing happens.
-- **Restore**: gives the window back its size from before the first snap (no effect if it is not snapped).
-- **Next / previous display**: sends the window to the next or previous display. A snapped window keeps its zone; a window that is not snapped is moved proportionally. See [Multiple displays](/fenestra/guide/multiple-displays/).
+- **Restore**: puts the window back where it was before the first snap, size and position (no effect if it is not snapped).
+- **Next / previous display**: sends the window to the next or previous display. A snapped window keeps its zone; a window that is not snapped keeps its relative position and its size (reduced if it does not fit). See [Multiple displays](/fenestra/guide/multiple-displays/).
+
+:::note
+A zone turned off in the **Zones** tab of the [settings](/fenestra/guide/settings/) is never used by the keyboard either: when a shortcut would lead to it, nothing happens.
+:::
 
 ## Change the shortcuts
 

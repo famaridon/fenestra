@@ -42,7 +42,7 @@ The path points to where Fenestra is installed: copy the configuration again if 
 | `list_windows` | The windows Fenestra can move, with their app, title, display and zone. |
 | `apply_layout` | Places several windows at once, see below. |
 
-Agents follow the same rules as you: minimized, full-screen and [excluded](/fenestra/guide/settings/#exclusions) windows are left alone, and nothing happens while Fenestra is turned off in the menu bar.
+Agents follow the same rules as you: minimized, full-screen, fixed-size and [excluded](/fenestra/guide/settings/#exclusions) windows are left alone. Commands fail with a clear error while Fenestra is turned off in the menu bar or does not have the Accessibility permission.
 
 ## Describing a layout
 
@@ -52,9 +52,9 @@ A layout is a list of **placements**. Each one picks a window and says where it 
 |---|---|
 | `app` | App name (`Safari`) or bundle identifier (`com.apple.Safari`), case-insensitive. Required. |
 | `title` | Part of the window title, to pick one window of an app with several. |
-| `display` | `primary` (default, the display with the menu bar), an index (`1`, `2`…), or `left`, `right`, `top`, `bottom`. |
+| `display` | A string: `primary` or `main` (default, the display with the menu bar), an index (`"1"`, `"2"`…, quoted), `left`, `right`, `top`, `bottom`, or `id:` followed by the `id` that `list_displays` returns. |
 | `zone` | A named zone: `leftHalf`, `rightHalf`, `topHalf`, `bottomHalf`, `topLeft`, `topRight`, `bottomLeft`, `bottomRight`, `maximize`, `leftThird`, `centerThird`, `rightThird`, `leftTwoThirds`, `rightTwoThirds`. |
-| `rect` | Or a custom area, in fractions of the display: `{"x": 0, "y": 0, "width": 0.6, "height": 1}` is the left 60 %. |
+| `rect` | Or a custom area, in fractions of the display's usable area (without the menu bar and the Dock): `{"x": 0, "y": 0, "width": 0.6, "height": 1}` is the left 60 %. |
 
 Give a `zone` or a `rect`, not both. Set `launch_apps` to `true` to open the apps that have no window yet; Fenestra waits up to 10 seconds for their windows.
 
@@ -73,7 +73,7 @@ Give a `zone` or a `rect`, not both. Set `launch_apps` to `true` to open the app
 - Each window is used **once**: list an app twice to place two of its windows (front-most first), or tell them apart with `title`.
 - Windows that are not listed **stay where they are**.
 - The **first** placement ends up in front.
-- Zones keep the **gap between windows** set in the settings, and work with [restore](/fenestra/guide/keyboard/) like any other snap. A window placed with `rect` is not considered snapped.
+- Zones and `rect` areas keep the **gap between windows** set in the settings. Zones work with [restore](/fenestra/guide/keyboard/) like any other snap. A window placed with `rect` is not considered snapped.
 - The reply lists the windows placed and, for each placement that failed, why (no matching window, unknown display…).
 
 ## From the terminal
@@ -88,8 +88,8 @@ $FENESTRA layout '{"placements": [{"app": "Xcode", "zone": "leftHalf"}, {"app": 
 $FENESTRA layout - < coding.json
 ```
 
-Each command prints its result as JSON and exits with a non-zero status on error.
+Each command prints its result as JSON. When the request fails as a whole (invalid JSON, Fenestra turned off…), it prints `fenestra: <message>` on stderr and exits with status 1. A layout where only some placements fail still exits with 0: check the `failed` list in the result.
 
 ## Turning it off
 
-Turn off **Allow AI agents and scripts to arrange windows** in the **Agents** tab of the [settings](/fenestra/guide/settings/): Fenestra closes its socket and the tool can no longer reach it.
+Turn off **Allow AI agents and scripts to arrange windows** in the **Agents** tab of the [settings](/fenestra/guide/settings/): Fenestra closes its socket and the tool can no longer reach it. The tool then tries to launch Fenestra for 10 seconds and gives up with "Fenestra is not running and could not be started", even though the app is running.

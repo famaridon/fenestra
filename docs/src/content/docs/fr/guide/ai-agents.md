@@ -42,7 +42,7 @@ Le chemin désigne l'emplacement de Fenestra : copiez de nouveau la configuratio
 | `list_windows` | Les fenêtres que Fenestra peut déplacer, avec leur app, leur titre, leur écran et leur zone. |
 | `apply_layout` | Place plusieurs fenêtres d'un coup, voir ci-dessous. |
 
-Les agents suivent les mêmes règles que vous : les fenêtres réduites, en plein écran macOS ou [exclues](/fenestra/fr/guide/settings/#exclusions) ne bougent pas, et rien ne se passe tant que Fenestra est désactivé dans la barre des menus.
+Les agents suivent les mêmes règles que vous : les fenêtres réduites, en plein écran macOS, de taille fixe ou [exclues](/fenestra/fr/guide/settings/#exclusions) ne bougent pas. Les commandes échouent avec une erreur explicite tant que Fenestra est désactivé dans la barre des menus ou n'a pas l'autorisation d'Accessibilité.
 
 ## Décrire une disposition
 
@@ -52,9 +52,9 @@ Une disposition est une liste de **placements**. Chacun choisit une fenêtre et 
 |---|---|
 | `app` | Nom de l'app (`Safari`) ou identifiant de bundle (`com.apple.Safari`), sans tenir compte de la casse. Obligatoire. |
 | `title` | Une partie du titre de la fenêtre, pour choisir parmi plusieurs fenêtres d'une même app. |
-| `display` | `primary` (par défaut, l'écran de la barre des menus), un numéro (`1`, `2`…), ou `left`, `right`, `top`, `bottom`. |
+| `display` | Une chaîne : `primary` ou `main` (par défaut, l'écran de la barre des menus), un numéro (`"1"`, `"2"`…, entre guillemets), `left`, `right`, `top`, `bottom`, ou `id:` suivi de l'`id` renvoyé par `list_displays`. |
 | `zone` | Une zone nommée : `leftHalf`, `rightHalf`, `topHalf`, `bottomHalf`, `topLeft`, `topRight`, `bottomLeft`, `bottomRight`, `maximize`, `leftThird`, `centerThird`, `rightThird`, `leftTwoThirds`, `rightTwoThirds`. |
-| `rect` | Ou une zone libre, en fractions de l'écran : `{"x": 0, "y": 0, "width": 0.6, "height": 1}` correspond aux 60 % de gauche. |
+| `rect` | Ou une zone libre, en fractions de la zone utile de l'écran (sans barre des menus ni Dock) : `{"x": 0, "y": 0, "width": 0.6, "height": 1}` correspond aux 60 % de gauche. |
 
 Donnez une `zone` ou un `rect`, pas les deux. Avec `launch_apps` à `true`, Fenestra ouvre les apps qui n'ont pas encore de fenêtre et attend leurs fenêtres jusqu'à 10 secondes.
 
@@ -73,7 +73,7 @@ Donnez une `zone` ou un `rect`, pas les deux. Avec `launch_apps` à `true`, Fene
 - Chaque fenêtre ne sert **qu'une fois** : indiquez une app deux fois pour placer deux de ses fenêtres (la plus en avant d'abord), ou distinguez-les avec `title`.
 - Les fenêtres absentes de la liste **restent où elles sont**.
 - Le **premier** placement passe au premier plan.
-- Les zones respectent l'**espace entre les fenêtres** des réglages et se [restaurent](/fenestra/fr/guide/keyboard/) comme tout autre snap. Une fenêtre placée avec `rect` n'est pas considérée comme collée.
+- Les zones et les `rect` respectent l'**espace entre les fenêtres** des réglages. Les zones se [restaurent](/fenestra/fr/guide/keyboard/) comme tout autre snap. Une fenêtre placée avec `rect` n'est pas considérée comme collée.
 - La réponse liste les fenêtres placées et, pour chaque placement en échec, la raison (aucune fenêtre correspondante, écran inconnu…).
 
 ## Depuis le terminal
@@ -88,8 +88,8 @@ $FENESTRA layout '{"placements": [{"app": "Xcode", "zone": "leftHalf"}, {"app": 
 $FENESTRA layout - < coder.json
 ```
 
-Chaque commande affiche son résultat en JSON et se termine avec un code non nul en cas d'erreur.
+Chaque commande affiche son résultat en JSON. Quand la requête échoue en entier (JSON invalide, Fenestra désactivé…), elle écrit `fenestra: <message>` sur stderr et se termine avec le code 1. Une disposition dont seuls certains placements échouent se termine avec 0 : consultez la liste `failed` du résultat.
 
 ## Désactiver
 
-Décochez **Autoriser les agents IA et les scripts à disposer les fenêtres** dans l'onglet **Agents** des [réglages](/fenestra/fr/guide/settings/) : Fenestra ferme son socket et l'outil ne peut plus le joindre.
+Décochez **Autoriser les agents IA et les scripts à disposer les fenêtres** dans l'onglet **Agents** des [réglages](/fenestra/fr/guide/settings/) : Fenestra ferme son socket et l'outil ne peut plus le joindre. L'outil essaie alors de lancer Fenestra pendant 10 secondes, puis abandonne avec « Fenestra is not running and could not be started », alors que l'app tourne.

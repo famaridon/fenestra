@@ -21,28 +21,30 @@ Sur un écran paysage, le bord bas ne fait rien et le bord haut donne le plein �
 
 | Action | Fenêtre non collée | Autre état |
 |---|---|---|
-| `⌃⌥↑` | Moitié haute | Moitié haute : plein écran. Moitié basse : monte sur l'écran voisin du dessus (sinon moitié haute). |
-| `⌃⌥↓` | Moitié basse | Moitié haute : descend sur l'écran voisin du dessous (sinon moitié basse). Moitié basse ou plein écran : restauration. |
+| `⌃⌥↑` | Moitié haute | Moitié haute : plein écran. Moitié basse : monte sur l'écran voisin du dessus (sinon moitié haute). Plein écran ou quart du haut : rien. |
+| `⌃⌥↓` | Moitié basse | Moitié haute : descend sur l'écran voisin du dessous (sinon moitié basse). Moitié basse, quart du bas ou plein écran : restauration. |
 
 ## Quarts : le découpage dans l'autre sens
 
-Sur un écran paysage, `↑`/`↓` coupent une moitié gauche ou droite en quarts. Sur un écran vertical, c'est l'inverse : `←`/`→` coupent la **moitié haute ou basse** en quarts.
+Sur un écran paysage, `↑`/`↓` coupent une moitié gauche ou droite en quarts. C'est toujours le cas sur un écran vertical, où `←`/`→` coupent en plus la **moitié haute ou basse** en quarts.
 
 | Raccourci | Depuis | Résultat |
 |---|---|---|
 | `⌃⌥←` / `⌃⌥→` | Moitié haute | Quart haut gauche / haut droit |
 | `⌃⌥←` / `⌃⌥→` | Moitié basse | Quart bas gauche / bas droit |
 | `⌃⌥→` / `⌃⌥←` | Quart haut gauche / haut droit | Retour à la moitié haute (idem pour les quarts du bas) |
+| `⌃⌥←` / `⌃⌥→` | Quart haut gauche / haut droit (même direction) | Quart miroir sur l'écran voisin, sinon restauration (idem pour les quarts du bas) |
 | `⌃⌥↑` / `⌃⌥↓` | Quart du bas / du haut | Le quart au-dessus / au-dessous, du même côté |
+| `⌃⌥↑` / `⌃⌥↓` | Moitié gauche / droite | Quart du haut / du bas de ce côté |
 
 Par exemple : `⌃⌥↑` (moitié haute), puis `⌃⌥←` (quart haut gauche), puis `⌃⌥→` (retour à la moitié haute).
 
 Sur une fenêtre non collée, ou déjà sur une moitié gauche ou droite, `⌃⌥←` et `⌃⌥→` donnent toujours les moitiés gauche et droite et passent à l'écran voisin, comme sur un écran paysage.
 
-Pour retrouver le comportement du paysage (quarts tirés des moitiés gauche et droite avec `↑`/`↓`), désactivez **Écran vertical : au clavier, ← et → coupent les moitiés haute et basse en quarts** dans l'onglet **Zones** des [réglages](/fenestra/fr/guide/settings/).
+Pour retrouver le comportement du paysage, désactivez **Au clavier, ← et → coupent les moitiés haute et basse en quarts** dans la section **Écran vertical** de l'onglet **Zones** des [réglages](/fenestra/fr/guide/settings/). `←`/`→` sur une moitié haute ou basse donnent alors la moitié gauche ou droite, et `↑`/`↓` sur un quart reviennent à la moitié gauche ou droite au lieu du quart au-dessus ou au-dessous.
 
 ## Option « bord haut = plein écran »
 
 Par défaut, le bord haut d'un écran vertical donne la **moitié haute**. Si vous préférez le comportement de Windows (plein écran), activez l'option correspondante dans l'onglet **Zones** des [réglages](/fenestra/fr/guide/settings/).
 
-Vous pouvez aussi désactiver les bords gauche et droit sur écran vertical, si vous ne voulez que le découpage haut / bas.
+Vous pouvez aussi désactiver les bords gauche et droit sur écran vertical, si vous ne voulez que le découpage haut / bas. Les coins restent actifs : près du haut ou du bas d'un bord latéral (dans la taille des coins), vous obtenez toujours un quart.

@@ -9,9 +9,9 @@ Like Windows 11 *snap groups*, windows snapped side by side stay **linked**: dra
 
 1. Snap two or more windows with Fenestra (for example one on the left and one on the right).
 2. Drag the common edge of one of the windows with the mouse.
-3. The neighboring windows that shared that edge resize to stay **adjacent**: if one grows, the other shrinks by the same amount.
+3. The neighboring windows that shared that edge resize to stay **adjacent** (keeping the gap between windows, if you set one): if one grows, the other shrinks by the same amount.
 
-This works on **vertical** borders (between left and right) and **horizontal** ones (for example between two stacked quarters). With several neighbors along the same edge, they all follow.
+This works on **vertical** borders (between left and right) and **horizontal** ones (for example between two stacked quarters). With several neighbors along the same edge, they all follow. Windows lined up with the dragged edge on the same side follow too: widening the top-left quarter also widens the bottom-left one. Links only exist between windows on the same display.
 
 ## Minimum sizes
 
@@ -31,4 +31,4 @@ The link between windows goes away as soon as one of them is:
 - Windows of excluded or non-standard apps are ignored.
 - An app that refuses the requested size can leave a small gap: Fenestra always reads back the actual size after each resize.
 
-The feature can be turned off in the **General** tab of the [settings](/fenestra/guide/settings/).
+The feature can be turned off in the **General** tab of the [settings](/fenestra/guide/settings/). It does not depend on snapping by dragging: it keeps working when that option is off.

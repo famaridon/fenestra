@@ -66,7 +66,7 @@ Le site est en anglais (racine) et en français (`src/content/docs/fr/`).
 
 ### Vidéo de présentation
 
-La vidéo de la page d'accueil est faite avec [Remotion](https://www.remotion.dev) dans `video/` : un composant par scène dans `src/scenes/`, les textes par langue dans `src/i18n.ts`, l'ordre des scènes dans `src/Root.tsx`.
+La vidéo de la page d'accueil est faite avec [Remotion](https://www.remotion.dev) dans `video/` : un composant par scène dans `src/scenes/`, les textes par langue dans `src/i18n.ts`, l'ordre des scènes et les transitions dans `src/timeline.ts`.
 
 ```sh
 cd video && pnpm install
@@ -78,8 +78,8 @@ Le workflow `Release` la génère et la joint à la release ; la documentation p
 
 ## Publier une version
 
-Poussez un tag `vX.Y.Z` (ou `vX.Y.Z-beta.1` pour une préversion) : le workflow `Release` lance les tests, compile une app arm64 non signée et publie `Fenestra.zip` et la vidéo de présentation dans les Releases GitHub.
+Poussez un tag `vX.Y.Z` (ou `vX.Y.Z-beta.1` pour une préversion) : le workflow `Release` lance les tests, compile une app arm64 non signée et publie `Fenestra.zip`, sa somme de contrôle `.sha256` et la vidéo de présentation dans les Releases GitHub. Vérifiez d'abord la version courante avec `git tag`.
 
 ```sh
-git tag v0.1.0 && git push origin v0.1.0
+git tag v1.2.0 && git push origin v1.2.0
 ```

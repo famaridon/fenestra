@@ -66,7 +66,7 @@ The site is in English (root) and French (`src/content/docs/fr/`).
 
 ### Intro video
 
-The home page video is made with [Remotion](https://www.remotion.dev) in `video/`: one component per scene in `src/scenes/`, texts per language in `src/i18n.ts`, scene order in `src/Root.tsx`.
+The home page video is made with [Remotion](https://www.remotion.dev) in `video/`: one component per scene in `src/scenes/`, texts per language in `src/i18n.ts`, scene order and transitions in `src/timeline.ts`.
 
 ```sh
 cd video && pnpm install
@@ -78,8 +78,8 @@ The `Release` workflow renders it and attaches it to the release; the documentat
 
 ## Release
 
-Push a `vX.Y.Z` tag (or `vX.Y.Z-beta.1` for a pre-release): the `Release` workflow runs the tests, builds an unsigned arm64 app and publishes `Fenestra.zip` and the intro video on GitHub Releases.
+Push a `vX.Y.Z` tag (or `vX.Y.Z-beta.1` for a pre-release): the `Release` workflow runs the tests, builds an unsigned arm64 app and publishes `Fenestra.zip`, its `.sha256` checksum and the intro video on GitHub Releases. Check `git tag` for the current version first.
 
 ```sh
-git tag v0.1.0 && git push origin v0.1.0
+git tag v1.2.0 && git push origin v1.2.0
 ```

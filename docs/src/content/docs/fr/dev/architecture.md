@@ -16,15 +16,16 @@ Cette page résume `ARCHITECTURE.md` (à la racine du dépôt), qui reste la ré
 
 | Dossier | Rôle |
 |---|---|
-| `App/` | Point d'entrée, `AppController` (assemblage), construction des écrans depuis `NSScreen`. |
+| `App/` | Point d'entrée, `AppController` (assemblage), construction des écrans depuis `NSScreen`. `AccessibilityPermission` (état de l'autorisation, interrogé jusqu'à l'accord) est à côté, à la racine de `Sources/Fenestra/`. |
 | `Core/` | Swift pur (Foundation + CoreGraphics), 100 % testable : géométrie, zones, résolveurs, registre des snaps, bordure partagée, association des fenêtres entre API. |
 | `Accessibility/` | `AXWindow` (enveloppe d'un `AXUIElement`) et `AXWindowFinder`. |
 | `Capture/` | `WindowThumbnailer` (miniatures des fenêtres avec ScreenCaptureKit) et `ScreenRecordingPermission`. |
 | `Input/` | `DragMonitor` (souris globale) et `HotkeyManager` (Carbon `RegisterEventHotKey`). |
 | `Settings/` | Modèle `Settings` observable, persisté dans `UserDefaults`, et `LaunchAtLogin` (`SMAppService`). |
-| `UI/` | Barre des menus, accueil, réglages, saisie de raccourci, panneaux d'aperçu et de Snap Assist. |
-| `Controllers/` | `SnapController`, `SharedBorderController`, `ScreenWatcher`, `SnapAssistController`. |
+| `UI/` | Barre des menus, accueil, réglages, saisie de raccourci, panneaux d'aperçu, de Snap Assist et de Snap Layouts. |
+| `Controllers/` | `SnapController`, `SharedBorderController`, `ScreenWatcher`, `SnapAssistController`, `SnapLayoutsController` (survol du bouton vert). |
 | `Commands/` | `CommandService` (`list_displays`, `list_windows`, `apply_layout`) et `ControlServer` (socket Unix local). Le calcul des dispositions est pur, dans `Core/Commands/`. |
+| `Sources/Shared/` | `ControlSocket` : le protocole du socket, compilé dans l'app et dans l'outil. |
 | `Sources/FenestraCLI/` | L'outil `fenestra`, livré dans `Contents/Helpers/` : ligne de commande et serveur MCP sur stdio, sans dépendance tierce. |
 
 ## Un seul repère de coordonnées
@@ -60,7 +61,7 @@ Clavier
 Autres flux :
 
 - **Bordure partagée** : si la *taille* change pendant un glisser sur une fenêtre collée, `SharedBorderController` appelle `SharedBorderResolver.adjustments(...)` (fonction pure) puis applique les nouveaux cadres.
-- **Restauration** : si la *position* change sur une fenêtre collée, la taille d'origine (`SnapRecord.restoreFrame`) est rendue une seule fois et l'enregistrement est retiré.
+- **Restauration** : si la *position* change sur une fenêtre collée et que **Restaurer la taille d'origine au décollage** est activé, la taille d'origine (`SnapRecord.restoreFrame`) est rendue une seule fois et l'enregistrement est retiré.
 - **Écrans** : `ScreenWatcher` réapplique la zone de chaque fenêtre du registre quand la configuration des écrans change.
 
 ## Robustesse
@@ -72,7 +73,8 @@ Chaque `AXUIElementCreateApplication` reçoit un délai de messagerie de 0,25 s.
 Les tests (Swift Testing) portent surtout sur `Core/`.
 
 ```sh
-xcodebuild test -scheme Fenestra -destination 'platform=macOS'
+xcodegen generate   # le .xcodeproj n'est pas versionné
+xcodebuild test -project Fenestra.xcodeproj -scheme Fenestra -destination 'platform=macOS' -derivedDataPath build
 ```
 
 ## Documentation
