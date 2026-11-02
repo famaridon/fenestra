@@ -20,6 +20,8 @@ final class DragSnapSession {
 
     // State of the current drag.
     private var layout = ScreenLayout(screens: [])
+    /// Settings read once per drag: nothing is rebuilt on each mouse event.
+    private var dragSettings = SnapSettings()
     private var resolver = DragZoneResolver(config: .init())
     private var dragWindow: (any WindowHandle)?
     private var wasSnapped = false
@@ -57,7 +59,8 @@ final class DragSnapSession {
         guard let window = windows.window(at: point),
               manageable.isManageable(window), let frame = window.frame else { return }
         layout = displays.currentLayout()
-        resolver = DragZoneResolver(config: settings.snapSettings.dragResolver)
+        dragSettings = settings.snapSettings
+        resolver = DragZoneResolver(config: dragSettings.dragResolver)
         dragWindow = window
         lastFrame = frame
         lastRead = .now
@@ -89,7 +92,7 @@ final class DragSnapSession {
         }
         guard !didResize, frame.origin != lastFrame.origin else { return }
         var current = frame
-        if wasSnapped && settings.snapSettings.restoreOnUnsnap && !didUnsnap {
+        if wasSnapped && dragSettings.restoreOnUnsnap && !didUnsnap {
             didUnsnap = true
             current = unsnap(window, frame: frame, pointer: point) ?? frame
         }
@@ -153,7 +156,7 @@ final class DragSnapSession {
     }
 
     private func updatePreview(pointer: CGPoint) {
-        let settings = settings.snapSettings
+        let settings = dragSettings
         guard settings.dragSnapEnabled, let screen = layout.screen(containing: pointer) else { return }
         let zone = resolver.zone(forPointer: pointer, on: screen, innerEdges: layout.innerEdges(of: screen))
             .flatMap { settings.enabledZones.contains($0) ? $0 : nil }
