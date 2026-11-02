@@ -7,80 +7,128 @@ qui permet l'assemblage final.
 ## Règles générales
 
 - Swift 6, mode strict de concurrence. Tout ce qui touche AppKit, l'Accessibilité
-  ou les événements souris est `@MainActor`.
+  ou les événements souris est `@MainActor`. Les use cases aussi (ils pilotent des fenêtres).
 - **Un seul repère de coordonnées dans tout le code métier : le repère « AX »**
   (origine en haut à gauche de l'écran principal, `y` vers le bas, en points).
   C'est le repère de `AXUIElement` et de `CGEvent`. `NSScreen` et
   `NSEvent.mouseLocation` utilisent l'origine en bas à gauche : la conversion
-  se fait **uniquement** dans `ScreenGeometry`.
-- Pas d'API privée. Pas de dépendance externe (pas de SwiftPM tiers).
+  se fait **uniquement** dans `ScreenGeometry`. Les ports ne transportent que du repère AX ;
+  les panneaux (Presentation) convertissent eux-mêmes vers Cocoa.
+- Pas d'API privée. Aucune dépendance externe dans l'app ni dans l'outil `fenestra`.
+  Seule exception : la cible de tests utilise **Harmonize** (règles d'architecture, voir plus bas).
 - Textes d'interface écrits en **anglais** dans le code et traduits dans `Sources/Fenestra/Localizable.xcstrings` (français) ; l'app suit la langue de macOS. Identifiants de code en anglais.
 - Pas de `print` de debug dans le code livré ; utiliser `os.Logger`
   (`Logger(subsystem: "com.florentamaridon.Fenestra", category: "<module>")`).
+
+## Couches (clean architecture)
+
+Le code est rangé **par feature**, puis **par couche** : `Sources/Fenestra/<Feature>/<Couche>/`.
+
+| Couche | Contenu | Peut utiliser | Imports autorisés |
+|---|---|---|---|
+| **Domain** | valeurs et règles pures (structs, enums), testées sans mock | Domain | Foundation, CoreGraphics |
+| **Application** | **use cases** (un type par cas, méthode `execute`) et **ports** (protocoles) | Domain, Application | Foundation, CoreGraphics, Observation, os |
+| **Infrastructure** | adaptateurs système qui implémentent les ports : Accessibilité, Carbon, NSEvent, ScreenCaptureKit, NSWorkspace, socket | Domain, Application, Infrastructure | tous |
+| **Presentation** | SwiftUI, NSPanel ; les panneaux implémentent les ports d'affichage | Domain, Application, Presentation | tous |
+| **App** (`App/`) | point d'assemblage : construit les adaptateurs et les use cases, les branche | tout | tous |
+
+- Infrastructure et Presentation ne se connaissent pas.
+- Une feature n'utilise d'une autre feature que son **Domain** et son **Application**, jamais son
+  Infrastructure ni sa Presentation.
+- `Kernel` est partagé par toutes les features, à toutes les couches (même règle de sens), et ne dépend
+  d'aucune feature.
+- Quand deux features dépendraient l'une de l'autre, l'une déclare un port que l'autre implémente
+  (inversion de dépendance) : `SnapFollowUp` (Snap Assist) et `SnappedWindowResizeHandler` (bordure partagée)
+  sont déclarés par Snapping.
+
+Ces règles sont vérifiées par `Tests/FenestraTests/Architecture/ArchitectureTests.swift`, avec
+[Harmonize](https://github.com/perrystreetsoftware/Harmonize) (version épinglée dans `project.yml`, fichier
+`.harmonize.yaml` à la racine) : place de chaque fichier, imports de Domain et Application, Domain sans classe, et
+types utilisés par chaque couche (identifiants relevés avec SwiftSyntax).
 
 ## Arborescence
 
 ```
 Sources/Fenestra/
-  FenestraApp.swift                    — @main, scènes SwiftUI (MenuBarExtra, Settings, fenêtre d'accueil)
-  AccessibilityPermission.swift        — état de l'autorisation d'Accessibilité (interrogé jusqu'à l'accord), demande
-  App/
-    AppDelegate.swift                  — NSApplicationDelegate (fenêtre d'accueil au 1er lancement)
-    AppController.swift                — point d'assemblage : possède Settings, DragMonitor, HotkeyManager, SnapController…
-    ScreenInfo+NSScreen.swift          — construction de ScreenInfo / ScreenLayout depuis NSScreen
-  Core/                                — Swift pur (Foundation + CoreGraphics), 100 % testable
-    Geometry/ScreenGeometry.swift      — conversion Cocoa <-> AX
-    Geometry/ScreenInfo.swift          — modèle d'écran, orientation
-    Geometry/ScreenLayout.swift        — ensemble d'écrans : voisinage, écran contenant un point/une fenêtre
-    Zones/Zone.swift                   — enum Zone + calcul de cadre
-    Zones/SnapAction.swift             — actions clavier + raccourcis par défaut
-    Zones/SnapLayout.swift             — dispositions de la palette Snap Layouts
-    Zones/KeyboardShortcut.swift       — raccourci clavier (valeur pure)
-    Zones/DragZoneResolver.swift       — pointeur près d'un bord -> Zone ?
-    Zones/KeyboardSnapResolver.swift   — action clavier + état -> commande
-    Snap/SnapRegistry.swift            — mémoire des fenêtres collées (restauration au décollage)
-    Snap/SharedBorderResolver.swift    — calcul de la bordure partagée
-    Capture/WindowMatcher.swift        — associe une fenêtre AX à une fenêtre ScreenCaptureKit (Snap Assist)
-    Commands/LayoutSpec.swift          — disposition « one shot » (LayoutSpec) et LayoutPlanner : fenêtres -> cadres
-  Accessibility/
-    AXWindow.swift                     — enveloppe d'une fenêtre AXUIElement
-    AXWindowFinder.swift               — fenêtre sous le pointeur, fenêtre active, toutes les fenêtres
-  Capture/
-    ScreenRecordingPermission.swift    — autorisation d'enregistrement de l'écran (aperçus de Snap Assist uniquement)
-    WindowThumbnailer.swift            — miniatures des fenêtres (ScreenCaptureKit)
-  Input/
-    DragMonitor.swift                  — événements souris globaux (repère AX)
-    HotkeyManager.swift                — raccourcis globaux (Carbon RegisterEventHotKey)
+  App/                                  — composition root
+    FenestraApp.swift                   — @main, scènes SwiftUI (MenuBarExtra, Settings, fenêtre d'accueil)
+    AppDelegate.swift                   — fenêtre d'accueil au 1er lancement
+    AppController.swift                 — construit et branche tout ; démarre / arrête les moniteurs selon les réglages
+  Kernel/                               — partagé par toutes les features
+    Domain/ScreenGeometry.swift         — conversion Cocoa <-> AX
+    Domain/ScreenInfo.swift             — modèle d'écran, orientation
+    Domain/ScreenLayout.swift           — ensemble d'écrans : voisinage, écran contenant un point/une fenêtre
+    Domain/Zone.swift                   — enum Zone + calcul de cadre
+    Application/WindowHandle.swift      — port WindowHandle (une fenêtre d'une autre app) + WindowRef (clé hashable)
+    Application/SystemPorts.swift       — ports WindowSystem, DisplayProvider, PointerState
+    Infrastructure/AXWindow.swift       — WindowHandle sur un AXUIElement
+    Infrastructure/AXWindowFinder.swift — recherches par l'API d'Accessibilité + AXWindowSystem
+    Infrastructure/ScreenInfo+NSScreen.swift — NSScreenDisplays, SystemPointer, ScreenInfo depuis NSScreen
+    Presentation/ScreenGeometry+Cocoa.swift  — conversion AX -> Cocoa pour placer les panneaux
+  Snapping/                             — glisser, clavier, restauration, changement d'écrans
+    Domain/DragZoneResolver.swift       — pointeur près d'un bord -> Zone ?
+    Domain/KeyboardSnapResolver.swift   — action clavier + état -> commande
+    Domain/SnapAction.swift             — actions clavier + raccourcis par défaut
+    Domain/KeyboardShortcut.swift       — raccourci clavier (valeur pure)
+    Domain/SnapRegistry.swift           — mémoire des fenêtres collées (restauration au décollage)
+    Domain/SnapSettings.swift           — instantané des réglages lus par les use cases
+    Domain/SnapGeometry.swift           — cadre au décollage, déplacement proportionnel entre écrans
+    Application/SnappingPorts.swift     — ports SnapSettingsProvider, SnapPreview, SnapFollowUp, SnappedWindowResizeHandler
+    Application/SnapStore.swift         — fenêtres collées de la session (SnapRegistry<WindowRef>)
+    Application/ManageableWindows.swift — fenêtres que Fenestra peut déplacer
+    Application/PlaceWindowInZone.swift — use case : placer une fenêtre dans une zone et l'enregistrer
+    Application/SnapWindowToZone.swift  — use case : snap choisi par l'utilisateur (premier plan + Snap Assist)
+    Application/SnapWithKeyboard.swift  — use case : action clavier sur la fenêtre active
+    Application/DragSnapSession.swift   — use case avec état : un glisser, du clic au relâchement
+    Application/ReapplySnapsAfterDisplayChange.swift — use case : replacer les fenêtres collées
+    Infrastructure/DragMonitor.swift    — événements souris globaux (repère AX)
+    Infrastructure/HotkeyManager.swift  — raccourcis globaux (Carbon RegisterEventHotKey)
+    Infrastructure/ScreenWatcher.swift  — changement d'écrans -> ReapplySnapsAfterDisplayChange
+    Presentation/SnapPreviewPanel.swift — aperçu translucide (port SnapPreview)
+  SharedBorder/
+    Domain/SharedBorderResolver.swift   — calcul de la bordure partagée
+    Domain/SharedBorderGeometry.swift   — bords entraînés, correction après un refus de taille
+    Application/PropagateBorderResize.swift — use case (port SnappedWindowResizeHandler)
+  SnapAssist/
+    Domain/WindowMatcher.swift          — associe une fenêtre AX à une fenêtre ScreenCaptureKit
+    Application/SnapAssistPorts.swift   — SnapAssistCandidate ; ports SnapAssistPresenter, WindowThumbnails, ScreenRecordingAccess
+    Application/OfferSnapAssist.swift   — use case (port SnapFollowUp) : proposer les fenêtres, placer la choisie
+    Infrastructure/WindowThumbnailer.swift — miniatures (ScreenCaptureKit)
+    Infrastructure/ScreenRecordingPermission.swift — autorisation d'enregistrement de l'écran
+    Presentation/SnapAssistPanel.swift  — panneau Snap Assist (port SnapAssistPresenter)
+  SnapLayouts/
+    Domain/SnapLayout.swift             — dispositions de la palette
+    Application/SnapLayoutsPorts.swift  — ports ZoomButtonLocator, SnapLayoutsPresenter
+    Application/ShowSnapLayouts.swift   — use case : palette au repos du pointeur sur le bouton vert
+    Infrastructure/ZoomButtonHoverMonitor.swift — survol (NSEvent) + AXZoomButtonLocator
+    Presentation/SnapLayoutsPanel.swift — palette (port SnapLayoutsPresenter), se ferme quand le pointeur s'éloigne
+  ExternalControl/                      — commandes de l'outil fenestra (CLI, MCP)
+    Domain/LayoutSpec.swift             — LayoutSpec et LayoutPlanner : fenêtres -> cadres
+    Application/ControlResults.swift    — résultats JSON des commandes ; port AppLauncher
+    Application/ListDisplays.swift, ListWindows.swift, ApplyLayout.swift — use cases
+    Infrastructure/CommandDispatcher.swift — JSON -> use case -> réponse
+    Infrastructure/ControlServer.swift  — socket Unix local (~/Library/Application Support/Fenestra/control.sock)
+    Infrastructure/WorkspaceAppLauncher.swift — lance les apps (NSWorkspace)
   Settings/
-    Settings.swift                     — modèle @Observable persisté dans UserDefaults
-    LaunchAtLogin.swift                — SMAppService
-  UI/
-    MenuBarView.swift                  — contenu du MenuBarExtra
-    OnboardingView.swift               — accueil / autorisation Accessibilité
-    SettingsView.swift                 — réglages (onglets)
-    ShortcutRecorderView.swift         — saisie d'un raccourci
-    ExcludedAppsView.swift             — applications exclues
-    SnapPreviewPanel.swift             — NSPanel d'aperçu translucide
-    SnapAssistPanel.swift              — panneau Snap Assist
-    SnapLayoutsPanel.swift             — palette Snap Layouts (bouton vert)
-  Commands/
-    CommandService.swift               — commandes list_displays / list_windows / apply_layout
-    ControlServer.swift                — socket Unix local (~/Library/Application Support/Fenestra/control.sock)
-  Controllers/
-    SnapController.swift               — orchestration glisser + clavier + restauration
-    SharedBorderController.swift       — bordure partagée : propage un redimensionnement aux voisines
-    ScreenWatcher.swift                — réagit aux changements d'écrans
-    SnapAssistController.swift         — Snap Assist : propose les fenêtres pour l'espace restant
-    SnapLayoutsController.swift        — survol du bouton vert -> palette Snap Layouts
-Sources/Shared/ControlSocket.swift     — protocole du socket, partagé par l'app et l'outil
-Sources/FenestraCLI/main.swift         — outil `fenestra` (Contents/Helpers) : CLI + serveur MCP stdio
-Tests/FenestraTests/                   — Swift Testing, surtout sur Core/
-docs/                                  — site Astro Starlight (documentation utilisateur et développeur)
+    Application/Settings.swift          — modèle @Observable persisté dans UserDefaults (+ snapSettings) ; port LoginItem
+    Infrastructure/LaunchAtLogin.swift  — SMAppService
+    Presentation/SettingsView.swift, ShortcutRecorderView.swift, ExcludedAppsView.swift
+  Onboarding/
+    Application/AccessibilityPermission.swift — état de l'autorisation (interrogé jusqu'à l'accord) ; port AccessibilityTrust
+    Infrastructure/AXAccessibilityTrust.swift — AXIsProcessTrusted
+    Presentation/OnboardingView.swift   — accueil
+  MenuBar/
+    Presentation/MenuBarView.swift      — contenu du MenuBarExtra
+Sources/Shared/ControlSocket.swift      — protocole du socket, partagé par l'app et l'outil
+Sources/FenestraCLI/main.swift          — outil `fenestra` (Contents/Helpers) : CLI + serveur MCP stdio
+Tests/FenestraTests/<Feature>/          — Swift Testing : Domain, et use cases avec des fakes des ports (Support/Fakes.swift)
+Tests/FenestraTests/Architecture/       — règles de dépendance entre couches (Harmonize)
+docs/                                   — site Astro Starlight (documentation utilisateur et développeur)
 ```
 
 ## Contrat des types partagés
 
-### Core/Geometry
+### Kernel/Domain : géométrie
 
 ```swift
 enum ScreenOrientation: String, Sendable, Codable { case landscape, portrait }
@@ -125,7 +173,7 @@ enum ScreenGeometry {
 
 Formules : `axRect.origin.y = primaryHeight - cocoaRect.maxY`, `axPoint.y = primaryHeight - cocoaPoint.y`.
 
-### Core/Zones
+### Zones, actions et résolveurs (Kernel/Domain, Snapping/Domain, SnapLayouts/Domain)
 
 ```swift
 enum Zone: String, CaseIterable, Codable, Sendable, Identifiable, Hashable {
@@ -254,11 +302,11 @@ Table de `KeyboardSnapResolver` (P = portrait, L = paysage, « voisin » = `layo
 | topLeft… bottomRight, maximize, tiers | tout | place(zone) sur l'écran courant ; si déjà cette zone sur cet écran : none |
 | restore | collée / non collée | restore / none |
 | nextDisplay / previousDisplay | collée | place(même zone, on: layout.next/previous) ; si pas d'autre écran : none |
-| nextDisplay / previousDisplay | non collée | none (le contrôleur déplace la fenêtre proportionnellement) |
+| nextDisplay / previousDisplay | non collée | none (`SnapWithKeyboard` déplace la fenêtre proportionnellement) |
 
 Les tiers (`leftThird`…) sont des zones « clavier seulement ».
 
-### Core/Snap
+### Snapping/Domain (registre) et SharedBorder/Domain
 
 ```swift
 struct SnapRecord: Sendable, Equatable {
@@ -307,7 +355,7 @@ enum SharedBorderResolver {
 }
 ```
 
-### Core/Capture et Core/Commands
+### SnapAssist/Domain et ExternalControl/Domain
 
 ```swift
 /// Ce qu'on sait d'une fenêtre, côté Accessibilité comme côté ScreenCaptureKit.
@@ -344,66 +392,192 @@ extension ScreenLayout {
 }
 ```
 
-### Accessibility
+### Snapping/Domain : réglages et géométrie
 
 ```swift
-/// Enveloppe d'une fenêtre AXUIElement. Hashable via CFEqual/CFHash de l'élément.
-@MainActor final class AXWindow: Hashable {
-    let element: AXUIElement
-    let pid: pid_t
-    init(element: AXUIElement, pid: pid_t)
-    var frame: CGRect? { get }                      // repère AX
-    /// Applique taille puis position puis taille (certaines apps ajustent). Retourne le cadre relu (nil si échec).
-    @discardableResult func setFrame(_ frame: CGRect) -> CGRect?
-    var title: String? { get }
-    var isMinimized: Bool { get }
-    var isFullScreen: Bool { get }                   // kAXFullScreenAttribute
-    var isStandardWindow: Bool { get }               // rôle AXWindow et sous-rôle AXStandardWindow
-    var isResizable: Bool { get }                    // kAXSizeAttribute settable
-    var bundleIdentifier: String? { get }            // via NSRunningApplication(processIdentifier:)
-    var appName: String? { get }
-    var appIcon: NSImage? { get }
-    func raise()                                     // kAXRaiseAction + activation de l'app
-    nonisolated static func == (lhs: AXWindow, rhs: AXWindow) -> Bool
-    nonisolated func hash(into hasher: inout Hasher)
+/// Instantané des réglages lus par les use cases (relu à chaque événement).
+struct SnapSettings: Sendable, Equatable {
+    var dragSnapEnabled, restoreOnUnsnap: Bool
+    var gap: CGFloat
+    var enabledZones: Set<Zone>
+    var dragResolver: DragZoneResolver.Config
+    var portraitArrowsSplitHalves, sharedBorderEnabled, snapAssistEnabled, snapAssistPreviews: Bool
+    var excludedBundleIdentifiers: Set<String>
+    var keyboardResolver: KeyboardSnapResolver { get }
+    func isExcluded(bundleIdentifier: String?) -> Bool
 }
 
+enum SnapGeometry {
+    /// Taille d'avant le snap rendue pendant le glisser : le pointeur garde le même ratio horizontal
+    /// dans la fenêtre et reste à 30 points au plus sous son bord haut.
+    static func unsnappedFrame(restoring size: CGSize, from frame: CGRect, pointer: CGPoint) -> CGRect
+    /// Même position relative dans la zone cible, réduite pour tenir, gardée dedans.
+    static func proportionalFrame(_ frame: CGRect, from source: CGRect, to target: CGRect) -> CGRect
+}
+
+enum SharedBorderGeometry {   // SharedBorder/Domain
+    static func shifted(_ frame: CGRect, old: CGRect, new: CGRect, tolerance: CGFloat) -> CGRect?
+    static func corrected(_ frame: CGRect, requested: CGRect, actual: CGRect, gap: CGFloat) -> CGRect
+    static func close(_ a: CGRect, _ b: CGRect) -> Bool
+}
+```
+
+### Ports (Application)
+
+```swift
+// Kernel
+@MainActor protocol WindowHandle: AnyObject, Hashable, Sendable {
+    nonisolated var pid: pid_t { get }
+    var frame: CGRect? { get }                                   // repère AX
+    @discardableResult func setFrame(_ frame: CGRect) -> CGRect? // cadre réellement obtenu
+    func raise()
+    var title: String? { get }; var appName: String? { get }; var bundleIdentifier: String? { get }
+    var isStandardWindow: Bool { get }; var isFullScreen: Bool { get }; var isResizable: Bool { get }
+}
+struct WindowRef: Hashable, Sendable { let window: any WindowHandle }   // clé de dictionnaire
+@MainActor protocol WindowSystem: AnyObject {
+    func frontmostWindow() -> (any WindowHandle)?
+    func window(at point: CGPoint) -> (any WindowHandle)?
+    func visibleStandardWindows() -> [any WindowHandle]
+}
+@MainActor protocol DisplayProvider: AnyObject { func currentLayout() -> ScreenLayout }
+@MainActor protocol PointerState: AnyObject { var isLeftButtonPressed: Bool { get }; var location: CGPoint { get } }
+
+// Snapping
+@MainActor protocol SnapSettingsProvider: AnyObject { var snapSettings: SnapSettings { get } }   // Settings
+@MainActor protocol SnapPreview: AnyObject { func show(frame: CGRect); func hide() }               // SnapPreviewPanel
+@MainActor protocol SnapFollowUp: AnyObject {                                                     // OfferSnapAssist
+    func windowSnapped(_ window: any WindowHandle, zone: Zone, screen: ScreenInfo)
+    func cancel()
+}
+@MainActor protocol SnappedWindowResizeHandler: AnyObject {                                       // PropagateBorderResize
+    func windowResized(_ window: any WindowHandle, from old: CGRect, to new: CGRect)
+    func resizeEnded(_ window: any WindowHandle)
+}
+
+// SnapAssist
+struct SnapAssistCandidate: Identifiable, Sendable, Equatable { let id: Int; let title, appName: String; let pid: pid_t }
+@MainActor protocol SnapAssistPresenter: AnyObject {                                              // SnapAssistPanel
+    func show(frame: CGRect, candidates: [SnapAssistCandidate], showsPreviews: Bool,
+              onSelect: @escaping (Int) -> Void, onDismiss: @escaping () -> Void)
+    func showThumbnail(_ image: CGImage, size: CGSize, for id: Int)
+    func hide()
+}
+@MainActor protocol WindowThumbnails: AnyObject {                                                 // WindowThumbnailer
+    func capture(_ targets: [(id: Int, window: WindowDescriptor)], maxSize: CGSize,
+                 deliver: @escaping @MainActor (Int, CGImage, CGSize) -> Void) async
+}
+@MainActor protocol ScreenRecordingAccess: AnyObject {                                            // ScreenRecordingPermission
+    var isGranted: Bool { get }; @discardableResult func request() -> Bool; func openSystemSettings()
+}
+
+// SnapLayouts
+@MainActor protocol ZoomButtonLocator: AnyObject {                                                // AXZoomButtonLocator
+    func zoomButton(at point: CGPoint) -> (window: any WindowHandle, buttonFrame: CGRect)?
+}
+@MainActor protocol SnapLayoutsPresenter: AnyObject {                                             // SnapLayoutsPanel
+    var isVisible: Bool { get }
+    func show(layouts: [SnapLayout], below button: CGRect, within area: CGRect,
+              onSelect: @escaping (Zone) -> Void, onDismiss: @escaping () -> Void)
+    func hide()
+}
+
+// ExternalControl, Settings, Onboarding
+@MainActor protocol AppLauncher: AnyObject { func launch(_ apps: [String]) async }                // WorkspaceAppLauncher
+@MainActor protocol LoginItem: AnyObject { var isEnabled: Bool { get }; func set(_ enabled: Bool) throws }  // LaunchAtLogin
+@MainActor protocol AccessibilityTrust: AnyObject { var isTrusted: Bool { get }; func requestTrust() -> Bool }  // AXAccessibilityTrust
+```
+
+Tous les cadres qui traversent un port sont en repère AX.
+
+### Use cases (Application)
+
+Un type `@MainActor final class` par cas, dépendances reçues à l'`init`, méthode `execute`.
+
+`SnapStore` (Snapping) : fenêtres collées de la session (`SnapRegistry<WindowRef>`, tolérance 4 points).
+`currentRecord(for:frame:)` rend l'enregistrement d'une fenêtre encore à sa place et oublie les autres ;
+`snappedWindows(on:excluding:)` fait de même pour un écran.
+
+`ManageableWindows` (Snapping) : fenêtre standard, redimensionnable, pas en plein écran natif, app non exclue ;
+`all()` liste les fenêtres visibles gérables.
+
+`PlaceWindowInZone.execute(window, zone:, on:)` : `zone.frame(in: screen.visibleFrame, gap:)`, `setFrame`, relit,
+enregistre (le `restoreFrame` d'une fenêtre déjà collée est conservé). Ni premier plan ni Snap Assist.
+
+`SnapWindowToZone.execute(window, zone:, on:)` : snap choisi par l'utilisateur (clavier, palette) :
+`followUp.cancel()`, place, `raise()`, `followUp.windowSnapped`.
+
+`SnapWithKeyboard.execute(action)` : retire l'offre Snap Assist en cours, fenêtre active,
+`KeyboardSnapResolver`, applique la commande ; un `.place` vers une zone absente de `enabledZones` est ignoré
+(pas de repli) ; `.restore` rend `restoreFrame` ; `nextDisplay/previousDisplay` sur une fenêtre non collée :
+`SnapGeometry.proportionalFrame` vers l'écran suivant / précédent.
+
+`DragSnapSession` : `mouseDown(at:)`, `mouseDragged(at:)`, `mouseUp(at:)`, `cancel()`.
+- `mouseDown` : fenêtre sous le pointeur si gérable ; mémorise son cadre et si elle est collée.
+- `mouseDragged` : relit le cadre (au plus toutes les 16 ms).
+  - Si la **taille** a changé → redimensionnement : `SnappedWindowResizeHandler.windowResized` si la fenêtre est collée.
+  - Si la **position** a changé : fenêtre collée et `restoreOnUnsnap` → `SnapGeometry.unsnappedFrame`, une seule
+    fois, et l'enregistrement est retiré. Puis, si `dragSnapEnabled`, `DragZoneResolver` sur l'écran du pointeur
+    → `SnapPreview.show/hide` (zones désactivées ignorées).
+- `mouseUp` : zone en attente → `PlaceWindowInZone` puis `SnapFollowUp.windowSnapped` ; après un redimensionnement →
+  `resizeEnded`. Une fenêtre collée lâchée ailleurs qu'à sa place sort du registre.
+- Un chien de garde termine le glisser si le relâchement n'arrive jamais (lâcher sur une de nos fenêtres).
+
+`ReapplySnapsAfterDisplayChange.execute()` : chaque fenêtre du registre retrouve le cadre standard de sa zone
+sur son écran (ou sur le premier si l'écran a disparu) ; les tailles modifiées par la bordure partagée sont perdues.
+
+`PropagateBorderResize` (SharedBorder, port `SnappedWindowResizeHandler`) : si `sharedBorderEnabled`, passe à
+`SharedBorderResolver` les fenêtres collées du même écran et la marge ; les fenêtres dont le bord du même côté
+était aligné sur le bord tiré suivent aussi (`SharedBorderGeometry.shifted`). Une voisine qui refuse la taille
+ramène la fenêtre tirée sur son bord réel (`corrected`).
+
+`OfferSnapAssist` (SnapAssist, port `SnapFollowUp`) : après un snap sur une zone qui a un `complement` activé
+(et si `snapAssistEnabled`), affiche les autres fenêtres gérables dans le cadre du complément. Rien n'est proposé
+si une fenêtre collée de cet écran occupe déjà le complément (`Zone.overlaps`). Un choix place la fenêtre
+(`PlaceWindowInZone`) et la passe au premier plan. Avec `snapAssistPreviews` et l'autorisation d'enregistrement
+de l'écran, les miniatures arrivent une à une (`WindowThumbnails`). L'API d'Accessibilité ne donne pas de
+`CGWindowID` public : chaque fenêtre est associée à sa fenêtre ScreenCaptureKit par processus, cadre et titre
+(`WindowMatcher`). Une fenêtre non associée garde son icône.
+
+`ShowSnapLayouts.execute()` (SnapLayouts) : appelé quand le pointeur se pose (300 ms) ; si le bouton n'est pas
+pressé et que le pointeur est sur le bouton vert d'une fenêtre gérable, affiche `SnapLayout.available(...)` pour
+l'écran de la fenêtre ; un clic sur une zone → `SnapWindowToZone`.
+
+`ListDisplays`, `ListWindows`, `ApplyLayout` (ExternalControl) : voir « Commandes externes et MCP ».
+
+### Infrastructure et Presentation
+
+```swift
+@MainActor final class AXWindow: WindowHandle {     // Hashable via CFEqual/CFHash de l'élément
+    let element: AXUIElement
+    var isMinimized: Bool { get }
+    /// setFrame applique taille puis position puis taille (certaines apps ajustent) et relit le cadre.
+}
 @MainActor enum AXWindowFinder {
     static func frontmostWindow() -> AXWindow?
-    static func window(at point: CGPoint) -> AXWindow?            // repère AX ; AXUIElementCopyElementAtPosition puis attribut window
-    static func visibleStandardWindows() -> [AXWindow]            // toutes apps `.regular`, fenêtres standard non minimisées
-    /// Bouton vert sous le pointeur (sous-rôle AXZoomButton ou AXFullScreenButton) : sa fenêtre et son cadre (repère AX).
+    static func window(at point: CGPoint) -> AXWindow?
+    static func visibleStandardWindows() -> [AXWindow]
+    /// Bouton vert sous le pointeur (sous-rôle AXZoomButton ou AXFullScreenButton) : sa fenêtre et son cadre.
     static func zoomButton(at point: CGPoint) -> (window: AXWindow, buttonFrame: CGRect)?
 }
-```
-
-Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_, 0.25)` : une app qui ne répond pas ne bloque jamais Fenestra.
-
-### Input
-
-```swift
-@MainActor final class DragMonitor {
-    /// Points en repère AX.
-    var onMouseDown: ((CGPoint) -> Void)?
-    var onMouseDragged: ((CGPoint) -> Void)?
-    var onMouseUp: ((CGPoint) -> Void)?
-    var isRunning: Bool { get }
-    func start()
-    func stop()
+@MainActor final class DragMonitor {                // onMouseDown / onMouseDragged / onMouseUp en repère AX ; start(), stop()
 }
-
-@MainActor final class HotkeyManager {
-    var onAction: ((SnapAction) -> Void)?
-    /// Remplace tous les raccourcis enregistrés. Un raccourci qui échoue est ignoré (journalisé).
-    func register(_ shortcuts: [SnapAction: KeyboardShortcut])
-    func unregisterAll()
+@MainActor final class HotkeyManager {              // onAction ; register(_ shortcuts:), unregisterAll()
 }
 ```
+
+Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_, 0.25)` : une app qui ne répond
+pas ne bloque jamais Fenestra.
+
+Les panneaux (`SnapPreviewPanel`, `SnapAssistPanel`, `SnapLayoutsPanel`) reçoivent des cadres AX et les
+convertissent avec `ScreenGeometry.toCocoa(_:)`. `SnapAssistPanel` lit l'icône de l'app à partir du `pid`.
+Les vues SwiftUI reçoivent ce qu'elles utilisent à l'`init` (`Settings`, `AccessibilityPermission`, ports
+`LoginItem` et `ScreenRecordingAccess`, closure d'action) : aucune ne connaît `AppController`.
 
 ### Settings
 
 ```swift
-@MainActor @Observable final class Settings {
+@MainActor @Observable final class Settings: SnapSettingsProvider {
     static let shared: Settings
     var isEnabled: Bool                      // interrupteur général (barre des menus), true
     var dragSnapEnabled: Bool                // glisser vers un bord, true
@@ -424,111 +598,25 @@ Chaque `AXUIElementCreateApplication` reçoit `AXUIElementSetMessagingTimeout(_,
     var shortcuts: [SnapAction: KeyboardShortcut]   // seules les actions assignées ; défaut SnapAction.defaultShortcuts
     var hasCompletedOnboarding: Bool
     func resetShortcuts()
-    func isExcluded(bundleIdentifier: String?) -> Bool
-    var dragResolverConfig: DragZoneResolver.Config { get }
-    var keyboardResolver: KeyboardSnapResolver { get }
-}
-
-@MainActor enum LaunchAtLogin {
-    static var isEnabled: Bool { get }
-    static func set(_ enabled: Bool) throws   // SMAppService.mainApp
+    var snapSettings: SnapSettings { get }   // instantané pour les use cases
 }
 ```
 
 Persistance : chaque propriété est écrite dans `UserDefaults.standard` (JSON pour les
-types composés) dans son `didSet`, et relue dans `init`.
+types composés) dans son `didSet`, et relue dans `init`. Un réglage lu par un use case passe aussi dans
+`SnapSettings`.
 
-### UI
+### App (assemblage)
 
-```swift
-@MainActor final class SnapPreviewPanel {
-    init()
-    /// `frame` en repère **Cocoa** (la conversion est faite par l'appelant).
-    func show(frame: CGRect)
-    func hide()
-}
-
-struct SnapAssistCandidate: Identifiable { let id: Int; let title: String; let appName: String; let icon: NSImage? }
-
-/// @Observable : les miniatures arrivent après l'affichage du panneau.
-@MainActor final class SnapAssistModel { let candidates: [SnapAssistCandidate]; let showsPreviews: Bool; var thumbnails: [Int: NSImage] }
-
-@MainActor final class SnapAssistPanel {
-    init()
-    /// `frame` en repère Cocoa. `onSelect(id)` quand l'utilisateur clique une fenêtre ; `onDismiss` sur Échap / clic ailleurs.
-    func show(frame: CGRect, model: SnapAssistModel, onSelect: @escaping (Int) -> Void, onDismiss: @escaping () -> Void)
-    func hide()
-}
-
-@MainActor final class SnapLayoutsPanel {
-    /// `button` et `area` (zone visible de l'écran) en repère Cocoa ; `screenSize` donne les proportions des miniatures.
-    func show(layouts: [SnapLayout], screenSize: CGSize, below button: CGRect, within area: CGRect,
-              onSelect: @escaping (Zone) -> Void, onDismiss: @escaping () -> Void)
-    func hide()
-}
-
-struct MenuBarView: View        // reçoit AppController via @Environment(AppController.self)
-struct SettingsView: View       // idem
-struct OnboardingView: View     // idem
-struct ShortcutRecorderView: View   // init(shortcut: Binding<KeyboardShortcut?>)
-struct ExcludedAppsView: View
-```
-
-### Controllers (assemblage)
-
-`AppController` (@MainActor, @Observable) possède : `settings`, `permission`,
-`dragMonitor`, `hotkeys`, `snapController`, `screenWatcher`, `snapAssist`, `snapLayouts`,
-`commands` (`CommandService`) et `controlServer`.
+`AppController` (@MainActor, @Observable) construit les adaptateurs (`AXWindowSystem`, `NSScreenDisplays`,
+`SystemPointer`, panneaux…), les use cases, et les branche : `DragMonitor` → `DragSnapSession`,
+`HotkeyManager` et le menu → `SnapWithKeyboard`, `ZoomButtonHoverMonitor` → `ShowSnapLayouts`,
+`ScreenWatcher` → `ReapplySnapsAfterDisplayChange`, `ControlServer` → `CommandDispatcher`.
 Il démarre les moniteurs quand `permission.isGranted && settings.isEnabled`, les arrête
 sinon, et ré-enregistre les raccourcis quand `settings.shortcuts` change. Les callbacks souris ne sont
 branchés que si `dragSnapEnabled`, `restoreOnUnsnap` ou `sharedBorderEnabled` est actif (la souris sert aux
-trois) ; `snapLayouts` ne démarre que si `snapLayoutsEnabled`. Le socket suit `externalControlEnabled`,
+trois) ; la palette ne démarre que si `snapLayoutsEnabled`. Le socket suit `externalControlEnabled`,
 indépendamment du reste (l'outil reçoit alors une erreur claire plutôt que rien).
-Il expose `func perform(_ action: SnapAction)` pour les menus.
-
-`SnapController` :
-- `mouseDown(at:)` : repère la fenêtre sous le pointeur (`AXWindowFinder.window(at:)`), mémorise son cadre et
-  si elle est collée (`registry.isStillSnapped`). Ignore les fenêtres non gérables (`isManageable` : fenêtre
-  standard, redimensionnable, pas en plein écran natif, app non exclue).
-- `mouseDragged(at:)` : relit le cadre de la fenêtre (au plus toutes les 16 ms).
-  - Si la **taille** a changé → c'est un redimensionnement : délègue à `SharedBorderController` si la fenêtre est collée.
-  - Si la **position** a changé (déplacement) : si la fenêtre était collée et `restoreOnUnsnap`, lui rend sa taille
-    d'origine une seule fois (origine recalculée pour garder le pointeur au même ratio dans la barre de titre),
-    puis retire l'enregistrement. Ensuite, si `dragSnapEnabled`, `DragZoneResolver` sur l'écran contenant le
-    pointeur → affiche/cache l'aperçu.
-- `mouseUp(at:)` : si une zone est affichée, applique `place(zone, on: screen)` ; cache l'aperçu ; déclenche Snap Assist.
-  Une fenêtre collée lâchée ailleurs qu'à sa place (restauration désactivée) sort du registre.
-- `perform(_ action: SnapAction)` : ferme Snap Assist, fenêtre active, `KeyboardSnapResolver`, applique la commande ;
-  un `.place` vers une zone absente de `enabledZones` est ignoré (pas de repli) ; après un `.place`, déclenche Snap Assist ;
-  `nextDisplay/previousDisplay` sur fenêtre non collée : déplacement proportionnel vers l'écran voisin.
-- `place(window, zone, screen)` : calcule `zone.frame(in: screen.visibleFrame, gap:)`, `setFrame`, relit, enregistre.
-- `restore(window)` : `setFrame(record.restoreFrame)` puis `registry.remove`.
-- `snap(_:to:on:)` : placement choisi dans la palette Snap Layouts (comme au clavier : premier plan, Snap Assist).
-- `placeExternal(window:zone:screen:)` : placement demandé par Snap Assist, `ScreenWatcher` ou `apply_layout`.
-- `placeCustom(_:frame:)` : cadre libre (`rect` d'`apply_layout`), la fenêtre sort du registre.
-- `isManageable(_:)`, `gap`, `snappedWindows(on:excluding:)`, `updateSnappedFrame` : utilisés par les autres contrôleurs.
-
-`ScreenWatcher` : sur `NSApplication.didChangeScreenParametersNotification`, pour chaque fenêtre du registre,
-réapplique le cadre standard de sa zone sur son écran (ou sur l'écran principal si l'écran a disparu) ; les tailles
-modifiées par la bordure partagée sont perdues.
-
-`SharedBorderController` : appelé par `SnapController` quand la taille d'une fenêtre collée change pendant un
-glisser. Passe à `SharedBorderResolver` les fenêtres collées du même écran et la marge (`gap`) ; les fenêtres dont le
-bord du même côté était aligné sur le bord tiré suivent aussi. Une voisine qui refuse la taille ramène la fenêtre tirée
-sur son bord réel.
-
-`SnapLayoutsController` : surveille le survol du bouton vert (`AXWindowFinder.zoomButton`) ; après un court délai,
-affiche `SnapLayoutsPanel` avec `SnapLayout.available(...)` pour l'écran de la fenêtre, puis `snap(_:to:on:)`.
-
-`SnapAssistController` : après un snap (glisser ou clavier) sur une zone qui a un `complement`, affiche
-`SnapAssistPanel` dans le cadre du complément (s'il est activé dans `enabledZones`), listant les autres fenêtres
-gérables (icône + titre).
-Rien n'est proposé si une fenêtre collée sur cet écran occupe déjà le complément (`Zone.overlaps`).
-Un clic place la fenêtre choisie dans le complément. Échap ou clic ailleurs ferme.
-Avec `snapAssistPreviews` et l'autorisation d'enregistrement de l'écran, le panneau s'affiche d'abord avec les
-icônes, puis `WindowThumbnailer` remplit `SnapAssistModel.thumbnails` une fenêtre après l'autre. L'API
-d'Accessibilité ne donne pas de `CGWindowID` public : chaque fenêtre est associée à sa fenêtre
-ScreenCaptureKit par processus, cadre et titre (`WindowMatcher`). Une fenêtre non associée garde son icône.
 
 ## Commandes externes et MCP
 
@@ -539,8 +627,11 @@ L'app écoute sur un socket Unix créé sous `umask(0o077)` (accessible au seul 
 `apply_layout` reçoit un `LayoutSpec` : une liste de placements `{app, title?, display?, zone | rect}`
 (rect en fractions 0…1 de la zone utile de l'écran) et `launch_apps`. `LayoutPlanner` (pur, testé)
 attribue une fenêtre distincte à chaque placement — ceux qui ont un titre choisissent d'abord — et
-calcule les cadres avec la même règle d'écart que `Zone`. Les placements en zone passent par le
-registre (la restauration fonctionne) ; les rect sortent la fenêtre du registre.
+calcule les cadres avec la même règle d'écart que `Zone`. Les placements en zone passent par
+`PlaceWindowInZone` (la restauration fonctionne) ; les rect sortent la fenêtre du registre. Avec `launch_apps`,
+`AppLauncher` ouvre les apps sans fenêtre, puis `ApplyLayout` attend leurs fenêtres (10 s au plus).
+`CommandDispatcher` décode la requête, refuse si l'Accessibilité manque ou si Fenestra est en pause, et appelle
+`ListDisplays`, `ListWindows` ou `ApplyLayout`.
 
 L'outil `fenestra` (pas de dépendance externe) relaie ces commandes : en ligne de commande, ou comme
 serveur MCP stdio (`fenestra mcp`, JSON-RPC écrit à la main : initialize, ping, tools/list, tools/call).

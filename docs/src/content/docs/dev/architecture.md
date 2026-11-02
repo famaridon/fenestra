@@ -1,30 +1,49 @@
 ---
 title: Architecture
-description: Module layout, single coordinate space and data flow.
+description: Features and clean architecture layers, single coordinate space and data flow.
 ---
 
 This page summarizes `ARCHITECTURE.md` (at the repository root, in French), which remains the reference for the contract between modules and their signatures.
 
 ## Conventions
 
-- **Swift 6**, strict concurrency mode. Everything that touches AppKit, Accessibility or mouse events is `@MainActor`.
-- **No private API** and **no third-party dependency** (no external SwiftPM package).
+- **Swift 6**, strict concurrency mode. Everything that touches AppKit, Accessibility or mouse events is `@MainActor`, and so are the use cases.
+- **No private API** and **no third-party dependency** in the app or the `fenestra` tool. The only exception is the test target, which uses [Harmonize](https://github.com/perrystreetsoftware/Harmonize) to check the architecture.
 - UI text written in English in the code and translated in `Localizable.xcstrings` (French); code identifiers in English.
 - No `print`: logging goes through `os.Logger` (subsystem `com.florentamaridon.Fenestra`, one category per module).
 
-## Modules
+## Layers
+
+The code is organized **by feature**, then **by layer**: `Sources/Fenestra/<Feature>/<Layer>/`.
+
+| Layer | Contents | May use | Imports |
+|---|---|---|---|
+| **Domain** | Pure values and rules (structs, enums), tested without mocks | Domain | Foundation, CoreGraphics |
+| **Application** | **Use cases** (one type per case, `execute` method) and **ports** (protocols) | Domain, Application | Foundation, CoreGraphics, Observation, os |
+| **Infrastructure** | System adapters implementing the ports: Accessibility, Carbon, NSEvent, ScreenCaptureKit, NSWorkspace, socket | Domain, Application, Infrastructure | any |
+| **Presentation** | SwiftUI and panels; the panels implement the display ports | Domain, Application, Presentation | any |
+| **App** (`App/`) | Composition root: builds the adapters and the use cases and wires them | everything | any |
+
+- Infrastructure and Presentation don't know each other.
+- A feature uses only the **Domain** and **Application** of another feature.
+- `Kernel` is shared by every feature and depends on none.
+- When two features would depend on each other, one declares a port the other implements: Snapping declares `SnapFollowUp` (implemented by Snap Assist) and `SnappedWindowResizeHandler` (implemented by the shared border).
+
+`Tests/FenestraTests/Architecture/ArchitectureTests.swift` checks these rules with Harmonize: where each file sits, the imports of Domain and Application, no class in Domain, and the types each layer uses.
+
+## Features
 
 | Folder | Role |
 |---|---|
-| `App/` | Entry point, `AppController` (wiring), building displays from `NSScreen`. `AccessibilityPermission` (permission state, polled until granted) sits next to it, at the root of `Sources/Fenestra/`. |
-| `Core/` | Pure Swift (Foundation + CoreGraphics), fully testable: geometry, zones, resolvers, snap registry, shared border, matching windows across APIs. |
-| `Accessibility/` | `AXWindow` (wrapper around an `AXUIElement`) and `AXWindowFinder`. |
-| `Capture/` | `WindowThumbnailer` (window thumbnails with ScreenCaptureKit) and `ScreenRecordingPermission`. |
-| `Input/` | `DragMonitor` (global mouse) and `HotkeyManager` (Carbon `RegisterEventHotKey`). |
-| `Settings/` | Observable `Settings` model, persisted in `UserDefaults`, and `LaunchAtLogin` (`SMAppService`). |
-| `UI/` | Menu bar, welcome window, settings, shortcut recorder, preview, Snap Assist and Snap Layouts panels. |
-| `Controllers/` | `SnapController`, `SharedBorderController`, `ScreenWatcher`, `SnapAssistController`, `SnapLayoutsController` (green button hover). |
-| `Commands/` | `CommandService` (`list_displays`, `list_windows`, `apply_layout`) and `ControlServer` (local Unix socket). The layout planning itself is pure, in `Core/Commands/`. |
+| `App/` | Entry point, `AppController` (wiring, starts and stops the monitors from the settings). |
+| `Kernel/` | Displays and geometry (`ScreenInfo`, `ScreenLayout`, `ScreenGeometry`), `Zone`; ports `WindowHandle`, `WindowSystem`, `DisplayProvider`, `PointerState` and their Accessibility / `NSScreen` adapters. |
+| `Snapping/` | Drag, keyboard, restoration, display changes. Use cases `DragSnapSession`, `SnapWithKeyboard`, `SnapWindowToZone`, `PlaceWindowInZone`, `ReapplySnapsAfterDisplayChange`; `SnapStore` holds the snapped windows. |
+| `SharedBorder/` | `SharedBorderResolver` (pure) and the `PropagateBorderResize` use case. |
+| `SnapAssist/` | `OfferSnapAssist` use case, panel, thumbnails (ScreenCaptureKit), Screen Recording permission. |
+| `SnapLayouts/` | `ShowSnapLayouts` use case, green button hover monitor, palette. |
+| `ExternalControl/` | `LayoutPlanner` (pure), use cases `ListDisplays`, `ListWindows`, `ApplyLayout`, JSON dispatcher and Unix socket. |
+| `Settings/` | Observable `Settings` model persisted in `UserDefaults`, `LaunchAtLogin`, settings views. |
+| `Onboarding/`, `MenuBar/` | Accessibility permission and welcome window; menu bar content. |
 | `Sources/Shared/` | `ControlSocket`: the socket protocol, compiled into both the app and the tool. |
 | `Sources/FenestraCLI/` | The `fenestra` tool, shipped in `Contents/Helpers/`: command line and MCP server over stdio, with no third-party dependency. |
 
@@ -34,35 +53,34 @@ This page summarizes `ARCHITECTURE.md` (at the repository root, in French), whic
 All business logic works in the **AX** coordinate space: origin at the top left of the main display, `y` pointing down, in points. It is the space used by `AXUIElement` and `CGEvent`.
 :::
 
-`NSScreen` and `NSEvent.mouseLocation` have their origin at the bottom left. The conversion happens **only** in `ScreenGeometry` (`toAX` / `toCocoa`), with `axRect.origin.y = primaryHeight - cocoaRect.maxY`. It is covered by unit tests. Only the preview panels receive Cocoa frames, converted by the caller.
+`NSScreen` and `NSEvent.mouseLocation` have their origin at the bottom left. The conversion happens **only** in `ScreenGeometry` (`toAX` / `toCocoa`), with `axRect.origin.y = primaryHeight - cocoaRect.maxY`. It is covered by unit tests. Every frame crossing a port is in AX space; the panels convert to Cocoa themselves.
 
 ## Data flow
 
 ```text
 Drag
   DragMonitor (mouse, AX space)
-    -> SnapController.mouseDown / mouseDragged / mouseUp
-       -> AXWindowFinder.window(at:)       window under the pointer
+    -> DragSnapSession.mouseDown / mouseDragged / mouseUp
+       -> WindowSystem.window(at:)          window under the pointer
        -> DragZoneResolver.zone(...)        pointer + display -> Zone?
-       -> SnapPreviewPanel.show / hide      translucent preview
-       -> (released) place(zone, on: screen)
-            Zone.frame -> AXWindow.setFrame -> read back -> SnapRegistry
-       -> SnapAssistController              if the zone has a complement
+       -> SnapPreview.show / hide           translucent preview
+       -> (released) PlaceWindowInZone
+            Zone.frame -> WindowHandle.setFrame -> read back -> SnapStore
+       -> SnapFollowUp.windowSnapped        Snap Assist, if the zone has a complement
 
 Keyboard
-  HotkeyManager (Carbon)
+  HotkeyManager (Carbon) or menu
     -> AppController.perform(action)
-       -> SnapController.perform(action)
+       -> SnapWithKeyboard.execute(action)
           -> KeyboardSnapResolver.command(...)   action + state + display -> SnapCommand
-          -> place(...) | restore(...) | nothing
-          -> SnapAssistController            after a place, if the zone has a complement
+          -> SnapWindowToZone | restore | move to the next display
 ```
 
 Other flows:
 
-- **Shared border**: if the *size* changes while dragging a snapped window, `SharedBorderController` calls `SharedBorderResolver.adjustments(...)` (a pure function), then applies the new frames.
+- **Shared border**: if the *size* changes while dragging a snapped window, `DragSnapSession` calls `SnappedWindowResizeHandler`, implemented by `PropagateBorderResize`, which calls `SharedBorderResolver.adjustments(...)` (a pure function) and applies the new frames.
 - **Restoration**: if the *position* changes on a snapped window and **Restore original size when unsnapping** is on, the original size (`SnapRecord.restoreFrame`) is applied once and the record is removed.
-- **Displays**: `ScreenWatcher` applies the zone of every window in the registry again when the display configuration changes.
+- **Displays**: `ScreenWatcher` runs `ReapplySnapsAfterDisplayChange` when the display configuration changes.
 
 ## Robustness
 
@@ -70,7 +88,7 @@ Each `AXUIElementCreateApplication` gets a 0.25 s messaging timeout. `setFrame` 
 
 ## Tests
 
-Tests (Swift Testing) mostly cover `Core/`.
+Tests (Swift Testing) mirror the features in `Tests/FenestraTests/<Feature>/`. They cover the Domain, and the use cases with fakes of the ports (`Support/Fakes.swift`), with no Accessibility or real display. `Architecture/` holds the layer rules.
 
 ```sh
 xcodegen generate   # the .xcodeproj is not under version control
