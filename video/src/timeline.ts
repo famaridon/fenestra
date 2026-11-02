@@ -12,7 +12,9 @@ import { outro, title } from './scenes/Title';
 import { push, zoomFade } from './transitions';
 
 // The video, in order. Add, remove or reorder scenes here.
-export const scenes: Scene[] = [title, mouse, assist, border, keyboard, displays, snapLayouts, agent(Object.values(strings).map((s) => s.agentPrompt[0])), outro];
+// The AI agents scene comes first: it is what sets Fenestra apart.
+const agentScene = agent(Object.values(strings).map((s) => s.agentPrompt[0]));
+export const scenes: Scene[] = [title, agentScene, mouse, assist, border, keyboard, displays, snapLayouts, outro];
 
 export const FPS = 30;
 

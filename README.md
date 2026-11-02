@@ -4,17 +4,25 @@
 
 <h1 align="center">Fenestra</h1>
 
-<p align="center">Windows and Ubuntu-style window snapping for macOS, from the menu bar.<br>
+<p align="center">Windows and Ubuntu-style window snapping for macOS, from the menu bar — and an MCP server built in, so AI agents can arrange your windows.<br>
 <a href="https://famaridon.github.io/fenestra/">Documentation</a> · <a href="README.fr.md">Français</a></p>
+
+## Built for AI agents
+
+Fenestra ships with an **MCP server**. Connect Claude (or any MCP app) in one copy-paste from the settings, then just ask:
+
+> *“Set me up for coding: Xcode on the left two thirds, Safari on the right, Slack full screen on the other display.”*
+
+The agent lists your windows and displays, then places **every window in a single call**: named zones or custom proportions, any display, missing apps launched for you. The same commands work from the terminal for your own scripts. Everything stays on your Mac. See the [AI agents guide](https://famaridon.github.io/fenestra/guide/ai-agents/).
 
 ## Features
 
+- AI agents and scripts: Claude and other MCP apps (or a shell script) arrange several windows in one call through the bundled `fenestra` tool.
 - Drag snapping: screen edges and corners, translucent preview, original size restored when you unsnap.
 - Configurable global keyboard shortcuts (halves, quarters, thirds, full screen, restore, move to another display).
 - Shared border: resizing a snapped window adjusts its neighbors.
 - Snap Layouts: rest the pointer on a window's green button and pick a zone in a palette of layouts, as on Windows 11.
 - Snap Assist: after a snap with the mouse or the keyboard, offers your other windows for the remaining space, with optional window thumbnails.
-- AI agents and scripts: Claude and other MCP apps (or a shell script) arrange several windows in one call through the bundled `fenestra` tool.
 - Multiple and vertical displays, zones applied again automatically when the display setup changes.
 - Excluded apps, gaps between windows, launch at login.
 

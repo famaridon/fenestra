@@ -4,7 +4,7 @@ description: Le snap de Windows et Ubuntu, sur macOS.
 template: splash
 hero:
   title: Fenestra
-  tagline: Le snap de fenêtres de Windows et Ubuntu sur macOS, à la souris comme au clavier.
+  tagline: Le snap de fenêtres de Windows et Ubuntu sur macOS, à la souris, au clavier — ou en demandant à un agent IA.
   actions:
     - text: Télécharger Fenestra
       link: https://github.com/famaridon/fenestra/releases/latest/download/Fenestra.zip
@@ -12,8 +12,9 @@ hero:
     - text: Guide d'installation
       link: /fenestra/fr/guide/installation/
       variant: secondary
-    - text: Découvrir l'utilisation
-      link: /fenestra/fr/guide/mouse/
+    - text: Connecter un agent IA
+      link: /fenestra/fr/guide/ai-agents/
+      icon: right-arrow
       variant: minimal
 ---
 
@@ -24,6 +25,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 </video>
 
 <CardGrid stagger>
+  <Card title="Agents IA" icon="comment-alt">
+    Demandez à Claude de préparer votre espace de travail : toutes les fenêtres placées d'un coup, par MCP ou depuis un script. [Connecter un agent](/fenestra/fr/guide/ai-agents/).
+  </Card>
   <Card title="Glisser vers un bord" icon="rocket">
     Le pointeur touche un bord, l'aperçu s'affiche immédiatement. Les coins donnent des quarts. [En savoir plus](/fenestra/fr/guide/mouse/).
   </Card>
@@ -44,8 +48,5 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
   </Card>
   <Card title="Multi-écrans" icon="external">
     Chaque écran a ses zones et son orientation ; envoyez une fenêtre de l'un à l'autre d'un raccourci. [Détails](/fenestra/fr/guide/multiple-displays/).
-  </Card>
-  <Card title="Agents IA" icon="comment-alt">
-    Demandez à Claude de préparer votre espace de travail : toutes les fenêtres placées d'un coup, par MCP ou depuis un script. [Connecter un agent](/fenestra/fr/guide/ai-agents/).
   </Card>
 </CardGrid>

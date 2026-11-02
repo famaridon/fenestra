@@ -4,7 +4,7 @@ description: Windows and Ubuntu-style window snapping for macOS.
 template: splash
 hero:
   title: Fenestra
-  tagline: Windows and Ubuntu-style window snapping for macOS, with the mouse or the keyboard.
+  tagline: Windows and Ubuntu-style window snapping for macOS, with the mouse, the keyboard — or by asking an AI agent.
   actions:
     - text: Download Fenestra
       link: https://github.com/famaridon/fenestra/releases/latest/download/Fenestra.zip
@@ -12,8 +12,9 @@ hero:
     - text: Installation guide
       link: /fenestra/guide/installation/
       variant: secondary
-    - text: See how it works
-      link: /fenestra/guide/mouse/
+    - text: Connect an AI agent
+      link: /fenestra/guide/ai-agents/
+      icon: right-arrow
       variant: minimal
 ---
 
@@ -24,6 +25,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 </video>
 
 <CardGrid stagger>
+  <Card title="AI agents" icon="comment-alt">
+    Ask Claude to set up your workspace: every window placed in one go, over MCP or from a script. [Connect an agent](/fenestra/guide/ai-agents/).
+  </Card>
   <Card title="Drag to an edge" icon="rocket">
     As soon as the pointer touches an edge, the preview appears. Corners give quarters. [Learn more](/fenestra/guide/mouse/).
   </Card>
@@ -44,8 +48,5 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
   </Card>
   <Card title="Multiple displays" icon="external">
     Each display has its own zones and orientation; send windows from one to the next with a shortcut. [Details](/fenestra/guide/multiple-displays/).
-  </Card>
-  <Card title="AI agents" icon="comment-alt">
-    Ask Claude to set up your workspace: every window placed in one go, over MCP or from a script. [Connect an agent](/fenestra/guide/ai-agents/).
   </Card>
 </CardGrid>

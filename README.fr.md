@@ -4,17 +4,25 @@
 
 <h1 align="center">Fenestra</h1>
 
-<p align="center">Gestionnaire de fenêtres macOS (barre des menus) façon Windows / Ubuntu.<br>
+<p align="center">Gestionnaire de fenêtres macOS (barre des menus) façon Windows / Ubuntu — avec un serveur MCP intégré, pour que les agents IA disposent vos fenêtres.<br>
 <a href="https://famaridon.github.io/fenestra/fr/">Documentation</a> · <a href="README.md">English</a></p>
+
+## Pensé pour les agents IA
+
+Fenestra intègre un **serveur MCP**. Connectez Claude (ou toute app MCP) en un copier-coller depuis les réglages, puis demandez simplement :
+
+> *« Prépare-moi pour coder : Xcode sur les deux tiers gauche, Safari à droite, Slack en plein écran sur l'autre écran. »*
+
+L'agent liste vos fenêtres et vos écrans, puis place **toutes les fenêtres en un seul appel** : zones nommées ou proportions libres, sur n'importe quel écran, en ouvrant les apps manquantes. Les mêmes commandes fonctionnent depuis le terminal pour vos scripts. Tout reste sur votre Mac. Voir le [guide des agents IA](https://famaridon.github.io/fenestra/fr/guide/ai-agents/).
 
 ## Fonctionnalités
 
+- Agents IA et scripts : Claude et les autres apps MCP (ou un script shell) disposent plusieurs fenêtres en un seul appel grâce à l'outil `fenestra` fourni.
 - Snap par glisser : bords et coins de l'écran, aperçu translucide, restauration de la taille d'origine au détachement.
 - Raccourcis clavier globaux configurables (moitiés, quarts, tiers, plein écran, restauration, changement d'écran).
 - Bordure partagée : redimensionner une fenêtre collée ajuste ses voisines.
 - Snap Layouts : laissez le pointeur sur le bouton vert d'une fenêtre et choisissez une zone dans une palette de dispositions, comme sous Windows 11.
 - Snap Assist : après un snap à la souris ou au clavier, propose les autres fenêtres pour l'espace restant, avec des miniatures en option.
-- Agents IA et scripts : Claude et les autres apps MCP (ou un script shell) disposent plusieurs fenêtres en un seul appel grâce à l'outil `fenestra` fourni.
 - Écrans multiples et verticaux, réapplication automatique au changement de configuration.
 - Applications exclues, marges entre fenêtres, lancement à la connexion.
 

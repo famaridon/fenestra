@@ -1,10 +1,10 @@
 import { TransitionSeries } from '@remotion/transitions';
-import { Composition, Freeze, Still } from 'remotion';
+import { Composition, Still } from 'remotion';
 import { Captions, Progress } from './components/Captions';
 import { Backdrop } from './components/Desktop';
 import { Caption } from './components/Overlay';
 import { type Lang, strings } from './i18n';
-import { assist } from './scenes/Assist';
+import { AgentPoster } from './scenes/Agent';
 import { duration, FPS, scenes, transitions } from './timeline';
 
 const Intro = ({ lang }: { lang: Lang }) => {
@@ -27,13 +27,11 @@ const Intro = ({ lang }: { lang: Lang }) => {
 	);
 };
 
-// Poster image: the Snap Assist list on screen.
+// Poster image: the AI agent has just placed every window.
 const Poster = ({ lang }: { lang: Lang }) => (
 	<Backdrop>
-		<Freeze frame={45}>
-			<assist.Component s={strings[lang]} />
-		</Freeze>
-		<Caption title={strings[lang].assist[0]} subtitle={strings[lang].assist[1]} />
+		<AgentPoster s={strings[lang]} />
+		<Caption title={strings[lang].agent[0]} subtitle={strings[lang].agent[1]} />
 	</Backdrop>
 );
 

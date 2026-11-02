@@ -33,8 +33,10 @@ const timing = (prompt: string) => {
 	return { typed, call, move, done, out: done + PANEL_OUT_AFTER };
 };
 
-const Agent = ({ s }: SceneProps) => {
-	const f = useCurrentFrame();
+// `at` pins the frame, for the poster image.
+const Agent = ({ s, at }: SceneProps & { at?: number }) => {
+	const current = useCurrentFrame();
+	const f = at ?? current;
 	const { fps } = useVideoConfig();
 	const [prompt, call, placed] = s.agentPrompt;
 	const t = timing(prompt);
@@ -130,6 +132,9 @@ const Agent = ({ s }: SceneProps) => {
 		</Stage>
 	);
 };
+
+// Every window placed, the call marked done: the poster image.
+export const AgentPoster = ({ s }: SceneProps) => <Agent s={s} at={120} />;
 
 // Long enough for the longest prompt of every language.
 export const agentDuration = (prompts: string[]) => Math.max(...prompts.map((p) => timing(p).out)) + 16;
