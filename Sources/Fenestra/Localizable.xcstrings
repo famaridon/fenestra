@@ -51,6 +51,36 @@
         }
       }
     },
+    "^[%lld window](inflect: true)" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld fenêtre](inflect: true)"
+          }
+        }
+      }
+    },
+    "^[%lld window](inflect: true) could not be placed: %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld fenêtre](inflect: true) non placée : %2$@"
+          }
+        }
+      }
+    },
+    "A workspace brings back an arrangement of windows: from this list, the menu bar, a shortcut, or the fenestra tool." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un workspace restaure un agencement de fenêtres : depuis cette liste, la barre des menus, un raccourci ou l'outil fenestra."
+          }
+        }
+      }
+    },
     "About" : {
       "localizations" : {
         "fr" : {
@@ -117,6 +147,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Autoriser les agents IA et les scripts à disposer les fenêtres"
+          }
+        }
+      }
+    },
+    "Apply" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appliquer"
+          }
+        }
+      }
+    },
+    "Apply automatically when these displays are connected" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appliquer automatiquement quand ces écrans sont branchés"
           }
         }
       }
@@ -227,6 +277,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Taille des coins : %lld pt"
+          }
+        }
+      }
+    },
+    "Displays: %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écrans : %@"
           }
         }
       }
@@ -454,6 +514,16 @@
         }
       }
     },
+    "Name" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom"
+          }
+        }
+      }
+    },
     "Next Display" : {
       "localizations" : {
         "fr" : {
@@ -534,6 +604,16 @@
         }
       }
     },
+    "Rename" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renommer"
+          }
+        }
+      }
+    },
     "Restore Default Shortcuts" : {
       "localizations" : {
         "fr" : {
@@ -604,6 +684,36 @@
         }
       }
     },
+    "Save Current Arrangement…" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrer l'agencement actuel…"
+          }
+        }
+      }
+    },
+    "Save the current arrangement as a new workspace" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrer l'agencement actuel comme nouveau workspace"
+          }
+        }
+      }
+    },
+    "Select a workspace, or save the current arrangement with +." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez un workspace, ou enregistrez l'agencement actuel avec +."
+          }
+        }
+      }
+    },
     "Settings…" : {
       "localizations" : {
         "fr" : {
@@ -620,6 +730,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bordure partagée entre fenêtres collées"
+          }
+        }
+      }
+    },
+    "Shortcut" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raccourci"
           }
         }
       }
@@ -744,6 +864,16 @@
         }
       }
     },
+    "Update with Current Arrangement" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre à jour avec l'agencement actuel"
+          }
+        }
+      }
+    },
     "Vertical Display" : {
       "localizations" : {
         "fr" : {
@@ -784,12 +914,42 @@
         }
       }
     },
+    "Windows" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fenêtres"
+          }
+        }
+      }
+    },
     "With the keyboard, ← and → cut the top and bottom halves into quarters" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Au clavier, ← et → coupent les moitiés haute et basse en quarts"
+          }
+        }
+      }
+    },
+    "Workspace name" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom du workspace"
+          }
+        }
+      }
+    },
+    "Workspaces" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Workspaces"
           }
         }
       }

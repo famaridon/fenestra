@@ -9,12 +9,13 @@ import { mouse } from './scenes/Mouse';
 import type { Scene } from './scenes/shared';
 import { strings } from './i18n';
 import { outro, title } from './scenes/Title';
+import { workspacesScene } from './scenes/Workspaces';
 import { push, zoomFade } from './transitions';
 
 // The video, in order. Add, remove or reorder scenes here.
 // The AI agents scene comes first: it is what sets Fenestra apart.
 const agentScene = agent(Object.values(strings).map((s) => s.agentPrompt[0]));
-export const scenes: Scene[] = [title, agentScene, mouse, assist, border, keyboard, displays, snapLayouts, outro];
+export const scenes: Scene[] = [title, agentScene, workspacesScene, mouse, assist, border, keyboard, displays, snapLayouts, outro];
 
 export const FPS = 30;
 

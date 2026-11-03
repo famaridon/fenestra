@@ -2,7 +2,7 @@
 
 export type Lang = 'en' | 'fr';
 
-export type CaptionKey = 'layouts' | 'mouse' | 'assist' | 'border' | 'keyboard' | 'displays' | 'agent';
+export type CaptionKey = 'layouts' | 'mouse' | 'assist' | 'border' | 'keyboard' | 'displays' | 'agent' | 'workspaces';
 
 export type Strings = {
 	tagline: string;
@@ -13,6 +13,9 @@ export type Strings = {
 	keyboard: [string, string];
 	displays: [string, string];
 	agent: [string, string];
+	workspaces: [string, string];
+	// Names of the two workspaces recalled in the workspaces scene.
+	workspaceNames: [string, string];
 	// Prompt typed to the agent, tool it calls, result shown once the windows are placed.
 	agentPrompt: [string, string, string];
 	outro: [string, string];
@@ -29,6 +32,8 @@ export const strings: Record<Lang, Strings> = {
 		keyboard: ['Keyboard shortcuts', 'Halves, quarters, full screen and restore'],
 		displays: ['Multiple and vertical displays', 'Send windows across, top / bottom split in portrait'],
 		agent: ['AI agents', 'Ask Claude to arrange all your windows at once'],
+		workspaces: ['Workspaces', 'Save an arrangement, bring it back with a shortcut'],
+		workspaceNames: ['Coding', 'Writing'],
 		agentPrompt: ['Safari on the left, Terminal and Notes on the right', 'apply_layout', '3 windows placed'],
 		outro: ['Download Fenestra', 'famaridon.github.io/fenestra'],
 		windows: { safari: 'Safari — Fenestra', notes: 'Notes', terminal: 'Terminal — zsh', mail: 'Mail — Inbox' },
@@ -42,6 +47,8 @@ export const strings: Record<Lang, Strings> = {
 		keyboard: ['Raccourcis clavier', 'Moitiés, quarts, plein écran et restauration'],
 		displays: ['Plusieurs écrans, écran vertical', 'Envoyez les fenêtres d’un écran à l’autre, haut / bas en portrait'],
 		agent: ['Agents IA', 'Demandez à Claude de placer toutes vos fenêtres d’un coup'],
+		workspaces: ['Workspaces', 'Enregistrez un agencement, retrouvez-le d’un raccourci'],
+		workspaceNames: ['Code', 'Écriture'],
 		agentPrompt: ['Safari à gauche, Terminal et Notes à droite', 'apply_layout', '3 fenêtres placées'],
 		outro: ['Téléchargez Fenestra', 'famaridon.github.io/fenestra'],
 		windows: { safari: 'Safari — Fenestra', notes: 'Notes', terminal: 'Terminal — zsh', mail: 'Mail — Boîte de réception' },

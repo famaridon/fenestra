@@ -8,6 +8,8 @@ struct FenestraApp: App {
     var body: some Scene {
         MenuBarExtra {
             MenuBarView(settings: controller.settings, permission: controller.permission,
+                        navigation: controller.navigation, workspaces: controller.workspaces,
+                        saveWorkspace: controller.saveWorkspace, applyWorkspace: controller.applyWorkspace,
                         perform: { controller.perform($0) })
         } label: {
             MenuBarIcon()
@@ -16,8 +18,11 @@ struct FenestraApp: App {
         .menuBarExtraStyle(.menu)
 
         SwiftUI.Settings {
-            SettingsView(settings: controller.settings, loginItem: controller.loginItem,
-                         screenRecording: controller.screenRecording, shortcutImport: shortcutImport)
+            SettingsView(settings: controller.settings, navigation: controller.navigation,
+                         loginItem: controller.loginItem, screenRecording: controller.screenRecording,
+                         shortcutImport: shortcutImport, workspaces: controller.workspaces,
+                         displays: controller.displays, saveWorkspace: controller.saveWorkspace,
+                         applyWorkspace: controller.applyWorkspace)
         }
 
         Window("Welcome to Fenestra", id: "onboarding") {

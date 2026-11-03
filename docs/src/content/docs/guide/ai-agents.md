@@ -41,6 +41,10 @@ The path points to where Fenestra is installed: copy the configuration again if 
 | `list_displays` | The displays in reading order (left to right, then top to bottom), with their index, size and orientation. |
 | `list_windows` | The windows Fenestra can move, with their app, title, display and zone. |
 | `apply_layout` | Places several windows at once, see below. |
+| `list_workspaces` | The saved [workspaces](#workspaces): name, number of windows, shortcut. |
+| `save_workspace` | Saves the windows as they are now under a name, or stores a layout given by the agent. |
+| `apply_workspace` | Arranges the windows as a saved workspace says. |
+| `delete_workspace` | Forgets a workspace. |
 
 Agents follow the same rules as you: minimized, full-screen, fixed-size and [excluded](/fenestra/guide/settings/#exclusions) windows are left alone. Commands fail with a clear error while Fenestra is turned off in the menu bar or does not have the Accessibility permission.
 
@@ -76,6 +80,17 @@ Give a `zone` or a `rect`, not both. Set `launch_apps` to `true` to open the app
 - Zones and `rect` areas keep the **gap between windows** set in the settings. Zones work with [restore](/fenestra/guide/keyboard/) like any other snap. A window placed with `rect` is not considered snapped.
 - The reply lists the windows placed and, for each placement that failed, why (no matching window, unknown display…).
 
+## Workspaces
+
+A **workspace** is a layout saved under a name, to bring back later. An agent can save one in two ways:
+
+- `save_workspace` with just a `name` **captures the screen**: every window Fenestra can move becomes a placement, with its zone if it is snapped, otherwise its exact frame, on its display.
+- `save_workspace` with a `name` and a `layout` (the same object as `apply_layout`) **stores that layout** without moving anything: *"save a Coding workspace with Xcode on the left two thirds and Safari on the right"*.
+
+`apply_workspace` then arranges the windows, launching the missing apps unless `launch_apps` is `false`. A placement on a display that is no longer connected goes to the primary display. Saving again under the same name updates the layout and keeps the workspace's shortcut. Names are case-insensitive.
+
+Workspaces live in `~/Library/Application Support/Fenestra/workspaces.json`, a readable file you can edit or version.
+
 ## From the terminal
 
 The same tool works in scripts and shortcuts:
@@ -86,6 +101,11 @@ $FENESTRA displays
 $FENESTRA windows
 $FENESTRA layout '{"placements": [{"app": "Xcode", "zone": "leftHalf"}, {"app": "Safari", "zone": "rightHalf"}]}'
 $FENESTRA layout - < coding.json
+$FENESTRA workspace save Coding            # the screen as it is now
+$FENESTRA workspace save Writing - < w.json
+$FENESTRA workspace list
+$FENESTRA workspace apply Coding           # add --no-launch to leave closed apps closed
+$FENESTRA workspace delete Writing
 ```
 
 Each command prints its result as JSON. When the request fails as a whole (invalid JSON, Fenestra turned off…), it prints `fenestra: <message>` on stderr and exits with status 1. A layout where only some placements fail still exits with 0: check the `failed` list in the result.

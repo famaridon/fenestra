@@ -217,3 +217,24 @@ final class FakeShortcutSourceReader: ShortcutSourceReader {
 final class FakeShortcutsStore: ShortcutsStore {
     var shortcuts: [SnapAction: KeyboardShortcut] = SnapAction.defaultShortcuts
 }
+
+// MARK: Workspaces
+
+@MainActor
+final class FakeWorkspaceStore: WorkspaceStore {
+    var saved: [Workspace] = []
+    private(set) var saveCount = 0
+
+    func load() throws -> [Workspace] { saved }
+
+    func save(_ workspaces: [Workspace]) throws {
+        saved = workspaces
+        saveCount += 1
+    }
+}
+
+@MainActor
+final class FakeWindowStacking: WindowStacking {
+    var windows: [StackedWindow] = []
+    func frontToBack() -> [StackedWindow] { windows }
+}

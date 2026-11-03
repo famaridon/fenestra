@@ -23,6 +23,7 @@ The agent lists your windows and displays, then places **every window in a singl
 - Shared border: resizing a snapped window adjusts its neighbors.
 - Snap Layouts: rest the pointer on a window's green button and pick a zone in a palette of layouts, as on Windows 11.
 - Snap Assist: after a snap with the mouse or the keyboard, offers your other windows for the remaining space, with optional window thumbnails.
+- Workspaces: save an arrangement of windows under a name and bring it back from the menu bar, a shortcut, a script or an AI agent, with the closed apps launched for you.
 - Multiple and vertical displays, zones applied again automatically when the display setup changes.
 - Excluded apps, gaps between windows, launch at login.
 

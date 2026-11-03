@@ -11,19 +11,44 @@ final class CommandDispatcher {
         init(_ description: String) { self.description = description }
     }
 
+    /// Arguments of the workspace commands.
+    private struct WorkspaceArguments: Decodable {
+        var name: String
+        var layout: LayoutSpec?
+        var launchApps: Bool?
+
+        enum CodingKeys: String, CodingKey {
+            case name, layout
+            case launchApps = "launch_apps"
+        }
+    }
+
+    private struct Done: Encodable {
+        var done = true
+    }
+
     private let trust: any AccessibilityTrust
     private let settings: Settings
     private let listDisplays: ListDisplays
     private let listWindows: ListWindows
     private let applyLayout: ApplyLayout
+    private let listWorkspaces: ListWorkspaces
+    private let saveWorkspace: SaveWorkspace
+    private let applyWorkspace: ApplyWorkspace
+    private let deleteWorkspace: DeleteWorkspace
 
     init(trust: any AccessibilityTrust, settings: Settings, listDisplays: ListDisplays,
-         listWindows: ListWindows, applyLayout: ApplyLayout) {
+         listWindows: ListWindows, applyLayout: ApplyLayout, listWorkspaces: ListWorkspaces,
+         saveWorkspace: SaveWorkspace, applyWorkspace: ApplyWorkspace, deleteWorkspace: DeleteWorkspace) {
         self.trust = trust
         self.settings = settings
         self.listDisplays = listDisplays
         self.listWindows = listWindows
         self.applyLayout = applyLayout
+        self.listWorkspaces = listWorkspaces
+        self.saveWorkspace = saveWorkspace
+        self.applyWorkspace = applyWorkspace
+        self.deleteWorkspace = deleteWorkspace
     }
 
     /// Handles one request (`{"command": ..., "arguments": {...}}`) and returns the reply line.
@@ -55,8 +80,27 @@ final class CommandDispatcher {
         case "list_displays": return listDisplays.execute()
         case "list_windows": return listWindows.execute()
         case "apply_layout": return await applyLayout.execute(try JSONDecoder().decode(LayoutSpec.self, from: arguments))
+        case "list_workspaces": return listWorkspaces.execute()
+        case "save_workspace":
+            let args = try workspaceArguments(arguments)
+            return saveWorkspace.execute(name: args.name, layout: args.layout)
+        case "apply_workspace":
+            let args = try workspaceArguments(arguments)
+            return try await applyWorkspace.execute(named: args.name, launchApps: args.launchApps ?? true)
+        case "delete_workspace":
+            try deleteWorkspace.execute(named: try workspaceArguments(arguments).name)
+            return Done()
         default: throw CommandError("unknown command \"\(command)\"")
         }
+    }
+
+    private func workspaceArguments(_ data: Data) throws -> WorkspaceArguments {
+        let args = try JSONDecoder().decode(WorkspaceArguments.self, from: data)
+        guard !args.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw CommandError("\"name\" must not be empty")
+        }
+        if let layout = args.layout, layout.placements.isEmpty { throw CommandError("\"layout\" needs at least one placement") }
+        return args
     }
 
     private static func describe(_ error: DecodingError) -> String {

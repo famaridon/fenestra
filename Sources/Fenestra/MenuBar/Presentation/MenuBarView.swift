@@ -4,6 +4,10 @@ import SwiftUI
 struct MenuBarView: View {
     let settings: Settings
     let permission: AccessibilityPermission
+    let navigation: SettingsNavigation
+    let workspaces: WorkspaceCollection
+    let saveWorkspace: SaveWorkspace
+    let applyWorkspace: ApplyWorkspace
     /// Applies a snap action to the frontmost window.
     let perform: (SnapAction) -> Void
     @Environment(\.openSettings) private var openSettings
@@ -31,13 +35,36 @@ struct MenuBarView: View {
                 }
             }
         }
-        Divider()
-        Button("Settings…") {
-            NSApplication.shared.activate()
-            openSettings()
+        Menu("Workspaces") {
+            ForEach(workspaces.all) { workspace in
+                Button {
+                    Task { await applyWorkspace.execute(workspace) }
+                } label: {
+                    if let shortcut = workspace.shortcut {
+                        Text(verbatim: "\(workspace.name)  \(shortcut.displayString)")
+                    } else {
+                        Text(verbatim: workspace.name)
+                    }
+                }
+            }
+            if !workspaces.all.isEmpty { Divider() }
+            Button("Save Current Arrangement…") {
+                let saved = saveWorkspace.execute(name: WorkspaceLibrary.defaultName)
+                navigation.workspace = saved.id
+                open(.workspaces)
+            }
         }
-        .keyboardShortcut(",")
+        Divider()
+        Button("Settings…") { open(nil) }
+            .keyboardShortcut(",")
         Button("Quit Fenestra") { NSApplication.shared.terminate(nil) }
             .keyboardShortcut("q")
+    }
+
+    /// Opens the settings window, on `tab` or on the last tab shown.
+    private func open(_ tab: SettingsTab?) {
+        if let tab { navigation.tab = tab }
+        NSApplication.shared.activate()
+        openSettings()
     }
 }

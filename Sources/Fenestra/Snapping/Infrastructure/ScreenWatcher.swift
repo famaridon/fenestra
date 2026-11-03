@@ -1,18 +1,19 @@
 import AppKit
 
-/// Watches the display configuration and re-applies every snapped window's zone when it changes.
+/// Watches the display configuration and, once it settles, runs `onChange` (re-applying the snapped
+/// windows' zones, then the workspace saved for these displays).
 @MainActor
 final class ScreenWatcher {
-    private let reapply: ReapplySnapsAfterDisplayChange
+    private let onChange: @MainActor () async -> Void
     private var observer: (any NSObjectProtocol)?
     private var debounce: Task<Void, Never>?
 
-    init(reapply: ReapplySnapsAfterDisplayChange) {
-        self.reapply = reapply
+    init(onChange: @escaping @MainActor () async -> Void) {
+        self.onChange = onChange
         observer = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main
         ) { [weak self] _ in
-            MainActor.assumeIsolated { self?.scheduleReapply() }
+            MainActor.assumeIsolated { self?.schedule() }
         }
     }
 
@@ -21,12 +22,13 @@ final class ScreenWatcher {
         debounce?.cancel()
     }
 
-    private func scheduleReapply() {
+    /// macOS posts several notifications per change: act half a second after the last one.
+    private func schedule() {
         debounce?.cancel()
         debounce = Task { [weak self] in
             try? await Task.sleep(for: .milliseconds(500))
-            guard !Task.isCancelled else { return }
-            self?.reapply.execute()
+            guard !Task.isCancelled, let self else { return }
+            await self.onChange()
         }
     }
 }

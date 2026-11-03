@@ -37,6 +37,10 @@ Une ligne par action avec un champ de saisie du raccourci, et un bouton pour **r
 
 Quand Rectangle, Magnet ou AeroSpace est utilisé sur le Mac, une section **Import** propose un bouton par application pour **reprendre ses raccourcis**. Voir [Garder les raccourcis de Rectangle, Magnet ou AeroSpace](/fenestra/fr/guide/keyboard/#garder-les-raccourcis-de-rectangle-magnet-ou-aerospace).
 
+## Workspaces
+
+Les [workspaces](/fenestra/fr/guide/workspaces/) enregistrés : **+** enregistre l'agencement actuel comme nouveau workspace, **−** supprime celui qui est sélectionné. Pour le workspace sélectionné : son **nom**, son **raccourci**, le nombre de fenêtres, **Appliquer automatiquement quand ces écrans sont branchés** (voir [Basculer automatiquement avec les écrans](/fenestra/fr/guide/workspaces/#basculer-automatiquement-avec-les-écrans)), **Appliquer** et **Mettre à jour avec l'agencement actuel**.
+
 ## Exclusions
 
 Liste des **applications exclues** : aucun snap (souris, clavier, bordure) n'est appliqué à leurs fenêtres. Ajoutez ou retirez des applications dans cette liste.

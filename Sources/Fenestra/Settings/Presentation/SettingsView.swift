@@ -5,26 +5,42 @@ import SwiftUI
 /// composition root; nil when no such app is in use.
 struct SettingsView<ShortcutImport: View>: View {
     let settings: Settings
+    let navigation: SettingsNavigation
     let loginItem: any LoginItem
     let screenRecording: any ScreenRecordingAccess
     let shortcutImport: ShortcutImport?
+    let workspaces: WorkspaceCollection
+    let displays: any DisplayProvider
+    let saveWorkspace: SaveWorkspace
+    let applyWorkspace: ApplyWorkspace
 
     var body: some View {
-        TabView {
+        @Bindable var navigation = navigation
+        TabView(selection: $navigation.tab) {
             GeneralTab(settings: settings, loginItem: loginItem, screenRecording: screenRecording)
                 .tabItem { Label("General", systemImage: "gearshape") }
+                .tag(SettingsTab.general)
             ZonesTab(settings: settings)
                 .tabItem { Label("Zones", systemImage: "rectangle.split.2x2") }
+                .tag(SettingsTab.zones)
             ShortcutsTab(settings: settings, shortcutImport: shortcutImport)
                 .tabItem { Label("Shortcuts", systemImage: "keyboard") }
+                .tag(SettingsTab.shortcuts)
+            WorkspacesView(workspaces: workspaces, navigation: navigation, displays: displays,
+                           saveWorkspace: saveWorkspace, applyWorkspace: applyWorkspace)
+                .tabItem { Label("Workspaces", systemImage: "square.grid.2x2") }
+                .tag(SettingsTab.workspaces)
             ExcludedAppsView(settings: settings)
                 .tabItem { Label("Exclusions", systemImage: "nosign") }
+                .tag(SettingsTab.exclusions)
             AgentsTab(settings: settings)
                 .tabItem { Label("Agents", systemImage: "sparkles") }
+                .tag(SettingsTab.agents)
             AboutTab()
                 .tabItem { Label("About", systemImage: "info.circle") }
+                .tag(SettingsTab.about)
         }
-        .frame(width: 520, height: 460)
+        .frame(width: 560, height: 460)
     }
 }
 

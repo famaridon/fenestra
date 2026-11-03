@@ -3,12 +3,13 @@ import Foundation
 import os
 
 /// Global hotkeys built on Carbon `RegisterEventHotKey` (no Accessibility permission needed).
+/// Each shortcut runs the closure registered for it (a snap action, a workspace…).
 @MainActor
 final class HotkeyManager {
-    var onAction: ((SnapAction) -> Void)?
+    typealias Action = @MainActor () -> Void
 
     private struct Entry {
-        let action: SnapAction
+        let action: Action
         let ref: EventHotKeyRef
     }
 
@@ -22,10 +23,11 @@ final class HotkeyManager {
 
     private var entries: [UInt32: Entry] = [:]
 
-    func register(_ shortcuts: [SnapAction: KeyboardShortcut]) {
+    /// Replaces every registered hotkey. A shortcut the system or another app already owns is skipped and logged.
+    func register(_ bindings: [KeyboardShortcut: Action]) {
         unregisterAll()
         Self.installHandlerIfNeeded()
-        for (action, shortcut) in shortcuts {
+        for (shortcut, action) in bindings {
             let id = Self.nextID
             Self.nextID &+= 1
             var ref: EventHotKeyRef?
@@ -35,7 +37,7 @@ final class HotkeyManager {
                 GetApplicationEventTarget(), 0, &ref
             )
             guard status == noErr, let ref else {
-                Self.logger.error("Cannot register \(shortcut.displayString) for \(action.rawValue): OSStatus \(status)")
+                Self.logger.error("Cannot register \(shortcut.displayString): OSStatus \(status)")
                 continue
             }
             entries[id] = Entry(action: action, ref: ref)
@@ -56,8 +58,7 @@ final class HotkeyManager {
     }
 
     private func fire(_ id: UInt32) {
-        guard let action = entries[id]?.action else { return }
-        onAction?(action)
+        entries[id]?.action()
     }
 
     private static func installHandlerIfNeeded() {

@@ -41,6 +41,10 @@ Le chemin désigne l'emplacement de Fenestra : copiez de nouveau la configuratio
 | `list_displays` | Les écrans dans l'ordre de lecture (de gauche à droite, puis de haut en bas), avec leur numéro, leur taille et leur orientation. |
 | `list_windows` | Les fenêtres que Fenestra peut déplacer, avec leur app, leur titre, leur écran et leur zone. |
 | `apply_layout` | Place plusieurs fenêtres d'un coup, voir ci-dessous. |
+| `list_workspaces` | Les [workspaces](#workspaces) enregistrés : nom, nombre de fenêtres, raccourci. |
+| `save_workspace` | Enregistre les fenêtres telles qu'elles sont sous un nom, ou mémorise une disposition donnée par l'agent. |
+| `apply_workspace` | Dispose les fenêtres comme le dit un workspace enregistré. |
+| `delete_workspace` | Oublie un workspace. |
 
 Les agents suivent les mêmes règles que vous : les fenêtres réduites, en plein écran macOS, de taille fixe ou [exclues](/fenestra/fr/guide/settings/#exclusions) ne bougent pas. Les commandes échouent avec une erreur explicite tant que Fenestra est désactivé dans la barre des menus ou n'a pas l'autorisation d'Accessibilité.
 
@@ -76,6 +80,17 @@ Donnez une `zone` ou un `rect`, pas les deux. Avec `launch_apps` à `true`, Fene
 - Les zones et les `rect` respectent l'**espace entre les fenêtres** des réglages. Les zones se [restaurent](/fenestra/fr/guide/keyboard/) comme tout autre snap. Une fenêtre placée avec `rect` n'est pas considérée comme collée.
 - La réponse liste les fenêtres placées et, pour chaque placement en échec, la raison (aucune fenêtre correspondante, écran inconnu…).
 
+## Workspaces
+
+Un **workspace** est une disposition enregistrée sous un nom, pour la retrouver plus tard. Un agent peut en enregistrer un de deux façons :
+
+- `save_workspace` avec seulement un `name` **capture l'écran** : chaque fenêtre que Fenestra peut déplacer devient un placement, avec sa zone si elle est collée, sinon son cadre exact, sur son écran.
+- `save_workspace` avec un `name` et un `layout` (le même objet que pour `apply_layout`) **mémorise cette disposition** sans rien déplacer : *« enregistre un workspace Code avec Xcode sur les deux tiers gauche et Safari à droite »*.
+
+`apply_workspace` dispose ensuite les fenêtres, en lançant les apps manquantes sauf si `launch_apps` vaut `false`. Un placement sur un écran qui n'est plus branché va sur l'écran principal. Enregistrer de nouveau sous le même nom met la disposition à jour et conserve le raccourci du workspace. Les noms ne tiennent pas compte de la casse.
+
+Les workspaces sont dans `~/Library/Application Support/Fenestra/workspaces.json`, un fichier lisible que vous pouvez modifier ou versionner.
+
 ## Depuis le terminal
 
 Le même outil fonctionne dans les scripts et les raccourcis :
@@ -86,6 +101,11 @@ $FENESTRA displays
 $FENESTRA windows
 $FENESTRA layout '{"placements": [{"app": "Xcode", "zone": "leftHalf"}, {"app": "Safari", "zone": "rightHalf"}]}'
 $FENESTRA layout - < coder.json
+$FENESTRA workspace save Code              # l'écran tel qu'il est
+$FENESTRA workspace save Écriture - < w.json
+$FENESTRA workspace list
+$FENESTRA workspace apply Code             # --no-launch pour laisser fermées les apps fermées
+$FENESTRA workspace delete Écriture
 ```
 
 Chaque commande affiche son résultat en JSON. Quand la requête échoue en entier (JSON invalide, Fenestra désactivé…), elle écrit `fenestra: <message>` sur stderr et se termine avec le code 1. Une disposition dont seuls certains placements échouent se termine avec 0 : consultez la liste `failed` du résultat.

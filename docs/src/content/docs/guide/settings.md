@@ -37,6 +37,10 @@ One row per action with a field to record the shortcut, and a button to **restor
 
 When Rectangle, Magnet or AeroSpace is in use on the Mac, an **Import** section offers one button per app to **reuse its shortcuts**. See [Keep the shortcuts of Rectangle, Magnet or AeroSpace](/fenestra/guide/keyboard/#keep-the-shortcuts-of-rectangle-magnet-or-aerospace).
 
+## Workspaces
+
+The saved [workspaces](/fenestra/guide/workspaces/): **+** saves the current arrangement as a new one, **−** deletes the selected one. For the selected workspace: its **name**, its **shortcut**, the number of windows, **Apply automatically when these displays are connected** (see [Switch automatically with the displays](/fenestra/guide/workspaces/#switch-automatically-with-the-displays)), **Apply** and **Update with Current Arrangement**.
+
 ## Exclusions
 
 List of **excluded apps**: no snapping (mouse, keyboard, border) is applied to their windows. Add or remove apps in this list.

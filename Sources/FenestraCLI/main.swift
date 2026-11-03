@@ -171,6 +171,65 @@ let tools: [[String: Any]] = [
         ],
         "annotations": ["readOnlyHint": false, "destructiveHint": false, "idempotentHint": true],
     ],
+    [
+        "name": "list_workspaces",
+        "title": "List workspaces",
+        "description": """
+            Lists the saved workspaces: named layouts the user (or an agent) stored, with the number of windows \
+            each one places, its keyboard shortcut and whether it applies on its own when its displays are connected.
+            """,
+        "inputSchema": emptySchema,
+        "annotations": ["readOnlyHint": true],
+    ],
+    [
+        "name": "save_workspace",
+        "title": "Save a workspace",
+        "description": """
+            Saves a workspace under a name. Without "layout", it captures the windows as they are on screen now \
+            (snapped windows keep their zone, the others their frame). With "layout", it stores that layout \
+            (same format as apply_layout) without touching the windows: use it to prepare a workspace the \
+            user will recall later from the menu or a shortcut. An existing workspace with that name is \
+            updated and keeps its shortcut.
+            """,
+        "inputSchema": [
+            "type": "object",
+            "properties": [
+                "name": ["type": "string", "description": "Workspace name, case-insensitive."],
+                "layout": ["type": "object", "description": "A layout as apply_layout takes it ({placements: [...]}). Omit to capture the screen."],
+            ],
+            "required": ["name"],
+        ],
+        "annotations": ["readOnlyHint": false, "destructiveHint": false, "idempotentHint": true],
+    ],
+    [
+        "name": "apply_workspace",
+        "title": "Apply a workspace",
+        "description": """
+            Arranges the windows as a saved workspace says, launching the missing apps unless "launch_apps" \
+            is false. A placement on a display that is no longer connected goes to the primary display. \
+            Returns the same report as apply_layout.
+            """,
+        "inputSchema": [
+            "type": "object",
+            "properties": [
+                "name": ["type": "string", "description": "Name of a saved workspace (see list_workspaces)."],
+                "launch_apps": ["type": "boolean", "description": "Open the apps that have no window and wait for them. Default true."],
+            ],
+            "required": ["name"],
+        ],
+        "annotations": ["readOnlyHint": false, "destructiveHint": false, "idempotentHint": true],
+    ],
+    [
+        "name": "delete_workspace",
+        "title": "Delete a workspace",
+        "description": "Deletes a saved workspace by name. The windows are not touched.",
+        "inputSchema": [
+            "type": "object",
+            "properties": ["name": ["type": "string", "description": "Name of a saved workspace."]],
+            "required": ["name"],
+        ],
+        "annotations": ["readOnlyHint": false, "destructiveHint": true, "idempotentHint": true],
+    ],
 ]
 
 let supportedProtocolVersions = ["2025-06-18", "2025-03-26", "2024-11-05"]
@@ -225,7 +284,8 @@ func respond(_ id: Any, errorCode: Int, message: String) {
                 "serverInfo": ["name": "fenestra", "title": "Fenestra", "version": version],
                 "instructions": """
                     Fenestra arranges the user's macOS windows. To set up a workspace, call list_windows \
-                    (and list_displays with several displays), then a single apply_layout with every window.
+                    (and list_displays with several displays), then a single apply_layout with every window. \
+                    save_workspace keeps an arrangement under a name; apply_workspace brings it back.
                     """,
             ])
         case "ping":
@@ -243,6 +303,13 @@ func respond(_ id: Any, errorCode: Int, message: String) {
 
 // MARK: Command line
 
+/// A JSON object given on the command line, or `-` for stdin.
+func jsonArgument(_ argument: String, _ command: String) -> Any {
+    let data = argument == "-" ? FileHandle.standardInput.readDataToEndOfFile() : Data(argument.utf8)
+    guard let value = try? JSONSerialization.jsonObject(with: data) else { fail("\(command): invalid JSON") }
+    return value
+}
+
 func runCommand(_ command: String, arguments: Any) -> Never {
     do {
         let reply = try send(command, arguments: arguments)
@@ -259,6 +326,10 @@ let usage = """
            fenestra displays
            fenestra windows
            fenestra layout '<json>' | -
+           fenestra workspace list
+           fenestra workspace save <name> ['<json>' | -]
+           fenestra workspace apply <name> [--no-launch]
+           fenestra workspace delete <name>
 
     layout JSON: {"placements": [{"app": "Xcode", "zone": "leftTwoThirds"},
                                  {"app": "Safari", "display": "2", "rect": {"x": 0, "y": 0, "width": 0.5, "height": 1}}],
@@ -275,9 +346,23 @@ case "windows":
     runCommand("list_windows", arguments: [String: Any]())
 case "layout":
     guard args.count == 2 else { fail("layout takes one JSON argument, or - for stdin\n\(usage)") }
-    let data = args[1] == "-" ? FileHandle.standardInput.readDataToEndOfFile() : Data(args[1].utf8)
-    guard let spec = try? JSONSerialization.jsonObject(with: data) else { fail("layout: invalid JSON") }
-    runCommand("apply_layout", arguments: spec)
+    runCommand("apply_layout", arguments: jsonArgument(args[1], "layout"))
+case "workspace":
+    let name = args.count >= 3 ? args[2] : nil
+    switch (args.dropFirst().first, name) {
+    case ("list", nil):
+        runCommand("list_workspaces", arguments: [String: Any]())
+    case ("save", let name?):
+        var arguments: [String: Any] = ["name": name]
+        if args.count == 4 { arguments["layout"] = jsonArgument(args[3], "workspace save") }
+        runCommand("save_workspace", arguments: arguments)
+    case ("apply", let name?):
+        runCommand("apply_workspace", arguments: ["name": name, "launch_apps": !args.dropFirst(3).contains("--no-launch")])
+    case ("delete", let name?):
+        runCommand("delete_workspace", arguments: ["name": name])
+    default:
+        fail("workspace: list, save <name> [json], apply <name> [--no-launch] or delete <name>\n\(usage)")
+    }
 case "-h", "--help", "help":
     print(usage)
 case "--version":

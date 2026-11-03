@@ -28,6 +28,7 @@ export default defineConfig({
 						{ slug: 'guide/shared-border' },
 						{ slug: 'guide/snap-layouts' },
 						{ slug: 'guide/snap-assist' },
+						{ slug: 'guide/workspaces' },
 						{ slug: 'guide/ai-agents' },
 						{ slug: 'guide/settings' },
 						{ slug: 'guide/troubleshooting' },

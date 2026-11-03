@@ -82,8 +82,8 @@ Sources/Fenestra/
     Application/DragSnapSession.swift   — use case avec état : un glisser, du clic au relâchement
     Application/ReapplySnapsAfterDisplayChange.swift — use case : replacer les fenêtres collées
     Infrastructure/DragMonitor.swift    — événements souris globaux (repère AX)
-    Infrastructure/HotkeyManager.swift  — raccourcis globaux (Carbon RegisterEventHotKey)
-    Infrastructure/ScreenWatcher.swift  — changement d'écrans -> ReapplySnapsAfterDisplayChange
+    Infrastructure/HotkeyManager.swift  — raccourcis globaux (Carbon RegisterEventHotKey) : raccourci -> closure (snap, workspace)
+    Infrastructure/ScreenWatcher.swift  — changement d'écrans (anti-rebond 500 ms) -> closure : replacer les zones, puis le workspace des écrans
     Presentation/SnapPreviewPanel.swift — aperçu translucide (port SnapPreview)
   SharedBorder/
     Domain/SharedBorderResolver.swift   — calcul de la bordure partagée
@@ -118,10 +118,21 @@ Sources/Fenestra/
     Application/DetectShortcutSources.swift, ImportShortcuts.swift — use cases
     Infrastructure/SystemShortcutSourceReader.swift — UserDefaults (ou conteneur sandbox) et fichiers du dossier personnel
     Presentation/ShortcutImportView.swift — bloc « Importer depuis … », injecté dans l'accueil et l'onglet Raccourcis par App
+  Workspaces/                           — agencements enregistrés sous un nom
+    Domain/Workspace.swift              — Workspace, DisplaySignature, WorkspaceLibrary (noms uniques, layout adapté aux écrans)
+    Domain/WorkspaceCapture.swift       — CapturedWindow ; fenêtres à l'écran -> LayoutSpec (zone ou fractions)
+    Application/WorkspacePorts.swift    — ports WorkspaceStore, WindowStacking ; WorkspaceSummary (résultat de list_workspaces)
+    Application/WorkspaceCollection.swift — @Observable : les workspaces chargés, réécrits à chaque changement
+    Application/SaveWorkspace.swift, ApplyWorkspace.swift, ListWorkspaces.swift (+ DeleteWorkspace) — use cases
+    Application/ApplyWorkspaceForDisplays.swift — use case : après un changement d'écrans, le workspace de cette configuration
+    Infrastructure/FileWorkspaceStore.swift — ~/Library/Application Support/Fenestra/workspaces.json
+    Infrastructure/CGWindowStacking.swift — ordre d'empilement des fenêtres (CGWindowListCopyWindowInfo, couche 0)
   Settings/
     Application/Settings.swift          — modèle @Observable persisté dans UserDefaults (+ snapSettings) ; port LoginItem ; implémente ShortcutsStore
     Infrastructure/LaunchAtLogin.swift  — SMAppService
+    Application/SettingsNavigation.swift — SettingsTab ; onglet (et workspace) que le menu demande à la fenêtre des réglages
     Presentation/SettingsView.swift, ShortcutRecorderView.swift, ExcludedAppsView.swift
+    Presentation/WorkspacesView.swift   — onglet Workspaces (liste, nom, raccourci, appliquer, mettre à jour, supprimer)
   Onboarding/
     Application/AccessibilityPermission.swift — état de l'autorisation (interrogé jusqu'à l'accord) ; port AccessibilityTrust
     Infrastructure/AXAccessibilityTrust.swift — AXIsProcessTrusted
@@ -500,6 +511,11 @@ struct SnapAssistCandidate: Identifiable, Sendable, Equatable { let id: Int; let
 // ShortcutImport
 @MainActor protocol ShortcutSourceReader: AnyObject { func read(_ source: ShortcutSource) -> ShortcutSourceData? }  // SystemShortcutSourceReader ; nil : app non utilisée
 @MainActor protocol ShortcutsStore: AnyObject { var shortcuts: [SnapAction: KeyboardShortcut] { get set } }        // Settings
+
+// Workspaces
+@MainActor protocol WorkspaceStore: AnyObject { func load() throws -> [Workspace]; func save(_ workspaces: [Workspace]) throws }  // FileWorkspaceStore
+@MainActor protocol WindowStacking: AnyObject { func frontToBack() -> [StackedWindow] }                                          // CGWindowStacking
+struct WorkspaceSummary: Codable { var name: String; var windows: Int; var shortcut: String?; var automatic: Bool }      // list_workspaces
 ```
 
 ### ShortcutImport/Domain
@@ -530,6 +546,39 @@ enum AeroSpaceShortcuts {                                                       
     static func mainBindings(in toml: String) -> [Binding]            // clé -> commandes (chaîne ou tableau)
     static func shortcut(forKey key: String) -> KeyboardShortcut?     // "alt-shift-h" (QWERTY) ; nil sans modificateur
     static func action(for commands: [String]) -> SnapAction?         // move ←→↑↓, fullscreen, move-node-to-monitor left/prev/right/next
+}
+```
+
+### Workspaces/Domain
+
+```swift
+struct Workspace: Codable, Identifiable {
+    var id: UUID; var name: String
+    var layout: LayoutSpec                 // les placements, au format d'apply_layout ; launchApps décidé à l'application
+    var shortcut: KeyboardShortcut?        // raccourci global qui applique le workspace
+    var displays: DisplaySignature?        // appliqué tout seul quand les écrans branchés correspondent ; nil = jamais
+    func isNamed(_ name: String) -> Bool   // nom comparé sans espaces autour ni casse
+}
+struct DisplaySignature: Codable, Equatable {   // tailles des cadres, triées : les ids changent d'un branchement à l'autre
+    init(_ layout: ScreenLayout); func matches(_ layout: ScreenLayout) -> Bool
+}
+enum WorkspaceLibrary {
+    static func uniqueName(_ proposed: String, among: [Workspace], excluding id: UUID? = nil) -> String  // "Workspace", "Nom 2"…
+    static func index(named: String, in: [Workspace]) -> Int?
+    /// Le layout à appliquer maintenant : un placement dont l'écran n'existe plus va sur l'écran principal (display nil).
+    static func layout(of workspace: Workspace, for screens: ScreenLayout, launchApps: Bool) -> LayoutSpec
+}
+struct CapturedWindow { var bundleIdentifier, appName, title: String?; var frame: CGRect; var zone: Zone?; var pid: pid_t }
+struct StackedWindow { var pid: pid_t; var frame: CGRect }   // une fenêtre de l'ordre d'empilement (repère AX)
+enum WorkspaceCapture {
+    /// Fenêtres de l'avant vers l'arrière : l'Accessibility les liste par app, l'ordre vient du serveur de fenêtres,
+    /// chaque fenêtre étant reconnue par processus et cadre (`WindowMatcher`) ; les inconnues après, dans leur ordre.
+    static func sorted(_ windows: [CapturedWindow], frontToBack stacking: [StackedWindow]) -> [CapturedWindow]
+    /// Un placement par fenêtre, dans l'ordre donné : app = bundle id (sinon nom), display = index en ordre de lecture,
+    /// zone si collée sinon rect (inverse de FractionRect.frame, gap défait, ramené dans l'écran, 4 décimales),
+    /// title seulement si l'app a plusieurs fenêtres dans la capture.
+    static func layout(of windows: [CapturedWindow], screens: ScreenLayout, gap: CGFloat) -> LayoutSpec
+    static func fraction(of frame: CGRect, in area: CGRect, gap: CGFloat) -> FractionRect
 }
 ```
 
@@ -590,6 +639,18 @@ l'écran de la fenêtre ; un clic sur une zone → `SnapWindowToZone`.
 
 `ListDisplays`, `ListWindows`, `ApplyLayout` (ExternalControl) : voir « Commandes externes et MCP ».
 
+`WorkspaceCollection` (Workspaces, @Observable) : les workspaces chargés à l'init par `WorkspaceStore` (liste vide
+et journal si le fichier est illisible), `workspace(named:)` / `workspace(id:)`, `upsert` (nom rendu unique parmi
+les autres) et `remove(id:)`, chacun réécrivant le fichier. `SaveWorkspace.execute(name:layout:)` : sans layout,
+`capture()` transforme les fenêtres gérables en `CapturedWindow` (zone via `SnapStore.currentRecord`), les trie de
+l'avant vers l'arrière avec `WindowStacking` (le premier placement revient au premier plan) et appelle
+`WorkspaceCapture.layout` avec la marge des réglages ; un workspace de ce nom est mis à jour (id, raccourci et
+écrans conservés), sinon créé. `ApplyWorkspace.execute(named:launchApps:)` : `WorkspaceLibrary.layout(of:for:)`
+puis `ApplyLayout` ; `UnknownWorkspace` si le nom est inconnu. `ListWorkspaces` rend des `WorkspaceSummary`,
+`DeleteWorkspace` retire par nom. `ApplyWorkspaceForDisplays.execute()` (appelé par `ScreenWatcher` après le
+replacement des zones) : si la `DisplaySignature` des écrans a changé depuis le dernier appel (celle du lancement au
+départ), applique le premier workspace dont `displays` correspond, avec `launchApps: false` ; sinon rien.
+
 `DetectShortcutSources.execute()` (ShortcutImport) : les sources dont `ShortcutSourceReader.read` rend quelque chose,
 dans l'ordre de `ShortcutSource.allCases`. `ImportShortcuts.execute(from:)` : lit, `parse`, puis
 `store.shortcuts = imported.merged(into: store.shortcuts)` ; rend `ImportedShortcuts` (nil si la source n'est pas
@@ -613,7 +674,7 @@ jamais modifiée.
 }
 @MainActor final class DragMonitor {                // onMouseDown / onMouseDragged / onMouseUp en repère AX ; start(), stop()
 }
-@MainActor final class HotkeyManager {              // onAction ; register(_ shortcuts:), unregisterAll()
+@MainActor final class HotkeyManager {              // register(_ bindings: [KeyboardShortcut: @MainActor () -> Void]), unregisterAll()
 }
 ```
 
@@ -669,9 +730,14 @@ types composés) dans son `didSet`, et relue dans `init`. Un réglage lu par un 
 `AppController` (@MainActor, @Observable) construit les adaptateurs (`AXWindowSystem`, `NSScreenDisplays`,
 `SystemPointer`, panneaux…), les use cases, et les branche : `DragMonitor` → `DragSnapSession`,
 `HotkeyManager` et le menu → `SnapWithKeyboard`, `ZoomButtonHoverMonitor` → `ShowSnapLayouts`,
-`ScreenWatcher` → `ReapplySnapsAfterDisplayChange`, `ControlServer` → `CommandDispatcher`.
+`ScreenWatcher` → `ReapplySnapsAfterDisplayChange`, `ControlServer` → `CommandDispatcher`. Il construit aussi
+`WorkspaceCollection` (sur `FileWorkspaceStore`), `SaveWorkspace` et `ApplyWorkspace`, partagés par le dispatcher,
+le menu et les réglages ; `ApplyLayout` est une seule instance, utilisée par `apply_layout` et par les workspaces.
 Il démarre les moniteurs quand `permission.isGranted && settings.isEnabled`, les arrête
-sinon, et ré-enregistre les raccourcis quand `settings.shortcuts` change. Les callbacks souris ne sont
+sinon, et ré-enregistre les raccourcis quand `settings.shortcuts` ou `workspaces.all` change : la table passée à
+`HotkeyManager` contient les actions de snap puis les workspaces, un workspace dont le raccourci est déjà pris par
+une action de snap étant ignoré (et journalisé). `SettingsNavigation` est partagé par le menu et la fenêtre des
+réglages : « Enregistrer l'agencement actuel… » crée le workspace puis ouvre l'onglet Workspaces dessus. Les callbacks souris ne sont
 branchés que si `dragSnapEnabled`, `restoreOnUnsnap` ou `sharedBorderEnabled` est actif (la souris sert aux
 trois) ; la palette ne démarre que si `snapLayoutsEnabled`. Le socket suit `externalControlEnabled`,
 indépendamment du reste (l'outil reçoit alors une erreur claire plutôt que rien).
@@ -680,7 +746,10 @@ indépendamment du reste (l'outil reçoit alors une erreur claire plutôt que ri
 
 L'app écoute sur un socket Unix créé sous `umask(0o077)` (accessible au seul propriétaire). Requête : une ligne JSON
 `{"command": "...", "arguments": {...}}` ; réponse : `{"ok": true, "result": ...}` ou
-`{"ok": false, "error": "..."}`. Commandes : `list_displays`, `list_windows`, `apply_layout`.
+`{"ok": false, "error": "..."}`. Commandes : `list_displays`, `list_windows`, `apply_layout`, `list_workspaces`,
+`save_workspace {name, layout?}`, `apply_workspace {name, launch_apps?}` (vrai par défaut), `delete_workspace {name}`.
+Les commandes de workspace passent par les use cases de Workspaces ; l'outil les expose en `fenestra workspace
+list | save <nom> [json | -] | apply <nom> [--no-launch] | delete <nom>` et en quatre outils MCP du même nom.
 
 `apply_layout` reçoit un `LayoutSpec` : une liste de placements `{app, title?, display?, zone | rect}`
 (rect en fractions 0…1 de la zone utile de l'écran) et `launch_apps`. `LayoutPlanner` (pur, testé)
